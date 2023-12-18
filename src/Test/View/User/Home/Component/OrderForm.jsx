@@ -121,8 +121,9 @@ const OrderForm = () => {
   
     // const referenceCoordinates = { lat: -8.785777, lng: 115.17243 };
     const referenceCoordinates = {
-      lat: -6.968173397938472,
-      lng: 110.4284581531086,
+      lat: -6.977329454784521,
+      lng: 110.41104278194457,
+      , 
     };
   
     const distance = calculateHaversineDistance(
