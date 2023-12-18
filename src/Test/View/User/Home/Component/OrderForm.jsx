@@ -19,6 +19,10 @@ const OrderForm = () => {
   const [mapKey, setMapKey] = useState(0);
   const [mapVisible, setMapVisible] = useState(false);
   const [mapdetail, setMapdetail] = useState("");
+  const referenceCoordinates = {
+    lat: -7.761981,
+    lng: 110.40567,
+  };
 
   const formatCurrency = (price) => {
     if (price >= 1000) {
@@ -73,7 +77,6 @@ const OrderForm = () => {
         setMapKey((prevKey) => prevKey + 1);
         setMapVisible(true);
 
-       
         try {
           const response = await fetch(
             `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=e80f453b74fc44c498014ee19ed91bff`
@@ -118,21 +121,16 @@ const OrderForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     // const referenceCoordinates = { lat: -8.785777, lng: 115.17243 };
-    const referenceCoordinates = {
-      lat: -6.977329454784521,
-      lng: 110.41104278194457,
-      , 
-    };
-  
+
     const distance = calculateHaversineDistance(
       referenceCoordinates,
       selectedLocation
     );
-  
+
     const maxDistance = 25;
-  
+
     if (distance > maxDistance) {
       toast.error(
         `Location is too far ${distance} km . Please choose a closer location.`,
@@ -152,39 +150,41 @@ const OrderForm = () => {
         name,
         phoneNumber,
         address,
-      
+
         selectedLocation,
       };
-  
-   
+
       navigate("/history", { state: { orderData } });
     }
   };
-  
 
   const handleBack = () => {
     navigate("/");
   };
-
   const calculateHaversineDistance = (coord1, coord2) => {
-    const toRadians = (angle) => (Math.PI / 180) * angle;
+    const toRadians = (angle) => (angle * Math.PI) / 180;
+
     const R = 6371;
 
-    const dLat = toRadians(coord2.lat - coord1.lat);
-    const dLon = toRadians(coord2.lng - coord1.lng);
+    const lat1 = toRadians(coord1.lat);
+    const lon1 = toRadians(coord1.lng);
+    const lat2 = toRadians(coord2.lat);
+    const lon2 = toRadians(coord2.lng);
+
+    const dLat = lat2 - lat1;
+    const dLon = lon2 - lon1;
 
     const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(toRadians(coord1.lat)) *
-        Math.cos(toRadians(coord2.lat)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    const distanceInKilometers = Math.round(R * c);
+    const distanceInKilometers = R * c;
 
-    return distanceInKilometers;
+    const roundedDistance = parseFloat(distanceInKilometers.toFixed(2));
+
+    return roundedDistance;
   };
 
   useEffect(() => {
@@ -294,6 +294,7 @@ const OrderForm = () => {
             mapVisible={mapVisible}
             MapClickHandler={MapClickHandler}
             mapdetail={mapdetail}
+            referenceCoordinates={referenceCoordinates}
           />
 
           <button
