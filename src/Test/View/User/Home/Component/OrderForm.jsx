@@ -19,10 +19,11 @@ const OrderForm = () => {
   const [mapKey, setMapKey] = useState(0);
   const [mapVisible, setMapVisible] = useState(false);
   const [mapdetail, setMapdetail] = useState("");
-  const referenceCoordinates = {
-    lat: -7.761981,
-    lng: 110.40567,
-  };
+  // const referenceCoordinates = {
+  //   lat: -7.761981,
+  //   lng: 110.40567,
+  // };
+  const referenceCoordinates = { lat: -8.785777, lng: 115.17243 };
 
   const formatCurrency = (price) => {
     if (price >= 1000) {
@@ -122,7 +123,7 @@ const OrderForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // const referenceCoordinates = { lat: -8.785777, lng: 115.17243 };
+    
 
     const distance = calculateHaversineDistance(
       referenceCoordinates,

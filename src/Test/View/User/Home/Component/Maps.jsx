@@ -11,7 +11,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "leaflet/dist/leaflet.css";
-import marker from "../../../../../Asset/mark.png"
+import marker from "../../../../../Asset/mark.png";
 const Maps = ({
   mapKey,
   handleGetCurrentLocation,
@@ -29,7 +29,6 @@ const Maps = ({
 
   useEffect(() => {
     checkLocationPermission();
-    fetchRoute()
   }, []);
 
   const checkLocationPermission = () => {
@@ -101,6 +100,12 @@ const Maps = ({
     }
   };
 
+  useEffect(() => {
+    if (locationPermission === true) {
+      fetchRoute();
+    }
+  }, [locationPermission]);
+
   const routePolyline = route && route.map((coord) => [coord[1], coord[0]]);
 
   return (
@@ -164,8 +169,6 @@ const Maps = ({
             {routePolyline && (
               <Polyline positions={routePolyline} color="blue" />
             )}
-
-          
           </MapContainer>
         </div>
       )}
