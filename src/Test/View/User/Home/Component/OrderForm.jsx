@@ -133,7 +133,7 @@ const OrderForm = () => {
 
     if (distance > maxDistance) {
       toast.error(
-        `Location is too far ${distance} km . Please choose a closer location.`,
+        `Location is too far ${distance} km. you cant order now !`,
         {
           position: "top-center",
           autoClose: 1000,

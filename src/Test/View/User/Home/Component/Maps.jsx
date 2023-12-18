@@ -4,7 +4,6 @@ import {
   TileLayer,
   Marker,
   Popup,
-  useMapEvents,
   Polyline,
 } from "react-leaflet";
 import L, { Icon } from "leaflet";
@@ -12,7 +11,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "leaflet/dist/leaflet.css";
-
+import marker from "../../../../../Asset/mark.png"
 const Maps = ({
   mapKey,
   handleGetCurrentLocation,
@@ -25,10 +24,12 @@ const Maps = ({
   const [locationPermission, setLocationPermission] = useState(null);
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [route, setRoute] = useState(null);
+  const [yourLocationMarkerRef, setYourLocationMarkerRef] = useState(null);
   const [toastId, setToastId] = useState(null);
 
   useEffect(() => {
     checkLocationPermission();
+    fetchRoute()
   }, []);
 
   const checkLocationPermission = () => {
@@ -121,7 +122,7 @@ const Maps = ({
           <MapContainer
             key={mapKey}
             center={[selectedLocation.lat, selectedLocation.lng]}
-            zoom={13}
+            zoom={8}
             style={{ height: "300px", width: "100%" }}
           >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -131,22 +132,26 @@ const Maps = ({
               icon={
                 new L.Icon({
                   iconUrl:
-                    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='48' height='48' fill='red' stroke='black' stroke-width='2'><circle cx='12' cy='12' r='8'/></svg>",
+                    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='48' height='48' fill='blue' stroke='black' stroke-width='2'><circle cx='12' cy='12' r='8'/></svg>",
                   iconSize: [24, 24],
                   iconAnchor: [12, 24],
                   popupAnchor: [0, -24],
                 })
               }
+              ref={(marker) => {
+                if (marker) {
+                  setYourLocationMarkerRef(marker);
+                }
+              }}
             >
-              <Popup autoOpen>Your Location</Popup>
+              {yourLocationMarkerRef && <Popup>Your Location</Popup>}
             </Marker>
 
             <Marker
               position={[referenceCoordinates.lat, referenceCoordinates.lng]}
               icon={
-                new Icon({
-                  iconUrl:
-                    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='48' height='48' fill='blue' stroke='black' stroke-width='2'><circle cx='12' cy='12' r='8'/></svg>",
+                new L.Icon({
+                  iconUrl: marker,
                   iconSize: [24, 24],
                   iconAnchor: [12, 24],
                   popupAnchor: [0, -24],
@@ -160,7 +165,7 @@ const Maps = ({
               <Polyline positions={routePolyline} color="blue" />
             )}
 
-            <MapClickHandler />
+          
           </MapContainer>
         </div>
       )}
