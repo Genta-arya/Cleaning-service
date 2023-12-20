@@ -5,10 +5,41 @@ import {
   faClipboardList,
   faBell,
   faUser,
+  faToggleOff,
+  faPowerOff,
 } from "@fortawesome/free-solid-svg-icons";
+import { logout } from "../../../../../Service/Api";
+import { useSelector } from "react-redux";
+import { selectIsAuthenticated } from "../../../../../Feature/Redux/Auth/AuthSlice";
 
 const BottomSheet = () => {
   const notificationCount = 0;
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+
+  const handleLogout = async () => {
+    try {
+      const accessToken = localStorage.getItem("token");
+      const username = localStorage.getItem("username");
+
+      if (!accessToken || !username) {
+        console.error("Token or username not found in localStorage");
+        return;
+      }
+
+      const response = await logout(accessToken, username);
+
+      if (response && response.data && response.data.success) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+
+        window.location.href = "/";
+      } else {
+        console.error("Gagal logout");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <div className="fixed inset-x-0 bottom-0 bg-white p-8 shadow-md flex flex-row justify-between z-50 ">
@@ -33,13 +64,23 @@ const BottomSheet = () => {
         />
         <p className="text-sm mt-1">Pesanan</p>
       </div>
-      <div className="flex flex-col items-center text-black">
-        <FontAwesomeIcon
-          icon={faUser}
-          className="text-2xl cursor-pointer hover:text-gray-300"
-        />
-        <p className="text-sm mt-1">Profil</p>
-      </div>
+      {isAuthenticated ? (
+        <div className="flex flex-col items-center text-black" onClick={handleLogout}>
+          <FontAwesomeIcon
+            icon={faPowerOff}
+            className="text-2xl cursor-pointer hover:text-gray-300"
+          />
+          <p className="text-sm mt-1">Logout</p>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center text-black">
+          <FontAwesomeIcon
+            icon={faUser}
+            className="text-2xl cursor-pointer hover:text-gray-300"
+          />
+          <p className="text-sm mt-1">Profil</p>
+        </div>
+      )}
     </div>
   );
 };

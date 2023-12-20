@@ -61,7 +61,7 @@ const Navbar = () => {
   return (
     <nav className="bg-black text-white p-4">
       <div className="container mx-auto flex justify-between items-center px-4">
-        <div className="text-sm font-bold">Our Website</div>
+        <div className="text-sm font-bold">Versi Beta </div>
 
         <div className="lg:hidden md:hidden block">
           <BottomSheet />
@@ -90,7 +90,7 @@ const Navbar = () => {
                   isDropdownOpen ? "text-green-500" : ""
                 }`}
                 onClick={() => {
-                  // Hanya membuka dropdown jika pengguna terautentikasi
+               
                   if (isAuthenticated) {
                     setDropdownOpen(!isDropdownOpen);
                   }
