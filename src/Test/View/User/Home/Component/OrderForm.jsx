@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { Icon } from "leaflet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleLeft } from "@fortawesome/free-solid-svg-icons";
+import { submitOrder } from "../../../../../Service/Api";
 
 const OrderForm = () => {
   const { state } = useLocation();
@@ -23,7 +24,10 @@ const OrderForm = () => {
   //   lat: -7.761981,
   //   lng: 110.40567,
   // };
-  const referenceCoordinates = { lat: -8.785777, lng: 115.17243 };
+  const referenceCoordinates = {
+    lat: -6.977425299234734,
+    lng: 110.41103205296062,
+  };
 
   const formatCurrency = (price) => {
     if (price >= 1000) {
@@ -119,46 +123,60 @@ const OrderForm = () => {
   const handleAddressChange = (e) => {
     setAddress(e.target.value);
   };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
+    const uid = "123";
 
     const distance = calculateHaversineDistance(
-      referenceCoordinates,
+      selectedLocation,
       selectedLocation
     );
 
     const maxDistance = 25;
 
     if (distance > maxDistance) {
-      toast.error(
-        `Location is too far ${distance} km. you cant order now !`,
-        {
+      toast.error(`Location is too far ${distance} km. You can't order now!`, {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+      const orderData = {
+        uid,
+        username: name,
+        orderDetails: {
+          nm_product: productData?.title || "",
+          qty: quantity || 1,
+          price: (productData?.price || 0) * (quantity || 1),
+          name: name,
+        },
+        location: {
+          address: address || "",
+          koordinat: selectedLocation || { lat: 0, lng: 0 },
+        },
+      };
+
+      try {
+        const response = await submitOrder(orderData);
+        alert("Order successful!");
+      } catch (error) {
+        console.log(orderData);
+        console.error("Error submitting order:", error);
+        toast.error("Error submitting order. Please try again later.", {
           position: "top-center",
-          autoClose: 1000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           draggable: true,
           progress: undefined,
-        }
-      );
-    } else {
-      const orderData = {
-        productData,
-        quantity,
-        name,
-        phoneNumber,
-        address,
-
-        selectedLocation,
-      };
-
-      navigate("/history", { state: { orderData } });
+        });
+      }
     }
   };
-
   const handleBack = () => {
     navigate("/");
   };

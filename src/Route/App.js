@@ -8,14 +8,17 @@ import Main from "../Test/View/User/Main";
 import IndexPesanan from "../Test/View/User/Pesanan/IndexPesanan";
 import OrderForm from "../Test/View/User/Home/Component/OrderForm";
 import History from "../Test/View/User/Home/Component/History";
+import Register from "../Test/View/User/Auth/Register";
+import Login from "../Test/View/User/Auth/Login";
 
 function App() {
   const [loading, setLoading] = useState(true);
+  // j3ZftkDMYaULzP4W
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 500);
   }, []);
 
   return (
@@ -25,6 +28,8 @@ function App() {
       ) : (
         <Routes>
           <Route path="/" element={<Main />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/pesanan" element={<IndexPesanan />} />
           <Route path="/order/:id/:name" element={<OrderForm />} />
           <Route path="/history" element={<History />} />

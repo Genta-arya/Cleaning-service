@@ -1,10 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import productsData from "../Data/ProductData";
+import ModalLogin from "./ModalLogin";
+import { checkLoginStatus } from "../../../../../Service/CheckAuth";
+import { checkJwt } from "../../../../../Service/Api";
+import {
+  selectIsAuthenticated,
+  setLoggedIn,
+} from "../../../../../Feature/Redux/Auth/AuthSlice";
 
 const Product = () => {
   const maxDescriptionLength = 50;
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  console.log(isAuthenticated);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await checkJwt();
+        console.log(data);
+        if (data.success) {
+          dispatch(setLoggedIn(true));
+      
+        }
+      } catch (error) {}
+    };
+
+    fetchData();
+  }, [dispatch, navigate]);
 
   const formatCurrency = (price) => {
     if (price >= 1000) {
@@ -24,9 +52,17 @@ const Product = () => {
   };
 
   const handleOrder = (product) => {
-    navigate(`/order/${product.id}/${encodeURIComponent(product.title)}`, {
-      state: { productData: product },
-    });
+    if (isAuthenticated) {
+      navigate(`/order/${product.id}/${encodeURIComponent(product.title)}`, {
+        state: { productData: product },
+      });
+    } else {
+      setShowModal(true);
+    }
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -63,6 +99,12 @@ const Product = () => {
           </div>
         </div>
       ))}
+
+      {showModal && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-70">
+          <ModalLogin closeModal={closeModal} navigate={navigate} />
+        </div>
+      )}
     </div>
   );
 };
