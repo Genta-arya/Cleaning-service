@@ -3,7 +3,7 @@ import IndexHome from "./Home/IndexHome";
 
 const Main = () => {
   return (
-    <div>
+    <div className="bg-biru">
       <IndexHome />
     </div>
   );

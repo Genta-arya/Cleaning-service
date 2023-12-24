@@ -9,12 +9,16 @@ import BottomSheet from "./BottomSheet";
 import { handleLogout, logout } from "../../../../../Service/Api";
 import { selectIsAuthenticated } from "../../../../../Feature/Redux/Auth/AuthSlice";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import logo from "../../../../../Asset/wayan logo.png"
 
 const Navbar = () => {
   const notificationCount = 0;
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const navigate = useNavigate();
+  console.log(isAuthenticated)
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -33,7 +37,9 @@ const Navbar = () => {
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
-  const handleLogout = async () => {
+
+  const handleLogoutClick = async () => {
+    
     try {
       const accessToken = localStorage.getItem("token");
       const username = localStorage.getItem("username");
@@ -58,57 +64,58 @@ const Navbar = () => {
     }
   };
 
+  const handleToLogin = () => {
+    navigate("/login");
+  };
+
   return (
-    <nav className="bg-black text-white p-4">
-      <div className="container mx-auto flex justify-between items-center px-4">
-        <div className="text-sm font-bold">Versi Beta </div>
-
-        <div className="lg:hidden md:hidden block">
-          <BottomSheet />
-        </div>
-
-        <div className="lg:block md:block hidden">
-          <div className="flex space-x-4 gap-8 relative">
-            <FontAwesomeIcon
-              icon={faClipboardList}
-              className="text-2xl cursor-pointer hover:text-gray-300"
-            />
-            {notificationCount > 0 && (
-              <span className="bg-red-500 text-white rounded-full absolute -top-3 right-12 px-2 py-1 text-xs">
-                {notificationCount}
-              </span>
-            )}
-            <FontAwesomeIcon
-              icon={faBell}
-              className="text-2xl cursor-pointer hover:text-gray-300"
-            />
-
-            <div className="relative inline-block" ref={dropdownRef}>
-              <FontAwesomeIcon
-                icon={faUser}
-                className={`text-2xl cursor-pointer hover:text-gray-300 ${
-                  isDropdownOpen ? "text-green-500" : ""
-                }`}
-                onClick={() => {
-               
-                  if (isAuthenticated) {
-                    setDropdownOpen(!isDropdownOpen);
-                  }
-                }}
-              />
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white text-black p-2 rounded-md shadow-md">
-                  <div onClick={() => console.log("Profile clicked")} className="cursor-pointer">
-                    Profile
+    <div className="flex justify-center w-full ">
+      <div className="lg:hidden md:hidden block">
+        <BottomSheet />
+      </div>
+      <div className="bg-white p-2 w-[95%] rounded-xl lg:block md:block hidden mt-8">
+        <nav className="text-white">
+          <div className=" flex justify-between items-center px-12 ">
+            <img src={logo} alt="logo-wayan" className="h-20 w-20 object-fill" />
+            <div className="lg:block md:block hidden space-x-8  relative items-center">
+              {isAuthenticated ? (
+                <>
+                  {notificationCount > 0 && (
+                    <span className="bg-red-500 text-white rounded-full absolute -top-3 right-12 px-2 py-1 text-xs">
+                      {notificationCount}
+                    </span>
+                  )}
+                  <FontAwesomeIcon
+                    icon={faBell}
+                    className="text-2xl cursor-pointer hover:text-biru text-biru"
+                  />
+                  <div className="relative inline-block" ref={dropdownRef}>
+                    <FontAwesomeIcon
+                      icon={faUser}
+                      className={`text-2xl cursor-pointer hover:text-gray-300 text-biru ${isDropdownOpen ? "text-green-500" : ""}`}
+                      onClick={toggleDropdown}
+                    />
+                    {isDropdownOpen && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white text-black  rounded-md shadow-2xl drop-shadow-2xl border-2 border-biru p-1">
+                        <div onClick={() => console.log("Profile clicked")} className="cursor-pointer">
+                          Profile
+                        </div>
+                        <div onClick={handleLogoutClick} className="cursor-pointer">Logout</div>
+                      </div>
+                    )}
                   </div>
-                  <div onClick={handleLogout} className="cursor-pointer">Logout</div>
-                </div>
+                </>
+              ) : (
+                <>
+                  <button className="text-biru font-bold" onClick={handleToLogin}>Login</button>
+                  <button className="text-white bg-biru font-bold rounded-xl p-2">Sign Up</button>
+                </>
               )}
             </div>
           </div>
-        </div>
+        </nav>
       </div>
-    </nav>
+    </div>
   );
 };
 

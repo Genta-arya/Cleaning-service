@@ -42,7 +42,7 @@ const BottomSheet = () => {
   };
 
   return (
-    <div className="fixed inset-x-0 bottom-0 bg-white p-8 shadow-md flex flex-row justify-between z-50 ">
+    <div className="fixed inset-x-0 bottom-0 bg-white p-4 shadow-md flex flex-row justify-between z-50 ">
       <div className="flex flex-col items-center text-black">
         <div className="relative">
           <FontAwesomeIcon
@@ -65,7 +65,10 @@ const BottomSheet = () => {
         <p className="text-sm mt-1">Pesanan</p>
       </div>
       {isAuthenticated ? (
-        <div className="flex flex-col items-center text-black" onClick={handleLogout}>
+        <div
+          className="flex flex-col items-center text-black"
+          onClick={handleLogout}
+        >
           <FontAwesomeIcon
             icon={faPowerOff}
             className="text-2xl cursor-pointer hover:text-gray-300"
