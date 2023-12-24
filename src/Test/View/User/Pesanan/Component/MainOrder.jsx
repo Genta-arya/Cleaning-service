@@ -2,7 +2,8 @@ import React from 'react'
 
 const MainOrder = () => {
   return (
-    <div>MainOrder</div>
+    <div className='flex justify-center bg-red-500'>MainOrder</div>
+   
   )
 }
 
