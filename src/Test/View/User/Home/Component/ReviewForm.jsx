@@ -67,7 +67,6 @@ function ReviewForm({ onSubmitReview }) {
 
   return (
     <div className="border-2 border-gray-200 p-12 mt-12 mb-8 rounded-xl">
-      <h2 className="text-xl font-semibold mb-4 mt-12 ">Comment</h2>
       <form onSubmit={handleSubmit} className="flex flex-col items-start">
         <div className="mb-4 w-full">
           <label
@@ -126,7 +125,7 @@ function ReviewForm({ onSubmitReview }) {
             type="submit"
             className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-500"
           >
-            Submit Review
+            Kirim
           </button>
         </div>
       </form>

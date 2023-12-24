@@ -12,21 +12,21 @@ const customerReviews = [
     name: "Tegar Tri",
     rating: 5,
     comment:
-      "I am very satisfied with the photography results from OmYoo Studio. They are truly professional, and the results are outstanding!",
+      "Jasa yang ditawarkan sangat bagus sekali untuk keperlu service AC rumahan!",
   },
   {
     id: 2,
     name: "Hanan",
     rating: 4,
     comment:
-      "Their photography services are excellent, but I wish I could get the results faster.",
+      "Pengerjaan service AC sangat cepat sekali dan memuaskan.",
   },
   {
     id: 3,
-    name: "Adhe Gondrong",
+    name: "Gentha Arya",
     rating: 5,
     comment:
-      "OmYoo Studio is the best choice for photography. I highly recommend them!",
+      "Berbagai jenis AC dapat diservice disini , sangat rekomendasi",
   },
 ];
 
@@ -57,9 +57,9 @@ function CustomerReviews() {
   };
 
   return (
-    <div className="container mx-auto mt-24">
-      <h2 className=" text-3xl font-bold mb-10 text-center text-white  w-72 rounded-full p-2">
-        Customer Reviews
+    <div className="container mx-auto  border-t-4 border-gray-400">
+      <h2 className=" text-3xl font-bold mb-10 text-center text-white  w-72 rounded-full p-2 mt-4">
+        Komentar
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
