@@ -313,7 +313,7 @@ const OrderForm = () => {
             mapVisible={mapVisible}
             MapClickHandler={MapClickHandler}
             mapdetail={mapdetail}
-            referenceCoordinates={referenceCoordinates}
+            referenceCoordinates={selectedLocation}
           />
 
           <button
