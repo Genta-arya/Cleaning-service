@@ -5,7 +5,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { faMailBulk, faRoad } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import { faMailchimp, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
 const customIcon = new L.divIcon({
   className: "custom-marker-icon",
@@ -37,8 +37,7 @@ const Footer = () => {
           <MapContainer
             center={center}
             zoom={20}
-            style={{ width: "100%", height: "500px" }}
-            className="border-2 border-biru rounded-lg z-10"
+            className="border-2 border-biru rounded-lg z-10 w-full h-80 lg:h-[500px]"
           >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <Marker position={center} icon={customIcon} ref={mapRef}>
@@ -51,7 +50,7 @@ const Footer = () => {
         </div>
         <aside>
           <div className="flex flex-col items-center">
-            <div className="lg:ml-32 md:ml-32 hidden">
+            <div className="lg:ml-32 md:ml-32 lg:block md:block hidden">
               <img
                 src={logo}
                 alt="logo"
@@ -60,28 +59,42 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="flex flex-col items-start gap-8 mx-auto ">
-            <p className="text-center">
-              <FontAwesomeIcon
-                icon={faRoad}
-                size="md"
-                className="mr-2 -ml-1 md:-ml-0"
-              />
-              Jl. Celagi Basur, Jimbaran, Kec. Kuta Sel., Kabupaten Badung, Bali
-              80361
-            </p>
-            <p className="text-center">
-              <FontAwesomeIcon icon={faWhatsapp} size="md" className="mr-2" />
-              <button onClick={openWhatsApp} className="hover:underline">
+          <div className="flex flex-col items-start gap-8  ">
+            <div className="text-center flex items-start">
+              <p className="">
+                <FontAwesomeIcon
+                  icon={faRoad}
+                  size="md"
+                  className="mr-2 -ml-1 md:-ml-0"
+                />
+                Jl. Celagi Basur, Jimbaran, Kec. Kuta Sel., Kabupaten Badung,
+                Bali 80361
+              </p>
+            </div>
+
+            <div className="text-center flex items-start">
+              <p className="">
+                <FontAwesomeIcon
+                  icon={faWhatsapp}
+                  size="md"
+                  className="mr-2 hover:underline"
+                  onClick={openWhatsApp}
+                />
                 +62 877-6268-9648
-              </button>
-            </p>
-            <p className="text-center">
-              <FontAwesomeIcon icon={faMailBulk} size="md" className="mr-2" />
-              <button onClick={openEmail} className="hover:underline">
-                waya@gmail.com
-              </button>
-            </p>
+              </p>
+            </div>
+
+            <div className="text-center flex items-start">
+              <p className="">
+                <FontAwesomeIcon
+                  icon={faMailBulk}
+                  size="md"
+                  className="mr-2 hover:underline"
+                  onClick={openEmail}
+                />
+                +62 877-6268-9648
+              </p>
+            </div>
           </div>
         </aside>
       </footer>
