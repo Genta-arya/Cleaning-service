@@ -80,6 +80,7 @@ function ReviewForm({ onSubmitReview }) {
             id="username"
             value={name}
             onChange={handleUsernameChange}
+            placeholder="your name"
             className="mt-1 p-2 w-full border rounded-md"
             required
           />

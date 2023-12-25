@@ -9,6 +9,7 @@ import {
   setLoggedIn,
 } from "../../../../../Feature/Redux/Auth/AuthSlice";
 import ProductModal from "./ProductModal";
+import { motion, useAnimation } from "framer-motion";
 
 const Product = () => {
   const maxDescriptionLength = 50;
@@ -70,23 +71,31 @@ const Product = () => {
     setShowModalOrder(false);
   };
 
+  const controls = useAnimation();
+
+  useEffect(() => {
+    controls.start({ opacity: 1, y: 0, scale: 1 });
+  }, [controls]);
+
   return (
     <div className="p-12">
       <div className="flex justify-center py-8 mb-8">
         <h1 className="text-white font-bold text-3xl">Katalog Kami</h1>
       </div>
-      <div className=" flex justify-center gap-8 ">
-        {productsData.map((product) => (
-          <div
+      <div className="flex justify-center gap-8 ">
+        {productsData.map((product, index) => (
+          <motion.div
             key={product.id}
-            className="border p-4 rounded-3xl bg-white shadow-md   "
-            
+            initial={{ opacity: 0, y: 20, scale: 0.8 }}
+            animate={controls}
+            transition={{ duration: 0.5 }}
+            className="border p-4 rounded-3xl bg-white shadow-md cursor-pointer transform hover:scale-105 transition-all delay-150"
+            onClick={() => handleProductClick(product)}
           >
             <img
               src={product.image}
               alt={product.title}
-              className="mb-4 w-full h-48 object-cover rounded-md cursor-pointer transform hover:scale-95 transition-all delay-150"
-              onClick={() => handleProductClick(product)}
+              className="mb-4 w-full h-48 object-cover rounded-md"
             />
 
             <h2 className="text-xl font-bold mb-2">{product.title}</h2>
@@ -108,7 +117,7 @@ const Product = () => {
                 Pesan
               </button>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 

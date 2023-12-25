@@ -10,8 +10,6 @@ import { setLoggedIn } from "../../../../Feature/Redux/Auth/AuthSlice";
 import AboutMe from "./Component/AboutMe";
 import Footer from "./Component/Footer";
 import Copyright from "./Component/Copyright";
-
-import ReviewForm from "./Component/ReviewForm";
 import CustomerReviews from "./Component/Review";
 
 const IndexHome = () => {
@@ -39,8 +37,8 @@ const IndexHome = () => {
       <AboutMe />
 
       <Product />
-      <CustomerReviews/>
- 
+      <CustomerReviews />
+
       <Footer />
       <Copyright />
     </div>

@@ -10,7 +10,7 @@ import { handleLogout, logout } from "../../../../../Service/Api";
 import { selectIsAuthenticated } from "../../../../../Feature/Redux/Auth/AuthSlice";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import logo from "../../../../../Asset/wayan logo.png"
+import logo from "../../../../../Asset/wayan logo.png";
 
 const Navbar = () => {
   const notificationCount = 0;
@@ -18,7 +18,7 @@ const Navbar = () => {
   const dropdownRef = useRef(null);
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const navigate = useNavigate();
-  console.log(isAuthenticated)
+  console.log(isAuthenticated);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -39,7 +39,6 @@ const Navbar = () => {
   };
 
   const handleLogoutClick = async () => {
-    
     try {
       const accessToken = localStorage.getItem("token");
       const username = localStorage.getItem("username");
@@ -70,13 +69,18 @@ const Navbar = () => {
 
   return (
     <div className="flex justify-center w-full ">
+      <img src={logo} alt="logo-wayan" className="h-40 w-40  object-fill lg:hidden md:hidden block mt-20" />
       <div className="lg:hidden md:hidden block">
         <BottomSheet />
       </div>
       <div className="bg-white p-2 w-[95%] rounded-xl lg:block md:block hidden mt-8">
         <nav className="text-white">
           <div className=" flex justify-between items-center px-12 ">
-            <img src={logo} alt="logo-wayan" className="h-20 w-20 object-fill" />
+            <img
+              src={logo}
+              alt="logo-wayan"
+              className="h-20 w-20 object-fill"
+            />
             <div className="lg:block md:block hidden space-x-8  relative items-center">
               {isAuthenticated ? (
                 <>
@@ -92,23 +96,37 @@ const Navbar = () => {
                   <div className="relative inline-block" ref={dropdownRef}>
                     <FontAwesomeIcon
                       icon={faUser}
-                      className={`text-2xl cursor-pointer hover:text-gray-300 text-biru ${isDropdownOpen ? "text-green-500" : ""}`}
+                      className={`text-2xl cursor-pointer hover:text-gray-300 text-biru ${
+                        isDropdownOpen ? "" : ""
+                      }`}
                       onClick={toggleDropdown}
                     />
                     {isDropdownOpen && (
-                      <div className="absolute right-0 mt-2 w-48 bg-white text-black  rounded-md shadow-2xl drop-shadow-2xl border-2 border-biru p-1">
-                        <div onClick={() => console.log("Profile clicked")} className="cursor-pointer">
-                          Profile
+                      <div className="absolute right-4  mt-2 w-48 bg-white text-black  rounded-md shadow-2xl drop-shadow-2xl border-2 border-biru p-4">
+                        <div className="cursor-pointer border-b-2 p-1">
+                          Pesanan
                         </div>
-                        <div onClick={handleLogoutClick} className="cursor-pointer">Logout</div>
+                        <div
+                          onClick={handleLogoutClick}
+                          className="cursor-pointer border-b-2 p-1"
+                        >
+                          Logout
+                        </div>
                       </div>
                     )}
                   </div>
                 </>
               ) : (
                 <>
-                  <button className="text-biru font-bold" onClick={handleToLogin}>Login</button>
-                  <button className="text-white bg-biru font-bold rounded-xl p-2">Sign Up</button>
+                  <button
+                    className="text-biru font-bold"
+                    onClick={handleToLogin}
+                  >
+                    Login
+                  </button>
+                  <button className="text-white bg-biru font-bold rounded-xl p-2">
+                    Sign Up
+                  </button>
                 </>
               )}
             </div>

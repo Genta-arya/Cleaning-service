@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
 const ProductModal = ({ product, closeModal, showModal }) => {
   const formatCurrency = (price) => {
@@ -53,11 +55,19 @@ const ProductModal = ({ product, closeModal, showModal }) => {
             <img
               src={product.image}
               alt={product.title}
-              className="mb-4 w-full h-48 object-cover rounded-md"
+              className="mb-4 w-full h-52 object-cover rounded-md"
             />
 
-            <h2 className="text-xl font-bold mb-2">{product.title}</h2>
-            <p className="text-gray-600 mb-4">{product.description}</p>
+            <h2 className="text-xl font-bold mb-2">
+              {product.title} <FontAwesomeIcon className="text-green-500" />
+            </h2>
+            <p className="text-gray-600 mb-4">
+              <FontAwesomeIcon
+                icon={faCheckCircle}
+                className="text-green-500 mr-2"
+              />
+              {product.description}
+            </p>
 
             <div className="flex items-center justify-between">
               <span className="text-green-500 font-bold">
@@ -70,5 +80,4 @@ const ProductModal = ({ product, closeModal, showModal }) => {
     </>
   );
 };
-
 export default ProductModal;
