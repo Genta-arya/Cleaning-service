@@ -60,40 +60,33 @@ const Footer = () => {
           </div>
 
           <div className="flex flex-col items-start gap-8  ">
-            <div className="text-center flex items-start">
-              <p className="">
-                <FontAwesomeIcon
-                  icon={faRoad}
-                  size="md"
-                  className="mr-2 -ml-1 md:-ml-0"
-                />
-                Jl. Celagi Basur, Jimbaran, Kec. Kuta Sel., Kabupaten Badung,
-                Bali 80361
+            <div className="text-center flex items-center ">
+              <FontAwesomeIcon icon={faRoad} size="xl" className="mr-2 " />
+
+              <p className="items-center">
+                Jl. Celagi Basur, Jimbaran, Kec. Kuta Sel.,<br></br> Kabupaten
+                Badung, Bali 80361
               </p>
             </div>
 
-            <div className="text-center flex items-start">
-              <p className="">
-                <FontAwesomeIcon
-                  icon={faWhatsapp}
-                  size="md"
-                  className="mr-2 hover:underline"
-                  onClick={openWhatsApp}
-                />
-                +62 877-6268-9648
-              </p>
+            <div className="text-center flex items-center hover:underline cursor-pointer"  onClick={openWhatsApp}>
+              <FontAwesomeIcon
+                icon={faWhatsapp}
+                size="xl"
+                className="mr-2 hover:underline"
+               
+              />
+              <p className="items-center">+62 877-6268-9648</p>
             </div>
 
-            <div className="text-center flex items-start">
-              <p className="">
-                <FontAwesomeIcon
-                  icon={faMailBulk}
-                  size="md"
-                  className="mr-2 hover:underline"
-                  onClick={openEmail}
-                />
-                +62 877-6268-9648
-              </p>
+            <div className="text-center flex items-center hover:underline cursor-pointer" onClick={openEmail}>
+              <FontAwesomeIcon
+                icon={faMailBulk}
+                size="xl"
+                className="mr-2 hover:underline"
+                
+              />
+              <p className="">wayan@gmail.com</p>
             </div>
           </div>
         </aside>
