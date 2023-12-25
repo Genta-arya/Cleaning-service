@@ -32,9 +32,7 @@ const Footer = () => {
     <div className="flex justify-center">
       <footer className="footer p-10 bg-base-200 text-base-content lg:flex md:flex">
         <div className="text-center mb-4 w-full">
-          <h2 className="text-xl font-bold text-biru">
-            Lokasi : 
-          </h2>
+          <h2 className="text-xl font-bold text-biru">Lokasi :</h2>
 
           <MapContainer
             center={center}
@@ -42,10 +40,7 @@ const Footer = () => {
             style={{ width: "100%", height: "500px" }}
             className="border-2 border-biru rounded-lg z-10"
           >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-             
-            />
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <Marker position={center} icon={customIcon} ref={mapRef}>
               <Popup>
                 <button onClick={openInMaps}>Wayan Service</button>
@@ -63,22 +58,29 @@ const Footer = () => {
                 className="lg:w-24 lg:h-24 h-16 w-16"
               />
             </div>
-           
           </div>
 
-          <div className="flex flex-col items-start gap-8 ">
+          <div className="flex flex-col items-start gap-8 mx-auto ">
             <p className="text-center">
-              <FontAwesomeIcon icon={faRoad} size="xl" className="mr-2 -ml-1 md:-ml-0" />
+              <FontAwesomeIcon
+                icon={faRoad}
+                size="md"
+                className="mr-2 -ml-1 md:-ml-0"
+              />
               Jl. Celagi Basur, Jimbaran, Kec. Kuta Sel., Kabupaten Badung, Bali
               80361
             </p>
             <p className="text-center">
-              <FontAwesomeIcon icon={faWhatsapp} size="xl" className="mr-2" />
-              <button onClick={openWhatsApp} className="hover:underline">+62 877-6268-9648</button>
+              <FontAwesomeIcon icon={faWhatsapp} size="md" className="mr-2" />
+              <button onClick={openWhatsApp} className="hover:underline">
+                +62 877-6268-9648
+              </button>
             </p>
             <p className="text-center">
-              <FontAwesomeIcon icon={faMailBulk} size="xl" className="mr-2" />
-              <button onClick={openEmail} className="hover:underline">waya@gmail.com</button>
+              <FontAwesomeIcon icon={faMailBulk} size="md" className="mr-2" />
+              <button onClick={openEmail} className="hover:underline">
+                waya@gmail.com
+              </button>
             </p>
           </div>
         </aside>
