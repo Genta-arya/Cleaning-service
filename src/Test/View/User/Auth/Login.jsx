@@ -6,6 +6,8 @@ import {
   selectIsAuthenticated,
   setLoggedIn,
 } from "../../../../Feature/Redux/Auth/AuthSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -60,10 +62,20 @@ const Login = () => {
   const HandleToRegister = () => {
     navigate("/register");
   };
+  const Handleback = () => {
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="max-w-md w-full p-6 bg-white rounded-md shadow-md">
+        <div
+          className="flex justify-start items-center gap-3 cursor-pointer"
+          onClick={Handleback}
+        >
+          <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
+          <span className="text-sm">Kembali</span>
+        </div>
         <h2 className="text-2xl font-semibold mb-4">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

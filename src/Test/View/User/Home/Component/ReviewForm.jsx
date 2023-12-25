@@ -66,23 +66,23 @@ function ReviewForm({ onSubmitReview }) {
   };
 
   return (
-    <div className="border-2 border-gray-200 p-12 mt-12 mb-8 rounded-xl">
+    <div className="border-2 border-gray-200 lg:p-12 mt-12 mb-8 rounded-xl p-4">
       <form onSubmit={handleSubmit} className="flex flex-col items-start">
         <div className="mb-4 w-full">
           <label
             htmlFor="username"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-white"
           >
-            Name:
+            Nama:
           </label>
+
           <input
             type="text"
             id="username"
-            value={name}
             onChange={handleUsernameChange}
-            placeholder="your name"
-            className="mt-1 p-2 w-full border rounded-md"
+            placeholder="Isi nama kamu"
             required
+            className="input input-info  rounded-md w-full"
           />
         </div>
         <div className="mb-4 w-full">
@@ -100,23 +100,24 @@ function ReviewForm({ onSubmitReview }) {
             edit={true}
             isHalf={false}
             activeColor="#FCD34D"
+           
           />
         </div>
         <div className="mb-4 w-full">
           <label
             htmlFor="review"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-white"
           >
-            Review:
+            Komentar:
           </label>
           <textarea
             rows="4"
             cols="50"
             id="review"
-            placeholder="Write your review here..."
+            placeholder="Tulis Komentarmu tentang wayan service disini yaa..."
             value={newReview}
             onChange={handleInputChange}
-            className="mt-1 p-2 w-full border rounded-md"
+            className="mt-1 p-2 w-full border rounded-md textarea textarea-info"
             required
           />
         </div>

@@ -4,6 +4,7 @@ import {
   faBell,
   faUser,
   faClipboardList,
+  faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import BottomSheet from "./BottomSheet";
 import { handleLogout, logout } from "../../../../../Service/Api";
@@ -69,7 +70,11 @@ const Navbar = () => {
 
   return (
     <div className="flex justify-center w-full ">
-      <img src={logo} alt="logo-wayan" className="h-40 w-40  object-fill lg:hidden md:hidden block mt-20" />
+      <img
+        src={logo}
+        alt="logo-wayan"
+        className="h-40 w-40  object-fill lg:hidden md:hidden block mt-20 bg-white rounded-xl"
+      />
       <div className="lg:hidden md:hidden block">
         <BottomSheet />
       </div>
@@ -102,15 +107,20 @@ const Navbar = () => {
                       onClick={toggleDropdown}
                     />
                     {isDropdownOpen && (
-                      <div className="absolute right-4  mt-2 w-48 bg-white text-black  rounded-md shadow-2xl drop-shadow-2xl border-2 border-biru p-4">
-                        <div className="cursor-pointer border-b-2 p-1">
+                      <div className="absolute right-4 mt-2 w-48 bg-white text-black rounded-lg shadow-2xl drop-shadow-2xl border-2 border-gelap p-4">
+                        <div className="cursor-pointer border-b-2 border-biru p-1">
+                          <FontAwesomeIcon icon={faClipboardList} className="mr-2" />
                           Pesanan
                         </div>
                         <div
                           onClick={handleLogoutClick}
-                          className="cursor-pointer border-b-2 p-1"
+                          className="cursor-pointer border-b-2 border-biru p-1"
                         >
-                          Logout
+                          <FontAwesomeIcon
+                            icon={faSignOutAlt}
+                            className="mr-2"
+                          />
+                          Keluar
                         </div>
                       </div>
                     )}

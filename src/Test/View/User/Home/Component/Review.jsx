@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
 
-import "../../../../../Style/Content.css"
+import "../../../../../Style/Content.css";
 import ReviewForm from "./ReviewForm";
 
 const customerReviews = [
@@ -18,15 +18,13 @@ const customerReviews = [
     id: 2,
     name: "Hanan",
     rating: 4,
-    comment:
-      "Pengerjaan service AC sangat cepat sekali dan memuaskan.",
+    comment: "Pengerjaan service AC sangat cepat sekali dan memuaskan.",
   },
   {
     id: 3,
     name: "Gentha Arya",
     rating: 5,
-    comment:
-      "Berbagai jenis AC dapat diservice disini , sangat rekomendasi",
+    comment: "Berbagai jenis AC dapat diservice disini , sangat rekomendasi",
   },
 ];
 
@@ -57,16 +55,16 @@ function CustomerReviews() {
   };
 
   return (
-    <div className="container mx-auto  border-t-4 border-gray-400">
-      <h2 className=" text-3xl font-bold mb-10 text-center text-white  w-72 rounded-full p-2 mt-4">
-        Komentar
+    <div className="container mx-auto  border-t-4 border-gray-400  p-4 lg:p-24 md:p-8 ">
+      <h2 className=" text-3xl font-bold mb-10 text-center text-white  w-80 lg:w-80 md:w-64 rounded-full  mt-4">
+        Ulasan Pelanggan
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
         {reviews.map((review) => (
           <div
             key={review.id}
-            className="bg-gray-300 p-4 rounded-3xl shadow-2xl drop-shadow-2xl hover:scale-90 transition-all delay-75 shine"
+            className="bg-gray-300 p-4 rounded-3xl shadow-2xl hover:scale-90 transition-all delay-75  "
           >
             <div className="flex items-center mb-4">
               <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center">

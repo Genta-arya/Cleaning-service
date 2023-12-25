@@ -37,7 +37,8 @@ const AboutMe = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY + window.innerHeight;
-      const elementPosition = document.getElementById("aboutMeSection").offsetTop;
+      const elementPosition =
+        document.getElementById("aboutMeSection").offsetTop;
 
       if (scrollPosition > elementPosition) {
         controls.start({ opacity: 1, y: 0 });
@@ -52,58 +53,82 @@ const AboutMe = () => {
   }, [controls]);
 
   return (
-    <div id="aboutMeSection" className="bg-white py-12">
+    <div id="aboutMeSection" className="bg-white py-12 p-4 ">
       <motion.div
         animate={controls}
         initial={{ opacity: 0, y: 50 }}
         transition={{ duration: 0.8 }}
       >
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-8 ">
           <h1 className="font-serif font-bold text-gelap text-3xl">
             Wayan Service
           </h1>
         </div>
         <div className="flex justify-center mb-8">
-          <h1 className="font-serif font-bold text-gelap text-base">
+          <h1 className="font-serif font-bold text-gelap text-base hidden lg:block md:block">
+            Berikut alasan Anda harus memilih kami sebagai jasa service AC Anda.
+          </h1>
+          <h1 className="font-serif font-bold text-gelap text-sm text-center lg:hidden md:hidden">
             Berikut alasan Anda harus memilih kami sebagai jasa service AC Anda.
           </h1>
         </div>
 
-        <div className="flex justify-center">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-40 p-8 py-4 mb-4">
-            {gridItems.map((item, index) => (
-              <div key={index} className="text-center">
-                <div className="flex  items-center justify-center py-4 gap-6">
-                  <img
-                    src={item.image}
-                    alt={`Icon ${index + 1}`}
-                    className="mx-auto mb-4 w-16 h-16"
-                  />
-                  <h1 className="font-serif font-bold text-gelap text-lg">
-                    {item.title}
-                  </h1>
+        <div className="md:p-2">
+          <div className="flex justify-center ">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:gap-x-40 md:gap-x-12  py-2 mb-4">
+              {gridItems.map((item, index) => (
+                <div key={index} className="text-center">
+                  <div className="flex  items-center justify-center py-4 gap-6">
+                    <img
+                      src={item.image}
+                      alt={`Icon ${index + 1}`}
+                      className="mx-auto mb-4 lg:w-16 lg:h-16 w-12 h-12"
+                    />
+                    <h1 className="font-serif font-bold text-gelap text-lg lg:text-lg ">
+                      {item.title}
+                    </h1>
+                  </div>
+                  <div className="grid grid-cols-1 text-justify lg:w-56 w-56 md:w-52 mx-auto text-biru font-medium">
+                    {item.text}
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 text-justify w-56 mx-auto text-biru font-medium">
-                  {item.text}
-                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-center mb-4 font-serif font-bold text-gelap mt-12 lg:text-start text-center">
+          Keunggulan lain dari Wayan Service antara lain :
+        </div>
+
+        <div className="lg:block hidden">
+          <div className="flex items-center justify-center lg:gap-12 py-8 ">
+            {services.map((service, index) => (
+              <div key={index} className="flex items-center mb-2 ">
+                <FontAwesomeIcon
+                  icon={faCheckCircle}
+                  className="text-green-500 mr-2"
+                />
+                <span className="text-sm font-bold text-biru">{service}</span>
               </div>
             ))}
           </div>
         </div>
-        <div className="flex justify-center mb-4 font-serif font-bold text-gelap mt-12">
-          Keunggulan lain dari Wayan Service antara lain :
-        </div>
 
-        <div className="flex items-center justify-center gap-12 py-8">
-          {services.map((service, index) => (
-            <div key={index} className="flex items-center mb-2 ">
-              <FontAwesomeIcon
-                icon={faCheckCircle}
-                className="text-green-500 mr-2"
-              />
-              <span className="text-sm font-bold text-biru">{service}</span>
+        <div className="lg:hidden block">
+          <div className="flex items-center justify-center">
+            <div className="flex-col items-center">
+              {services.map((service, index) => (
+                <div key={index} className="flex items-center mb-2">
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-500 mr-2"
+                  />
+                  <span className="text-sm font-bold text-biru">{service}</span>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </motion.div>
     </div>

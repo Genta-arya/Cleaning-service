@@ -11,10 +11,12 @@ import {
 import { logout } from "../../../../../Service/Api";
 import { useSelector } from "react-redux";
 import { selectIsAuthenticated } from "../../../../../Feature/Redux/Auth/AuthSlice";
+import { useNavigate } from "react-router-dom";
 
 const BottomSheet = () => {
   const notificationCount = 0;
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const navigate = useNavigate()
 
   const handleLogout = async () => {
     try {
@@ -41,6 +43,11 @@ const BottomSheet = () => {
     }
   };
 
+  const handleToLogin = () => {
+    navigate("/login")
+  }
+
+
   return (
     <div className="fixed inset-x-0 bottom-0 bg-white p-4 shadow-md flex flex-row justify-around z-50 ">
       <div className="flex flex-col items-center text-black">
@@ -50,7 +57,7 @@ const BottomSheet = () => {
             className="text-2xl cursor-pointer hover:text-gelap text-biru"
           />
           {notificationCount >= 0 && (
-            <span className="bg-red-500 text-white rounded-full absolute  -top-4 -right-4 px-2 py-1 text-xs">
+            <span className="bg-red-500 text-white rounded-full absolute  -top-4 -right-4 px-2 py-1 text-xs z-auto">
               {notificationCount}
             </span>
           )}
@@ -71,17 +78,17 @@ const BottomSheet = () => {
         >
           <FontAwesomeIcon
             icon={faPowerOff}
-            className="text-2xl cursor-pointer hover:text-gray-300"
+            className="text-2xl cursor-pointer text-red-600"
           />
-          <p className="text-xs mt-1">Logout</p>
+          <p className="text-xs mt-1 text-red-600">Logout</p>
         </div>
       ) : (
-        <div className="flex flex-col items-center text-black">
+        <div className="flex flex-col items-center text-black" onClick={handleToLogin}>
           <FontAwesomeIcon
             icon={faUser}
-            className="text-2xl cursor-pointer hover:text-gray-300"
+            className="text-2xl cursor-pointer text-biru"
           />
-          <p className="text-sm mt-1">Profil</p>
+          <p className="text-xs text-biru mt-1">Login</p>
         </div>
       )}
     </div>

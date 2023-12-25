@@ -30,6 +30,7 @@ const Testimoni = () => {
 
     fetchTestimonialImages();
   }, []);
+
   useEffect(() => {
     if (!loading) {
       controls.start({
@@ -39,6 +40,11 @@ const Testimoni = () => {
       });
     }
   }, [controls, loading]);
+
+  const truncateText = (text, maxLength) => {
+    return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+  };
+
   const settings = {
     dots: false,
     infinite: true,
@@ -52,13 +58,13 @@ const Testimoni = () => {
     arrows: false,
     responsive: [
       {
-        breakpoint: 768, 
+        breakpoint: 768,
         settings: {
           slidesToShow: 2,
         },
       },
       {
-        breakpoint: 1024, 
+        breakpoint: 1024,
         settings: {
           slidesToShow: 3,
         },
@@ -70,10 +76,10 @@ const Testimoni = () => {
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       animate={controls}
-      className="bg-biru p-8"
+      className="bg-biru md:p-12 lg:p-8 p-8 -mt-12"
     >
       <div className="flex justify-center mb-4">
-        <h1 className="text-white font-bold font-serif text-2xl">
+        <h1 className="text-white font-bold font-serif lg:text-2xl md:text-2xl text-lg">
           Testimoni Kami
         </h1>
       </div>
@@ -85,17 +91,27 @@ const Testimoni = () => {
       ) : (
         <Slider {...settings} className="mx-auto">
           {testimonialImages.map((image, index) => (
-            <div key={index} className="slick-slide px-8">
+            <div key={index} className="slick-slide px-1 lg:px-8 md:px-8">
               <img
                 src={image}
                 alt={`Testimonial ${index + 1}`}
-                className="testimoni-image w-full h-full rounded-3xl mb-4 py-4"
+                className="testimoni-image w-32 h-32 rounded-3xl py-4 lg:w-full lg:h-full md:w-full md:h-full"
               />
               <div className="text-white">
-                <p className="text-lg font-semibold mb-2">Client Name</p>
-                <p className="text-sm">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis
-                  at velit maximus, molestie est a, tempor magna.
+                <p className="text-sm lg:text-lg md:text-lg font-semibold mb-1">
+                  Client Name
+                </p>
+                <p className="text-sm lg:block md:block hidden">
+                  {truncateText(
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis at velit maximus, molestie est a, tempor magna.",
+                    50
+                  )}
+                </p>
+                <p className="text-xs lg:hidden md:hidden block">
+                  {truncateText(
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis at velit maximus, molestie est a, tempor magna.",
+                    20
+                  )}
                 </p>
               </div>
             </div>
