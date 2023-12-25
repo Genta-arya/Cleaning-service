@@ -40,7 +40,7 @@ const Footer = () => {
             center={center}
             zoom={20}
             style={{ width: "100%", height: "500px" }}
-            className="border-2 border-biru rounded-lg"
+            className="border-2 border-biru rounded-lg z-10"
           >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -56,7 +56,7 @@ const Footer = () => {
         </div>
         <aside>
           <div className="flex flex-col items-center">
-            <div className="lg:ml-32">
+            <div className="lg:ml-32 md:ml-32 hidden">
               <img
                 src={logo}
                 alt="logo"
@@ -66,9 +66,9 @@ const Footer = () => {
            
           </div>
 
-          <div className="flex flex-col items-start gap-4 ">
+          <div className="flex flex-col items-start gap-8 ">
             <p className="text-center">
-              <FontAwesomeIcon icon={faRoad} size="xl" className="mr-2" />
+              <FontAwesomeIcon icon={faRoad} size="xl" className="mr-2 -ml-1 md:-ml-0" />
               Jl. Celagi Basur, Jimbaran, Kec. Kuta Sel., Kabupaten Badung, Bali
               80361
             </p>
