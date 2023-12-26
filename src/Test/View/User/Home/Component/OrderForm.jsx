@@ -35,7 +35,6 @@ const OrderForm = () => {
     lng: 110.41103205296062,
   };
 
-
   const formatCurrency = (price) => {
     if (price >= 1000) {
       const truncatedPrice = Math.floor(price / 1000);
@@ -160,7 +159,7 @@ const OrderForm = () => {
           qty: parseInt(quantity) || 1,
           price: (productData?.price || 0) * (quantity || 1),
           name: name,
-          url:productData.url
+          url: productData.url,
         },
         location: {
           address: address || "",
@@ -247,7 +246,10 @@ const OrderForm = () => {
             <div className="flex items-center mb-4   border-b-2 border-t-2 border-gray-400 p-8">
               <div className=" overflow-hidden mr-4">
                 <img
-                  src={productData.url}
+                  src={
+                    productData.url ||
+                    "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
+                  }
                   alt={productData.title}
                   className="w-full h-full object-cover rounded-md"
                 />

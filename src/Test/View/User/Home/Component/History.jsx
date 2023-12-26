@@ -88,7 +88,10 @@ const History = () => {
                   <td>
                     <div className="flex justify-center">
                       <img
-                        src={order.orderDetails.url}
+                        src={
+                          order.orderDetails.url ||
+                          "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
+                        }
                         alt="image"
                         className="w-16 h-16 object-cover rounded"
                       />

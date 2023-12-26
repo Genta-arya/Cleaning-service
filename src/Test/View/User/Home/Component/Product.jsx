@@ -163,9 +163,12 @@ const Product = () => {
               className="border p-10 lg:p-4  md:p-12 rounded-xl  bg-white w-96 shadow-xl border-gelap  transform transition-all "
             >
               <img
-                src={product.url}
+                src={
+                  product.url ||
+                  "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
+                }
                 alt={product.nm_product}
-                className="mb-4 lg:w-full lg:h-48 md:w-full md:h-48  object-cover rounded-2xl hover:scale-105 transition-all transform duration-200 delay-200 ease-in cursor-pointer"
+                className="mb-4 lg:w-full lg:h-48 md:w-full md:h-48 object-cover rounded-2xl hover:scale-105 transition-all transform duration-200 delay-200 ease-in cursor-pointer"
                 onClick={() => handleProductClick(product)}
               />
 
