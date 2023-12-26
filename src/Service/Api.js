@@ -87,7 +87,7 @@ export const getProduct = async () => {
 export const getHistory = async () => {
   const username = localStorage.getItem("username")
   try {
-    const response = await axiosInstance.get(`http://localhost:5001/history/${username}`)
+    const response = await axiosInstance.get(`/history/${username}`)
    
     return response.data
   } catch (error) {
