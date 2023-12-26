@@ -7,6 +7,7 @@ import {
   faUser,
   faToggleOff,
   faPowerOff,
+  faClipboard,
 } from "@fortawesome/free-solid-svg-icons";
 import { logout } from "../../../../../Service/Api";
 import { useSelector } from "react-redux";
@@ -16,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 const BottomSheet = () => {
   const notificationCount = 0;
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -44,33 +45,67 @@ const BottomSheet = () => {
   };
 
   const handleToLogin = () => {
-    navigate("/login")
-  }
-
+    navigate("/login");
+  };
+  const handleHistory = () => {
+    navigate("/history");
+  };
 
   return (
     <div className="fixed inset-x-0 bottom-0 bg-white p-4 shadow-md flex flex-row justify-around z-50 ">
       <div className="flex flex-col items-center text-black">
-        <div className="relative">
+        {isAuthenticated ? (
+          <>
+            <div className="relative">
+              <FontAwesomeIcon
+                icon={faBell}
+                className="text-2xl cursor-pointer hover:text-gelap text-biru"
+              />
+              {notificationCount >= 0 && (
+                <span className="bg-red-500 text-white rounded-full absolute  -top-4 -right-4 px-2 py-1 text-xs z-auto">
+                  {notificationCount}
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-biru mt-1">Notifikasi</p>
+          </>
+        ) : (
+          <>
+            <div className="relative">
+              <FontAwesomeIcon
+                icon={faBell}
+                className="text-2xl   text-gray-500"
+              />
+              {notificationCount >= 0 && (
+                <span className="bg-red-500 text-white rounded-full absolute  -top-4 -right-4 px-2 py-1 text-xs z-auto">
+                  {notificationCount}
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Notifikasi</p>
+          </>
+        )}
+      </div>
+      {isAuthenticated ? (
+        <div
+          className="flex flex-col items-center text-black"
+          onClick={handleHistory}
+        >
           <FontAwesomeIcon
-            icon={faBell}
-            className="text-2xl cursor-pointer hover:text-gelap text-biru"
+            icon={faClipboard}
+            className="text-2xl cursor-pointer text-biru"
           />
-          {notificationCount >= 0 && (
-            <span className="bg-red-500 text-white rounded-full absolute  -top-4 -right-4 px-2 py-1 text-xs z-auto">
-              {notificationCount}
-            </span>
-          )}
+          <p className="text-xs mt-1 text-biru">Pesanan</p>
         </div>
-        <p className="text-xs text-biru mt-1">Notifikasi</p>
-      </div>
-      <div className="flex flex-col items-center text-black">
-        <FontAwesomeIcon
-          icon={faClipboardList}
-          className="text-2xl text-biru hover:text-gelap cursor-pointer "
-        />
-        <p className="text-xs text-biru mt-1">Pesanan</p>
-      </div>
+      ) : (
+        <div className="flex flex-col items-center text-black">
+          <FontAwesomeIcon
+            icon={faClipboard}
+            className="text-2xl  text-gray-500"
+          />
+          <p className="text-xs text-gray-500  mt-1">Pesanan</p>
+        </div>
+      )}
       {isAuthenticated ? (
         <div
           className="flex flex-col items-center text-black"
@@ -83,7 +118,10 @@ const BottomSheet = () => {
           <p className="text-xs mt-1 text-red-600">Logout</p>
         </div>
       ) : (
-        <div className="flex flex-col items-center text-black" onClick={handleToLogin}>
+        <div
+          className="flex flex-col items-center text-black"
+          onClick={handleToLogin}
+        >
           <FontAwesomeIcon
             icon={faUser}
             className="text-2xl cursor-pointer text-biru"

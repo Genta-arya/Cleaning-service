@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { getHistory } from "../../../../../Service/Api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const History = () => {
   const [historyData, setHistoryData] = useState([]);
-  const [sortingCriteria, setSortingCriteria] = useState("status"); // Default sorting criteria
-  const [filterStatus, setFilterStatus] = useState("all"); // Default filter status
+  const [sortingCriteria, setSortingCriteria] = useState("status");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const navigate = useNavigate();
 
   console.log(historyData);
 
@@ -40,6 +44,9 @@ const History = () => {
   const handleSortingChange = (criteria) => {
     setSortingCriteria(criteria);
   };
+  const handleBack = () =>{
+    navigate("/")
+  }
 
   const handleFilterChange = (status) => {
     setFilterStatus(status);
@@ -68,7 +75,9 @@ const History = () => {
 
   return (
     <div className="container mx-auto mt-8">
-      <h2 className="text-3xl font-semibold mb-4">Pesanan</h2>
+      <h2 className="text-3xl font-semibold mb-4 hidden lg:block md:block">
+        Pesanan
+      </h2>
       <div className="hidden lg:block md:block">
         <div className="overflow-x-auto">
           <table className="table">
@@ -140,8 +149,11 @@ const History = () => {
       </div>
 
       {/* mobile view */}
-      <div className="lg:hidden md:hidden block">
-        <h2 className="text-3xl font-semibold mb-4">Pesanan</h2>
+      <div className="lg:hidden md:hidden block p-2">
+        <div className="flex justify-between mx-auto ">
+          <FontAwesomeIcon icon={faArrowLeft} size="lg" onClick={handleBack} className="cursor-pointer"></FontAwesomeIcon>
+          <h2 className="font-semibold mb-4 text-xl">Pesanan</h2>
+        </div>
 
         <div className="mb-4 p-2">
           <label className="mr-2">Status:</label>

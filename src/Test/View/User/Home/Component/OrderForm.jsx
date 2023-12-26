@@ -11,6 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { submitOrder } from "../../../../../Service/Api";
 import ChatBotOrder from "./ChatBotOrder";
+import SuccessModal from "./SuccesModal";
 
 const OrderForm = () => {
   const { state } = useLocation();
@@ -25,6 +26,7 @@ const OrderForm = () => {
   const [mapKey, setMapKey] = useState(0);
   const [mapVisible, setMapVisible] = useState(false);
   const [mapdetail, setMapdetail] = useState("");
+  const [isOrderSuccess, setOrderSuccess] = useState(false);
   const username = localStorage.getItem("username");
   // const referenceCoordinates = {
   //   lat: -7.761981,
@@ -169,11 +171,11 @@ const OrderForm = () => {
 
       try {
         const response = await submitOrder(orderData);
-        alert("Order successful!");
-        handleHistory();
+
+        setOrderSuccess(true);
       } catch (error) {
-        console.log(orderData);
-        console.error("Error submitting order:", error);
+        setOrderSuccess(false);
+        console.log("Error submitting order:", error);
         toast.error("Error submitting order. Please try again later.", {
           position: "top-center",
           autoClose: 3000,
@@ -223,6 +225,10 @@ const OrderForm = () => {
   };
   const handleCloseChat = () => {
     setChatBotOpen(false);
+  };
+
+  const handleCloseModal = () => {
+    setOrderSuccess(false);
   };
   const handleHistory = () => {
     navigate("/history");
@@ -351,12 +357,18 @@ const OrderForm = () => {
       </div>
 
       <div
-        className="fixed bottom-8 right-8 bg-blue-500 text-white p-4 rounded-full cursor-pointer"
+        className="fixed bottom-32 right-8 bg-blue-500 text-white p-4 rounded-full cursor-pointer"
         onClick={toggleChatBot}
       >
-        <FontAwesomeIcon icon={faCommentAlt} size="2x" />
+        <FontAwesomeIcon icon={faCommentAlt} size="1x" />
       </div>
       {isChatBotOpen && <ChatBotOrder onClose={handleCloseChat} />}
+      {isOrderSuccess && (
+        <SuccessModal
+          showModal={isOrderSuccess}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 };
