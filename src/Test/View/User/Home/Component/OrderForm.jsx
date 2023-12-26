@@ -5,8 +5,12 @@ import { useMapEvents } from "react-leaflet";
 import { ToastContainer, toast } from "react-toastify";
 import { Icon } from "leaflet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowCircleLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowCircleLeft,
+  faCommentAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { submitOrder } from "../../../../../Service/Api";
+import ChatBotOrder from "./ChatBotOrder";
 
 const OrderForm = () => {
   const { state } = useLocation();
@@ -17,9 +21,11 @@ const OrderForm = () => {
   const [address, setAddress] = useState("");
   const navigate = useNavigate();
   const [selectedLocation, setSelectedLocation] = useState({ lat: 0, lng: 0 });
+  const [isChatBotOpen, setChatBotOpen] = useState(false);
   const [mapKey, setMapKey] = useState(0);
   const [mapVisible, setMapVisible] = useState(false);
   const [mapdetail, setMapdetail] = useState("");
+  const username = localStorage.getItem("username");
   // const referenceCoordinates = {
   //   lat: -7.761981,
   //   lng: 110.40567,
@@ -28,6 +34,7 @@ const OrderForm = () => {
     lat: -6.977425299234734,
     lng: 110.41103205296062,
   };
+
 
   const formatCurrency = (price) => {
     if (price >= 1000) {
@@ -147,12 +154,13 @@ const OrderForm = () => {
     } else {
       const orderData = {
         uid,
-        username: name,
+        username: username,
         orderDetails: {
-          nm_product: productData?.title || "",
-          qty: quantity || 1,
+          nm_product: productData?.nm_product || "",
+          qty: parseInt(quantity) || 1,
           price: (productData?.price || 0) * (quantity || 1),
           name: name,
+          url:productData.url
         },
         location: {
           address: address || "",
@@ -163,6 +171,7 @@ const OrderForm = () => {
       try {
         const response = await submitOrder(orderData);
         alert("Order successful!");
+        handleHistory();
       } catch (error) {
         console.log(orderData);
         console.error("Error submitting order:", error);
@@ -210,6 +219,16 @@ const OrderForm = () => {
     handleGetCurrentLocation();
   }, []);
 
+  const toggleChatBot = () => {
+    setChatBotOpen((prev) => !prev);
+  };
+  const handleCloseChat = () => {
+    setChatBotOpen(false);
+  };
+  const handleHistory = () => {
+    navigate("/history");
+  };
+
   return (
     <div className="flex items-center justify-center mt-8 py-8 p-4 h-full ">
       <ToastContainer />
@@ -221,22 +240,23 @@ const OrderForm = () => {
             onClick={handleBack}
           />
         </div>
-        <h2 className="text-2xl font-bold mb-6">Order Form</h2>
+        <h2 className="text-2xl font-bold mb-6 mt-4">Isi Data Pesanan</h2>
 
         {productData && (
           <div className="mb-6">
-            <div className="flex items-center mb-4">
-              <div className="w-20 h-20 overflow-hidden mr-4">
+            <div className="flex items-center mb-4   border-b-2 border-t-2 border-gray-400 p-8">
+              <div className=" overflow-hidden mr-4">
                 <img
-                  src={productData.image}
+                  src={productData.url}
                   alt={productData.title}
                   className="w-full h-full object-cover rounded-md"
                 />
               </div>
               <div>
                 <p className="text-lg font-semibold">
-                  {decodeURIComponent(productData.title)}
+                  {decodeURIComponent(productData.nm_product)}
                 </p>
+                <p className="text-lg font-semibold">{productData.desc}</p>
                 <p className="text-lg font-semibold">
                   {formatCurrency(productData.price * quantity)}
                 </p>
@@ -261,12 +281,13 @@ const OrderForm = () => {
               htmlFor="name"
               className="block text-sm font-medium text-gray-600"
             >
-              Name
+              Nama
             </label>
             <input
               type="text"
               id="name"
               value={name}
+              placeholder="ketikan namamu disini ya"
               onChange={handleNameChange}
               className="mt-1 p-2 w-full border rounded-md"
               required
@@ -277,10 +298,11 @@ const OrderForm = () => {
               htmlFor="phoneNumber"
               className="block text-sm font-medium text-gray-600"
             >
-              Phone Number
+              WhatsApp
             </label>
             <input
               type="number"
+              placeholder="+6212345678910"
               id="phoneNumber"
               value={phoneNumber}
               onChange={handlePhoneNumberChange}
@@ -293,10 +315,11 @@ const OrderForm = () => {
               htmlFor="address"
               className="block text-sm font-medium text-gray-600"
             >
-              Address
+              Alamat
             </label>
             <textarea
               id="address"
+              placeholder="Alamat Lengkap"
               value={address}
               onChange={handleAddressChange}
               className="mt-1 p-2 w-full border rounded-md"
@@ -318,12 +341,20 @@ const OrderForm = () => {
 
           <button
             type="submit"
-            className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-700 min-w-full"
+            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-green-700 min-w-full"
           >
             Submit
           </button>
         </form>
       </div>
+
+      <div
+        className="fixed bottom-8 right-8 bg-blue-500 text-white p-4 rounded-full cursor-pointer"
+        onClick={toggleChatBot}
+      >
+        <FontAwesomeIcon icon={faCommentAlt} size="2x" />
+      </div>
+      {isChatBotOpen && <ChatBotOrder onClose={handleCloseChat} />}
     </div>
   );
 };

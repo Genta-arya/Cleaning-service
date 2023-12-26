@@ -27,7 +27,7 @@ const AboutMe = () => {
 
   const services = [
     "Pelayanan Cepat",
-    "Bergaransi",
+    "Kepuasan Pelanggan",
     "Terpercaya",
     "Terjamin Mutu dan Kualitas, Profesional",
   ];
@@ -60,16 +60,16 @@ const AboutMe = () => {
         transition={{ duration: 0.8 }}
       >
         <div className="flex justify-center mb-8 ">
-          <h1 className="font-serif font-bold text-gelap text-3xl">
-            Wayan Service
+          <h1 className="font-serif font-bold text-gelap text-3xl uppercase">
+            tangkas jaya teknik
           </h1>
         </div>
         <div className="flex justify-center mb-8">
           <h1 className="font-serif font-bold text-gelap text-base hidden lg:block md:block">
-            Berikut alasan Anda harus memilih kami sebagai jasa service AC Anda.
+            Layanan Service AC Terbaik Pilihan Anda
           </h1>
           <h1 className="font-serif font-bold text-gelap text-sm text-center lg:hidden md:hidden">
-            Berikut alasan Anda harus memilih kami sebagai jasa service AC Anda.
+            Layanan Service AC Terbaik Pilihan Anda
           </h1>
         </div>
 
@@ -98,7 +98,7 @@ const AboutMe = () => {
         </div>
 
         <div className="flex justify-center mb-4 font-serif font-bold text-gelap mt-12 lg:text-start text-center">
-          Keunggulan lain dari Wayan Service antara lain :
+          Keunggulan lain dari Tangkas Jaya Teknik antara lain
         </div>
 
         <div className="lg:block hidden">

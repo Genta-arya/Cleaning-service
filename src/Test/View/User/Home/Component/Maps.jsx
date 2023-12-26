@@ -109,7 +109,7 @@ const Maps = ({
   const routePolyline = route && route.map((coord) => [coord[1], coord[0]]);
 
   return (
-    <div>
+    <div className="">
       <ToastContainer />
 
       <div className="mb-4 flex justify-center ">
@@ -118,17 +118,18 @@ const Maps = ({
           onClick={getLocation}
           className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 mr-2"
         >
-          Set your Location
+          Cek Lokasi kamu
         </button>
       </div>
 
       {mapVisible && locationPermission !== false && (
-        <div className="mb-4 border-2 border-gray-500 rounded-xl p-2">
+        <div className="mb-4 border-2 border-gray-500 rounded-xl p-2 ">
           <MapContainer
             key={mapKey}
             center={[selectedLocation.lat, selectedLocation.lng]}
             zoom={8}
             style={{ height: "300px", width: "100%" }}
+            className="-z-0"
           >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 

@@ -1,94 +1,211 @@
-import { faArrowCircleLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { getHistory } from "../../../../../Service/Api";
 
 const History = () => {
-  const { state } = useLocation();
-  const { orderData } = state || {};
-  const navigate = useNavigate();
+  const [historyData, setHistoryData] = useState([]);
+  const [sortingCriteria, setSortingCriteria] = useState("status"); // Default sorting criteria
+  const [filterStatus, setFilterStatus] = useState("all"); // Default filter status
 
-  if (!orderData) {
-    return <div>No order data available</div>;
-  }
+  console.log(historyData);
 
-  const {
-    productData,
-    quantity,
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const data = await getHistory();
+        setHistoryData(data);
+      } catch (error) {
+        console.error("Error fetching history:", error);
+      }
+    };
 
-    name,
-    phoneNumber,
-    address,
-    selectedLocation,
-  } = orderData;
+    fetchHistory();
+  }, []);
 
-  const formatCurrency = (price) => {
-    if (price >= 1000) {
-      const truncatedPrice = Math.floor(price / 1000);
-      return `Rp ${truncatedPrice}k`;
-    } else {
-      return `Rp ${price}`;
+  const handleWhatsAppChat = (phoneNumber, orderDetails) => {
+    const message =
+      `Hi, Saya sudah order. Tolong konfirmasi pesanan dengan detail berikut:\n\n` +
+      `nama: ${orderDetails.name}\n` +
+      `Produk: ${orderDetails.nm_product}\n` +
+      `Jumlah: ${orderDetails.qty}\n` +
+      `Total Harga: Rp ${orderDetails.price.toLocaleString()}\n\n` +
+      `Terima kasih!`;
+
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+      message
+    )}`;
+
+    window.open(url, "_blank");
+  };
+
+  const handleSortingChange = (criteria) => {
+    setSortingCriteria(criteria);
+  };
+
+  const handleFilterChange = (status) => {
+    setFilterStatus(status);
+  };
+
+  const sortData = (data) => {
+    if (sortingCriteria === "status") {
+      return data.sort((a, b) => {
+        if (a.orderDetails.status < b.orderDetails.status) return -1;
+        if (a.orderDetails.status > b.orderDetails.status) return 1;
+        return 0;
+      });
     }
-  };
-  const generateGoogleMapsLink = (lat, lng) => {
-    return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+    return sortingCriteria === "latest" ? data.reverse() : data;
   };
 
-  const handleBack = () => {
-    navigate(-1);
+  const filterData = (data) => {
+    if (filterStatus === "all") {
+      return data;
+    }
+    return data.filter((order) => order.orderDetails.status === filterStatus);
   };
+
+  const sortedAndFilteredData = filterData(sortData(historyData));
 
   return (
-    <div className="p-8">
-      <div>
-        <FontAwesomeIcon
-          icon={faArrowCircleLeft}
-          className="text-lg cursor-pointer"
-          onClick={handleBack}
-        />
+    <div className="container mx-auto mt-8">
+      <h2 className="text-3xl font-semibold mb-4">Pesanan</h2>
+      <div className="hidden lg:block md:block">
+        <div className="overflow-x-auto">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Service</th>
+                <th>Total Price</th>
+                <th>Tanggal</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedAndFilteredData.map((order) => (
+                <tr key={order.id}>
+                  <td>
+                    <div className="flex justify-center">
+                      <img
+                        src={order.orderDetails.url}
+                        alt="image"
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                    </div>
+                  </td>
+                  <td>
+                    <div className="text-gray-700">
+                      Quantity: {order.orderDetails.qty} x{" "}
+                      {order.orderDetails.nm_product}
+                    </div>
+                  </td>
+                  <td>Rp {order.orderDetails.price.toLocaleString()}</td>
+                  <td>
+                    {order.orderDetails.createdAt &&
+                      new Date(order.orderDetails.createdAt).toLocaleString()}
+                  </td>
+
+                  <td
+                    className={`${
+                      order.orderDetails.status === "pending"
+                        ? "text-orange-500"
+                        : order.orderDetails.status === "selesai"
+                        ? "text-green-500"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {order.orderDetails.status === "pending"
+                      ? "diproses"
+                      : order.orderDetails.status}
+                  </td>
+                  <td>
+                    <button
+                      onClick={() =>
+                        handleWhatsAppChat("6287762689648", order.orderDetails)
+                      }
+                      className="bg-green-500 text-white px-4 py-2 rounded-md"
+                    >
+                      <span className="mr-2">&#x1F4AC;</span>Chat
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="table table-xs">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Name</th>
-              <th>Service</th>
-              <th>Addres</th>
-              <th>Contact</th>
-              <th>Price</th>
-              <th>Qty</th>
-              <th>Google Maps</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th>1</th>
-              <td>{name}</td>
-              <td>{productData.title}</td>
-              <td>{address}</td>
-              <td>{phoneNumber}</td>
-              <td>{formatCurrency(productData.price * quantity)}</td>
-              <td>{quantity}</td>
+      {/* mobile view */}
+      <div className="lg:hidden md:hidden block">
+        <h2 className="text-3xl font-semibold mb-4">Pesanan</h2>
 
-              <td>
-                <a
-                  href={generateGoogleMapsLink(
-                    selectedLocation.lat,
-                    selectedLocation.lng
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-orange-500"
-                >
-                  Click to open maps
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="mb-4 p-2">
+          <label className="mr-2">Status:</label>
+          <select
+            value={filterStatus}
+            onChange={(e) => handleFilterChange(e.target.value)}
+            className="p-2 border rounded-md"
+          >
+            <option value="all">All</option>
+            <option value="pending">Pending</option>
+            <option value="selesai">Selesai</option>
+          </select>
+        </div>
+
+        {sortedAndFilteredData.map((order) => (
+          <div
+            key={order.id}
+            className={`bg-white shadow-md rounded-md p-6 mb-4`}
+          >
+            <h3 className="text-lg font-semibold mb-2">{order.createdAt}</h3>
+
+            <div className="flex justify-center">
+              <img src={order.orderDetails.url} alt="image" />
+            </div>
+
+            <div className="text-gray-700">
+              Quantity: {order.orderDetails.qty} x{" "}
+              {order.orderDetails.nm_product} - Rp{" "}
+              {order.orderDetails.price.toLocaleString()}
+            </div>
+
+            <div className="flex items-center mx-auto justify-between">
+              <p className="mt-2 text-gray-800 font-bold">
+                Total: Rp {order.orderDetails.price.toLocaleString()}
+              </p>
+              <p
+                className={`${
+                  order.orderDetails.status === "pending"
+                    ? "text-orange-500"
+                    : order.orderDetails.status === "selesai"
+                    ? "text-green-500"
+                    : "text-gray-500"
+                }`}
+              >
+                {order.orderDetails.status === "pending"
+                  ? "diproses"
+                  : order.orderDetails.status}
+              </p>
+            </div>
+
+            <div className="flex justify-center">
+              <button
+                onClick={() =>
+                  handleWhatsAppChat("6287762689648", order.orderDetails)
+                }
+                className="bg-green-500 text-white px-4 py-2 mt-4 rounded-md items-center"
+              >
+                <span className="mr-2">&#x1F4AC;</span>Chat via WhatsApp
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
+
+      {sortedAndFilteredData.length === 0 && (
+        <p className="text-center text-gray-600">No order history available.</p>
+      )}
     </div>
   );
 };

@@ -34,7 +34,7 @@ const ModalLogin = ({ closeModalOrder, navigate }) => {
           />
         </div>
         <p className="text-gray-700 text-lg mb-4 mt-12 text-center font-serif">
-          Yuk Login dulu agar bisa order pesanan.
+          Yuk Login dulu agar bisa order service dari kami.
         </p>
         <div className="flex justify-center w-full">
           <button

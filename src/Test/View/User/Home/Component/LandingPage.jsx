@@ -35,8 +35,10 @@ const LandingPage = () => {
           <h1 className="font-serif text-center text-sm max-w-screen-md mx-auto leading-relaxed lg:text-xl md:text-xl">
             Apakah Anda mengalami masalah pada AC Anda, seperti AC panas, AC
             mati, AC tidak dingin, AC berisik? Apakah Anda membutuhkan service
-            AC yang murah dan bergaransi?<span className="flex justify-center font-extrabold mt-4 -mb-2">Ayo Konsultasikan pada kami
-            segera.</span>
+            AC yang murah dan bergaransi?
+            <span className="flex justify-center font-extrabold mt-4 -mb-2">
+              Ayo Konsultasikan pada kami segera.
+            </span>
           </h1>
         </div>
 

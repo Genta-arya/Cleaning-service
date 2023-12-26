@@ -45,7 +45,7 @@ export const checkJwt = async () => {
 
     return response.data;
   } catch (error) {
-    console.error("Error checking JWT:", error);
+    console.log("Error checking JWT:", error);
 
     throw error;
   }
@@ -68,7 +68,29 @@ export const logout = async (accessToken, username) => {
 
     return response;
   } catch (error) {
-    console.error("Error during logout:", error);
+    console.log("Error during logout:", error);
     throw error;
   }
 };
+
+export const getProduct = async () => {
+  try {
+    const response = await axiosInstance.get("/product");
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+
+export const getHistory = async () => {
+  const username = localStorage.getItem("username")
+  try {
+    const response = await axiosInstance.get(`http://localhost:5001/history/${username}`)
+   
+    return response.data
+  } catch (error) {
+    
+  }
+}

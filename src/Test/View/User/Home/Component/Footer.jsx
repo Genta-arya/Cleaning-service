@@ -50,7 +50,7 @@ const Footer = () => {
         </div>
         <aside>
           <div className="flex flex-col items-center">
-            <div className="lg:ml-32 md:ml-32 lg:block md:block hidden">
+            <div className="lg:block md:block hidden">
               <img
                 src={logo}
                 alt="logo"
@@ -63,8 +63,8 @@ const Footer = () => {
             <div className="text-center flex items-center ">
               <FontAwesomeIcon icon={faRoad} size="xl" className="mr-2 " />
 
-              <p className="items-center">
-                Jl. Celagi Basur, Jimbaran, Kec. Kuta Sel.,<br></br> Kabupaten
+              <p className="items-center text-left text-sm">
+                Jl. Celagi Basur, Jimbaran, Kec. Kuta Sel. Kabupaten
                 Badung, Bali 80361
               </p>
             </div>

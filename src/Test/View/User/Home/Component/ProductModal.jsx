@@ -29,7 +29,7 @@ const ProductModal = ({ product, closeModal, showModal }) => {
       {showModal && (
         <div className="md:block hidden lg:block">
           <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center p-8 bg-black bg-opacity-80 z-50">
-            <div className="bg-white p-8 rounded-md relative">
+            <div className="bg-white p-8 rounded-md relative w-fit">
               <button
                 className="absolute top-2 left-4 text-gray-500 hover:text-gray-700 cursor-pointer"
                 onClick={closeModal}
@@ -54,20 +54,21 @@ const ProductModal = ({ product, closeModal, showModal }) => {
                 Detail Katalog :
               </div>
               <img
-                src={product.image}
+                src={product.url}
                 alt={product.title}
                 className="mb-4 w-full h-52 object-cover rounded-md"
               />
 
               <h2 className="text-xl font-bold mb-2">
-                {product.title} <FontAwesomeIcon className="text-green-500" />
+                {product.nm_product}{" "}
+                <FontAwesomeIcon className="text-green-500" />
               </h2>
               <p className="text-gray-600 mb-4">
                 <FontAwesomeIcon
                   icon={faCheckCircle}
                   className="text-green-500 mr-2"
                 />
-                {product.description}
+                {product.desc}
               </p>
 
               <div className="flex items-center justify-between">
@@ -115,20 +116,21 @@ const ProductModal = ({ product, closeModal, showModal }) => {
                 Detail Katalog :
               </div>
               <img
-                src={product.image}
-                alt={product.title}
+                src={product.url}
+                alt={product.nm_product}
                 className="mb-4 w-full h-52 object-cover rounded-md"
               />
 
               <h2 className="text-xl font-bold mb-2">
-                {product.title} <FontAwesomeIcon className="text-green-500" />
+                {product.nm_product}{" "}
+                <FontAwesomeIcon className="text-green-500" />
               </h2>
               <p className="text-gray-600 mb-4">
                 <FontAwesomeIcon
                   icon={faCheckCircle}
                   className="text-green-500 mr-2"
                 />
-                {product.description}
+                {product.desc}
               </p>
 
               <div className="flex items-center justify-between">
