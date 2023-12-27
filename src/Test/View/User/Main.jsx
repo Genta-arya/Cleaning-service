@@ -3,9 +3,9 @@ import { Helmet } from "react-helmet";
 import IndexHome from "./Home/IndexHome";
 
 const Main = () => {
-  const pageTitle = "Tangkas Teknik Jaya - HomePage";
+  const pageTitle = "Tangkas  Jaya Teknik - HomePage";
   const pageDescription =
-    "Selamat datang di Tangkas Teknik Jaya ! Kami adalah mitra terpercaya Anda dalam layanan AC di Bali. Dengan tim teknisi berpengalaman, kami siap memberikan solusi cepat dan handal untuk perbaikan, perawatan, dan instalasi AC. Kami memprioritaskan kepuasan pelanggan dengan harga yang kompetitif. Percayakan kebutuhan AC Anda kepada kami dan rasakan kenyamanan yang optimal dalam ruangan Anda. Hubungi kami sekarang untuk pelayanan yang berkualitas";
+    "Selamat datang di Tangkas   Jaya Teknik ! Kami adalah mitra terpercaya Anda dalam layanan AC di Bali. Dengan tim teknisi berpengalaman, kami siap memberikan solusi cepat dan handal untuk perbaikan, perawatan, dan instalasi AC. Kami memprioritaskan kepuasan pelanggan dengan harga yang kompetitif. Percayakan kebutuhan AC Anda kepada kami dan rasakan kenyamanan yang optimal dalam ruangan Anda. Hubungi kami sekarang untuk pelayanan yang berkualitas";
   const imageUrl =
     "https://cleaning-service-brown.vercel.app/static/media/wayan%20logo.cb0052e55f7b1f9d551e.png";
   const pageUrl = "https://cleaning-service-brown.vercel.app/";
@@ -17,8 +17,8 @@ const Main = () => {
         <meta name="description" content={pageDescription} />
         <meta
           name="keywords"
-          content="Jasa Service AC Tangkas Teknik Jaya
-, Service AC Terpercaya Tangkas Teknik Jaya, AC Service Tangkas Teknik Jaya"
+          content="Jasa Service AC Tangkas  Jaya Teknik 
+, Service AC Terpercaya Tangkas Jaya Teknik , AC Service Tangkas  Jaya Teknik"
         />
         <meta name="author" content="wayan" />
         {/* Open Graph meta tags */}
