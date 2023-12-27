@@ -76,6 +76,9 @@ const Navbar = () => {
   const handleToPesanan = () => {
     navigate("/history");
   };
+  const handleToRegister = () => {
+    navigate("/register");
+  };
 
   return (
     <div className="flex justify-center w-full ">
@@ -163,7 +166,7 @@ const Navbar = () => {
                   >
                     Login
                   </button>
-                  <button className="text-white bg-biru font-bold rounded-xl p-2">
+                  <button className="text-white bg-biru font-bold rounded-xl p-2" onClick={handleToRegister}>
                     Sign Up
                   </button>
                 </>

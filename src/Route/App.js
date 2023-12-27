@@ -10,10 +10,9 @@ import OrderForm from "../Test/View/User/Home/Component/OrderForm";
 import History from "../Test/View/User/Home/Component/History";
 import Register from "../Test/View/User/Auth/Register";
 import Login from "../Test/View/User/Auth/Login";
-
+import { Helmet } from "react-helmet";
 function App() {
   const [loading, setLoading] = useState(true);
-  // j3ZftkDMYaULzP4W
 
   useEffect(() => {
     setTimeout(() => {
