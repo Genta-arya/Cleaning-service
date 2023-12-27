@@ -101,15 +101,16 @@ const History = () => {
 
   return (
     <div className="container mx-auto mt-8 p-4">
-      <div className="hidden lg:block md:block"></div>
-      <div className="flex justify-between mx-auto ">
-        <FontAwesomeIcon
-          icon={faArrowLeft}
-          size="lg"
-          onClick={handleBack}
-          className="cursor-pointer"
-        ></FontAwesomeIcon>
-        <h2 className="text-3xl font-semibold mb-4 ">Pesanan</h2>
+      <div className="hidden lg:block md:block">
+        <div className="flex justify-between mx-auto ">
+          <FontAwesomeIcon
+            icon={faArrowLeft}
+            size="lg"
+            onClick={handleBack}
+            className="cursor-pointer"
+          ></FontAwesomeIcon>
+          <h2 className="text-3xl font-semibold mb-4 ">Pesanan</h2>
+        </div>
       </div>
 
       <div className="hidden lg:block md:block">
