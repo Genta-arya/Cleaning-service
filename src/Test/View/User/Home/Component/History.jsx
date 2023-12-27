@@ -220,7 +220,7 @@ const History = () => {
           ))
         ) : (
           <div>
-            {sortedAndFilteredData === 0 && (
+            {sortedAndFilteredData != 0 && (
               <div className="mb-4 p-2">
                 <label className="mr-2">Status:</label>
                 <select
