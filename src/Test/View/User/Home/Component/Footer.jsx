@@ -42,7 +42,7 @@ const Footer = () => {
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <Marker position={center} icon={customIcon} ref={mapRef}>
               <Popup>
-                <button onClick={openInMaps}>Wayan Service</button>
+                <button onClick={openInMaps}>Tangkas jaya teknik</button>
                 <br />
               </Popup>
             </Marker>

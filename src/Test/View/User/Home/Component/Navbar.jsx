@@ -16,6 +16,7 @@ import logo from "../../../../../Asset/wayan logo.png";
 const Navbar = () => {
   const notificationCount = 0;
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isDropdownNotifikasi, setDropdownOpenNotifikasi] = useState(false);
   const dropdownRef = useRef(null);
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const Navbar = () => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
+        setDropdownOpenNotifikasi(false)
       }
     };
 
@@ -37,6 +39,10 @@ const Navbar = () => {
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
+  };
+
+  const toggleDropdownNotif = () => {
+    setDropdownOpenNotifikasi(!isDropdownNotifikasi);
   };
 
   const handleLogoutClick = async () => {
@@ -67,6 +73,9 @@ const Navbar = () => {
   const handleToLogin = () => {
     navigate("/login");
   };
+  const handleToPesanan = () => {
+    navigate("/history");
+  };
 
   return (
     <div className="flex justify-center w-full ">
@@ -89,15 +98,29 @@ const Navbar = () => {
             <div className="lg:block md:block hidden space-x-8  relative items-center">
               {isAuthenticated ? (
                 <>
+               
                   {notificationCount > 0 && (
-                    <span className="bg-red-500 text-white rounded-full absolute -top-3 right-12 px-2 py-1 text-xs">
+                    <span className="bg-red-500 text-white rounded-full absolute -top-3 right-12 px-2 py-1 text-xs"  ref={dropdownRef}>
                       {notificationCount}
                     </span>
                   )}
                   <FontAwesomeIcon
                     icon={faBell}
-                    className="text-2xl cursor-pointer hover:text-biru text-biru"
+                    className={`text-2xl cursor-pointer hover:text-gray-300 text-biru ${
+                      isDropdownOpen ? "" : ""
+                    }`}
+                  
+                    onClick={toggleDropdownNotif}
                   />
+
+                  {isDropdownNotifikasi && (
+                    <div className="absolute right-16 mt-2 w-80 bg-white text-black rounded-lg shadow-2xl drop-shadow-2xl border-2 border-gelap p-4">
+                      <div className="flex justify-center">
+                        Tidak ada pemberitahuan
+                      </div>
+                    </div>
+                  )}
+
                   <div className="relative inline-block" ref={dropdownRef}>
                     <FontAwesomeIcon
                       icon={faUser}
@@ -108,8 +131,14 @@ const Navbar = () => {
                     />
                     {isDropdownOpen && (
                       <div className="absolute right-4 mt-2 w-48 bg-white text-black rounded-lg shadow-2xl drop-shadow-2xl border-2 border-gelap p-4">
-                        <div className="cursor-pointer border-b-2 border-biru p-1">
-                          <FontAwesomeIcon icon={faClipboardList} className="mr-2" />
+                        <div
+                          className="cursor-pointer border-b-2 border-biru p-1"
+                          onClick={handleToPesanan}
+                        >
+                          <FontAwesomeIcon
+                            icon={faClipboardList}
+                            className="mr-2"
+                          />
                           Pesanan
                         </div>
                         <div

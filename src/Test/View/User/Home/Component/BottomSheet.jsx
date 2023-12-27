@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -13,11 +13,21 @@ import { logout } from "../../../../../Service/Api";
 import { useSelector } from "react-redux";
 import { selectIsAuthenticated } from "../../../../../Feature/Redux/Auth/AuthSlice";
 import { useNavigate } from "react-router-dom";
+import ModalNotifikasi from "./ModalNotifikasi";
 
 const BottomSheet = () => {
   const notificationCount = 0;
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const [isNotificationModalOpen, setNotificationModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  const handleNotificationClick = () => {
+    setNotificationModalOpen(true);
+  };
+
+  const closeNotificationModal = () => {
+    setNotificationModalOpen(false);
+  };
 
   const handleLogout = async () => {
     try {
@@ -56,7 +66,7 @@ const BottomSheet = () => {
       <div className="flex flex-col items-center text-black">
         {isAuthenticated ? (
           <>
-            <div className="relative">
+            <div className="relative " onClick={handleNotificationClick}>
               <FontAwesomeIcon
                 icon={faBell}
                 className="text-2xl cursor-pointer hover:text-gelap text-biru"
@@ -128,6 +138,9 @@ const BottomSheet = () => {
           />
           <p className="text-xs text-biru mt-1">Login</p>
         </div>
+      )}
+       {isNotificationModalOpen && (
+        <ModalNotifikasi onClose={closeNotificationModal} />
       )}
     </div>
   );

@@ -116,7 +116,7 @@ const Maps = ({
         <button
           type="button"
           onClick={getLocation}
-          className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 mr-2"
+          className="bg-biru text-white p-1 lg:w-52 md:w-52 w-40 rounded-full hover:bg-blue-300 mr-2 font-bold"
         >
           Cek Lokasi kamu
         </button>
@@ -150,7 +150,7 @@ const Maps = ({
                 }
               }}
             >
-              {yourLocationMarkerRef && <Popup>Your Location</Popup>}
+              {yourLocationMarkerRef && <Popup>Lokasi kamu</Popup>}
             </Marker>
 
             <Marker
@@ -164,7 +164,7 @@ const Maps = ({
                 })
               }
             >
-              <Popup>Service Location</Popup>
+              <Popup>Lokasi Service</Popup>
             </Marker>
 
             {routePolyline && (
@@ -176,9 +176,8 @@ const Maps = ({
 
       {locationPermission === false && (
         <div className="mb-4">
-          <p>
-            Location services are not enabled. Please enable location services
-            to use this feature.
+          <p className="text-red-500">
+           Lokasimu tidak aktif , tolong aktifkan lokasimu untuk melanjutkan pesanan.
           </p>
         </div>
       )}

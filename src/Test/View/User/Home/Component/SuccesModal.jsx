@@ -10,7 +10,7 @@ const SuccessModal = ({ onClose }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
+    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50 p-8 lg:p-4 md:p-4">
       <div className="bg-white w-96 p-12 rounded-md shadow-lg z-50">
         <div className="flex justify-end">
           <button
@@ -23,13 +23,16 @@ const SuccessModal = ({ onClose }) => {
         <div className="flex justify-center mb-4">
           <Lottie
             animationData={animationData}
-            loop={false}
+            loop={true}
             autoplay
             className="-mb-16 "
           />
         </div>
-        <p className="text-gray-700 text-lg mb-4 mt-12 text-center font-serif">
-          Orderanmu Berhasil Terkirim.
+        <p className="text-gray-700 text-sm mb-4 mt-12 text-center font-serif ">
+          Pesananmu akan segara kami konfirmasi.
+        </p>
+        <p className="text-gray-700 text-sm text-center font-serif ">
+          Trimakasih.
         </p>
       </div>
     </div>

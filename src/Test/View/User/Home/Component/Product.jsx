@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useAsyncError, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -24,6 +24,7 @@ import {
   setProducts,
 } from "../../../../../Feature/Redux/Product/ProductSlice";
 import Category from "./Category";
+import SkeletonProduct from "./SkeletonProduct";
 
 const Product = () => {
   const maxDescriptionLength = 50;
@@ -33,7 +34,7 @@ const Product = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const [selectedProduct, setSelectedProduct] = useState(null);
-
+  const [isLoading, setIsloading] = useState(false);
   const productsData = useSelector(selectProducts);
   const productsError = useSelector(selectProductsError);
   const productsStatus = useSelector(selectProductsStatus);
@@ -66,11 +67,13 @@ const Product = () => {
         const uniqueCategories = Array.from(
           new Set(products.map((product) => product.category.nm_category))
         );
+        setIsloading(true);
 
         dispatch(setCategories(uniqueCategories));
         console.log(uniqueCategories);
       } catch (error) {
         console.error("Error fetching products:", error);
+        setIsloading(false);
         dispatch(setError(error.message));
       }
     };
@@ -146,56 +149,62 @@ const Product = () => {
           </h1>
         </div>
 
-        <div className="mb-12">
-          <Category />
-        </div>
+        {!isLoading ? (
+          <SkeletonProduct />
+        ) : (
+          <>
+            <div className="mb-12">
+              <Category />
+            </div>
 
-        <motion.div
-          initial={{ opacity: 1, y: 40 }}
-          animate={controls}
-          transition={{ duration: 2 }}
-          className="flex justify-center lg:gap-8 md:gap-8 gap-1 "
-          ref={ref}
-        >
-          {filteredProducts.map((product, index) => (
             <motion.div
-              key={product.id}
-              className="border p-10 lg:p-4  md:p-12 rounded-xl  bg-white w-96 shadow-xl border-gelap  transform transition-all "
+              initial={{ opacity: 1, y: 40 }}
+              animate={controls}
+              transition={{ duration: 2 }}
+              className="flex justify-center lg:gap-8 md:gap-8 gap-1 "
+              ref={ref}
             >
-              <img
-                src={
-                  product.url ||
-                  "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
-                }
-                alt={product.nm_product}
-                className="mb-4 lg:w-full lg:h-48 md:w-full md:h-48 object-cover rounded-2xl hover:scale-105 transition-all transform duration-200 delay-200 ease-in cursor-pointer"
-                onClick={() => handleProductClick(product)}
-              />
-
-              <h2 className="lg:text-xl md:text-xl text-sm font-bold mb-2">
-                {product.nm_product}
-              </h2>
-              <p className="text-gray-600 mb-4 lg:block md:block hidden">
-                {truncateDescription(product.desc, maxDescriptionLength)}
-              </p>
-
-              <div className="flex items-center justify-between">
-                <span className="text-green-500 font-bold text-xs lg:text-base md:text-base">
-                  Harga: {formatCurrency(product.price)}
-                </span>
-              </div>
-
-              <div className="flex justify-center mt-4">
-                <button
-                  className="bg-biru text-white px-4 py-2 rounded-md hover:bg-gelap w-full"
-                  onClick={() => handleOrder(product)}
+              {filteredProducts.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  className="border p-10 lg:p-4  md:p-12 rounded-xl  bg-white w-96 shadow-xl border-gelap  transform transition-all "
                 >
-                  Pesan
-                </button>
-              </div>
+                  <img
+                    src={
+                      product.url ||
+                      "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
+                    }
+                    alt={product.nm_product}
+                    className="mb-4 lg:w-full lg:h-48 md:w-full md:h-48 object-cover rounded-2xl hover:scale-105 transition-all transform duration-200 delay-200 ease-in cursor-pointer"
+                    onClick={() => handleProductClick(product)}
+                  />
+
+                  <h2 className="lg:text-xl md:text-xl text-sm font-bold mb-2">
+                    {product.nm_product}
+                  </h2>
+                  <p className="text-gray-600 mb-4 lg:block md:block hidden">
+                    {truncateDescription(product.desc, maxDescriptionLength)}
+                  </p>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-green-500 font-bold text-xs lg:text-base md:text-base">
+                      Harga: {formatCurrency(product.price)}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-center mt-4">
+                    <button
+                      className="bg-biru text-white px-4 py-2 rounded-md hover:bg-gelap w-full"
+                      onClick={() => handleOrder(product)}
+                    >
+                      Pesan
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
             </motion.div>
-          ))}
-        </motion.div>
+          </>
+        )}
       </div>
 
       {/* Mobile View */}

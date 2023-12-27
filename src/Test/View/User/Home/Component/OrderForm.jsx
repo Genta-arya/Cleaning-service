@@ -15,6 +15,7 @@ import SuccessModal from "./SuccesModal";
 
 const OrderForm = () => {
   const { state } = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
   const { productData } = state || {};
   const [quantity, setQuantity] = useState(1);
   const [name, setName] = useState("");
@@ -133,6 +134,7 @@ const OrderForm = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const uid = "123";
 
@@ -173,9 +175,12 @@ const OrderForm = () => {
         const response = await submitOrder(orderData);
 
         setOrderSuccess(true);
+        setIsLoading(false)
       } catch (error) {
-        setOrderSuccess(false);
         console.log("Error submitting order:", error);
+        setOrderSuccess(false);
+        setIsLoading(false);
+
         toast.error("Error submitting order. Please try again later.", {
           position: "top-center",
           autoClose: 3000,
@@ -241,15 +246,19 @@ const OrderForm = () => {
         <div>
           <FontAwesomeIcon
             icon={faArrowCircleLeft}
-            className="text-lg cursor-pointer"
+            className=" cursor-pointer "
+            size="2x"
+            color="#5F93C0"
             onClick={handleBack}
           />
         </div>
-        <h2 className="text-2xl font-bold mb-6 mt-4">Isi Data Pesanan</h2>
+        <h2 className="text-2xl lg:text-3xl border-b-4 p-1 border-gelap font-bold mb-6 mt-4 text-biru font-sans">
+          Isi Data Pesanan
+        </h2>
 
         {productData && (
           <div className="mb-6">
-            <div className="flex items-center mb-4   border-b-2 border-t-2 border-gray-400 p-8">
+            <div className="lg:flex grid grid-cols-1 items-center mb-4   border-b-4   border-gelap p-2 lg:space-x-4">
               <div className=" overflow-hidden mr-4">
                 <img
                   src={
@@ -257,27 +266,44 @@ const OrderForm = () => {
                     "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
                   }
                   alt={productData.title}
-                  className="w-full h-full object-cover rounded-md"
+                  className="w-full h-full object-cover  border-black border rounded-xl p-2 mb-4"
                 />
               </div>
               <div>
-                <p className="text-lg font-semibold">
+                <p className="text-xl font-semibold">
                   {decodeURIComponent(productData.nm_product)}
                 </p>
-                <p className="text-lg font-semibold">{productData.desc}</p>
-                <p className="text-lg font-semibold">
-                  {formatCurrency(productData.price * quantity)}
+                <p className="text-sm mt-2 text-gray-500 font-semibold">
+                  Deskripsi :
                 </p>
-                <p className="text-gray-600">
-                  Quantity:
+
+                <p className="text-sm mb-4 text-gray-500 ">
+                  {productData.desc}
+                </p>
+                <p className="text-sm text-gray-600">
+                  Jumlah:
                   <input
                     type="number"
                     min="1"
+                    max="3"
                     value={quantity}
                     onChange={handleQuantityChange}
-                    className="border border-gray-400 py-1 px-2 w-16 ml-2 mt-2"
+                    className="border text-center  mb-4 rounded-2xl p-1 w-16 ml-2 "
                   />
                 </p>
+                <div className="lg:block md:hidden hidden ">
+                  <p className="text-lg font-semibold">Total Biaya :</p>
+                  <p className="text-lg font-semibold">
+                    {formatCurrency(productData.price * quantity)}
+                  </p>
+                </div>
+
+                <div className="flex justify-end lg:hidden gap-4 ">
+                  <p className="text-lg font-semibold">Total Biaya :</p>
+                  <p className="text-lg font-semibold">
+                    {formatCurrency(productData.price * quantity)}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -287,7 +313,7 @@ const OrderForm = () => {
           <div className="mb-4">
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-bold text-blue-300  "
             >
               Nama
             </label>
@@ -297,14 +323,14 @@ const OrderForm = () => {
               value={name}
               placeholder="ketikan namamu disini ya"
               onChange={handleNameChange}
-              className="mt-1 p-2 w-full border rounded-md"
+              className="mt-1 p-2 w-full border   input-info rounded-full px-5"
               required
             />
           </div>
           <div className="mb-4">
             <label
               htmlFor="phoneNumber"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-bold text-blue-300 "
             >
               WhatsApp
             </label>
@@ -314,14 +340,14 @@ const OrderForm = () => {
               id="phoneNumber"
               value={phoneNumber}
               onChange={handlePhoneNumberChange}
-              className="mt-1 p-2 w-full border rounded-md"
+              className="mt-1 p-2 w-full border      input-info rounded-full px-5"
               required
             />
           </div>
           <div className="mb-4">
             <label
               htmlFor="address"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-bold text-blue-300"
             >
               Alamat
             </label>
@@ -330,7 +356,7 @@ const OrderForm = () => {
               placeholder="Alamat Lengkap"
               value={address}
               onChange={handleAddressChange}
-              className="mt-1 p-2 w-full border rounded-md"
+              className="mt-1 p-2 w-full border  textarea textarea-info rounded-xl px-5"
               rows="3"
               required
             />
@@ -349,9 +375,17 @@ const OrderForm = () => {
 
           <button
             type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-green-700 min-w-full"
+            className="bg-biru text-white py-2 px-4 rounded-md hover:bg-blue-400 min-w-full font-bold"
+            disabled={isLoading}
           >
-            Submit
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                <span className="ml-2">Tunggu sebentar ya...</span>
+              </div>
+            ) : (
+              "Submit"
+            )}
           </button>
         </form>
       </div>
@@ -360,14 +394,11 @@ const OrderForm = () => {
         className="fixed bottom-32 right-8 bg-blue-500 text-white p-4 rounded-full cursor-pointer"
         onClick={toggleChatBot}
       >
-        <FontAwesomeIcon icon={faCommentAlt} size="1x" />
+        <FontAwesomeIcon icon={faCommentAlt} size="sm" />
       </div>
       {isChatBotOpen && <ChatBotOrder onClose={handleCloseChat} />}
       {isOrderSuccess && (
-        <SuccessModal
-          showModal={isOrderSuccess}
-          onClose={handleCloseModal}
-        />
+        <SuccessModal showModal={isOrderSuccess} onClose={handleCloseModal} />
       )}
     </div>
   );
