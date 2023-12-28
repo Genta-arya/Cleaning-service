@@ -63,7 +63,6 @@ const IndexHome = () => {
       <Footer />
       <Copyright />
 
-    
       {showScrollToTop && (
         <button
           className="fixed bottom-24 lg:bottom-12  right-4  z-50 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700 focus:outline-none"

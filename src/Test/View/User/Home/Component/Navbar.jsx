@@ -12,11 +12,13 @@ import { selectIsAuthenticated } from "../../../../../Feature/Redux/Auth/AuthSli
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import logo from "../../../../../Asset/wayan logo.png";
+import { ClipLoader, PulseLoader } from "react-spinners";
 
 const Navbar = () => {
   const notificationCount = 0;
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isDropdownNotifikasi, setDropdownOpenNotifikasi] = useState(false);
+  const [isLoading, setIsloading] = useState(false);
   const dropdownRef = useRef(null);
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ const Navbar = () => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
-        setDropdownOpenNotifikasi(false)
+        setDropdownOpenNotifikasi(false);
       }
     };
 
@@ -46,6 +48,7 @@ const Navbar = () => {
   };
 
   const handleLogoutClick = async () => {
+    setIsloading(true);
     try {
       const accessToken = localStorage.getItem("token");
       const username = localStorage.getItem("username");
@@ -60,8 +63,8 @@ const Navbar = () => {
       if (response && response.data && response.data.success) {
         localStorage.removeItem("token");
         localStorage.removeItem("username");
-
-        window.location.href = "/";
+        setIsloading(false);
+        window.location.reload();
       } else {
         console.error("Gagal logout");
       }
@@ -101,9 +104,11 @@ const Navbar = () => {
             <div className="lg:block md:block hidden space-x-8  relative items-center">
               {isAuthenticated ? (
                 <>
-               
                   {notificationCount > 0 && (
-                    <span className="bg-red-500 text-white rounded-full absolute -top-3 right-12 px-2 py-1 text-xs"  ref={dropdownRef}>
+                    <span
+                      className="bg-red-500 text-white rounded-full absolute -top-3 right-12 px-2 py-1 text-xs"
+                      ref={dropdownRef}
+                    >
                       {notificationCount}
                     </span>
                   )}
@@ -112,7 +117,6 @@ const Navbar = () => {
                     className={`text-2xl cursor-pointer hover:text-gray-300 text-biru ${
                       isDropdownOpen ? "" : ""
                     }`}
-                  
                     onClick={toggleDropdownNotif}
                   />
 
@@ -166,7 +170,10 @@ const Navbar = () => {
                   >
                     Login
                   </button>
-                  <button className="text-white bg-biru font-bold rounded-xl p-2" onClick={handleToRegister}>
+                  <button
+                    className="text-white bg-biru font-bold rounded-xl p-2"
+                    onClick={handleToRegister}
+                  >
                     Sign Up
                   </button>
                 </>
@@ -175,6 +182,16 @@ const Navbar = () => {
           </div>
         </nav>
       </div>
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-lg">
+            <div className="flex justify-center">
+              <PulseLoader color="#5F93C0" size={25} />
+            </div>
+            <p>Tunggu sebentar</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

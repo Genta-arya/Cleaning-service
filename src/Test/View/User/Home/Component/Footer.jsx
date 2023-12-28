@@ -50,7 +50,7 @@ const Footer = () => {
         </div>
         <aside>
           <div className="flex flex-col items-center">
-            <div className="lg:block md:block hidden">
+            <div className="lg:block md:block hidden mt-12">
               <img
                 src={logo}
                 alt="logo"
@@ -64,27 +64,31 @@ const Footer = () => {
               <FontAwesomeIcon icon={faRoad} size="xl" className="mr-2 " />
 
               <p className="items-center text-left text-sm">
-                Jl. Celagi Basur, Jimbaran, Kec. Kuta Sel. Kabupaten
-                Badung, Bali 80361
+                Jl. Celagi Basur, Jimbaran, Kec. Kuta Sel. Kabupaten Badung,
+                Bali 80361
               </p>
             </div>
 
-            <div className="text-center flex items-center hover:underline cursor-pointer"  onClick={openWhatsApp}>
+            <div
+              className="text-center flex items-center hover:underline cursor-pointer"
+              onClick={openWhatsApp}
+            >
               <FontAwesomeIcon
                 icon={faWhatsapp}
                 size="xl"
                 className="mr-2 hover:underline"
-               
               />
               <p className="items-center">+62 877-6268-9648</p>
             </div>
 
-            <div className="text-center flex items-center hover:underline cursor-pointer" onClick={openEmail}>
+            <div
+              className="text-center flex items-center hover:underline cursor-pointer"
+              onClick={openEmail}
+            >
               <FontAwesomeIcon
                 icon={faMailBulk}
                 size="xl"
                 className="mr-2 hover:underline"
-                
               />
               <p className="">wayan@gmail.com</p>
             </div>

@@ -228,8 +228,8 @@ const History = () => {
                   onChange={(e) => handleFilterChange(e.target.value)}
                   className="p-2 border rounded-md"
                 >
-                  <option value="all">All</option>
-                  <option value="pending">Pending</option>
+                  <option value="all">Semua</option>
+                  <option value="pending">Diproses</option>
                   <option value="selesai">Selesai</option>
                 </select>
               </div>

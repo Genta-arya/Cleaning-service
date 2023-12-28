@@ -32,13 +32,17 @@ const Testimoni = () => {
   }, []);
 
   useEffect(() => {
-    if (!loading) {
-      controls.start({
-        opacity: 1,
-        y: 2,
-        transition: { duration: 1.5, ease: "easeIn" },
-      });
-    }
+    const animateElement = async () => {
+      if (!loading) {
+        await controls.start({
+          opacity: 1,
+         
+          transition: { duration: 1.5, ease: "backInOut" },
+        });
+      }
+    };
+
+    animateElement();
   }, [controls, loading]);
 
   const truncateText = (text, maxLength) => {
@@ -74,7 +78,7 @@ const Testimoni = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, scale:0.8}}
       animate={controls}
       className="bg-biru md:p-12 lg:p-8 p-8 -mt-12"
     >

@@ -40,8 +40,6 @@ const Product = () => {
   const productsStatus = useSelector(selectProductsStatus);
   const categories = useSelector(selectCategories);
   const selectedCategory = useSelector(selectSelectedCategory);
-  console.log(productsData);
-  // console.log(categories)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -139,9 +137,22 @@ const Product = () => {
         (product) => product.category.nm_category === selectedCategory
       )
     : productsData;
+  const startAnimation = async () => {
+    await controls.start({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 1, ease: "easeOut" },
+    });
+  };
 
   return (
-    <div className="lg:p-12 md:p-12 p-3">
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={controls}
+      transition={{ duration: 1 }}
+      onMouseEnter={startAnimation}
+      className="lg:p-12 md:p-12 p-3 lg:-mt-12 "
+    >
       <div className="hidden lg:block ">
         <div className="flex justify-center py-8 lg:mb-8 md:mb-8 ">
           <h1 className="text-white font-bold lg:text-3xl md:text-3xl text-2xl border-b-4 border-white p-1">
@@ -153,16 +164,14 @@ const Product = () => {
           <SkeletonProduct />
         ) : (
           <>
-            <div className="mb-12">
+            <div className="mb-0">
               <Category />
             </div>
 
-            <motion.div
-              initial={{ opacity: 1, y: 40 }}
-              animate={controls}
-              transition={{ duration: 2 }}
-              className="flex justify-center lg:gap-8 md:gap-8 gap-1 "
+            <div
+              className="flex justify-center lg:gap-8 md:gap-8 gap-1"
               ref={ref}
+              onMouseEnter={startAnimation}
             >
               {filteredProducts.map((product, index) => (
                 <motion.div
@@ -202,7 +211,7 @@ const Product = () => {
                   </div>
                 </motion.div>
               ))}
-            </motion.div>
+            </div>
           </>
         )}
       </div>
@@ -271,7 +280,7 @@ const Product = () => {
           showModal={showModal}
         />
       )}
-    </div>
+    </motion.div>
   );
 };
 

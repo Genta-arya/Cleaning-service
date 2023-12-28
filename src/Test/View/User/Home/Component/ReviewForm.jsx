@@ -88,7 +88,7 @@ function ReviewForm({ onSubmitReview }) {
         <div className="mb-4 w-full">
           <label
             htmlFor="rating"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-white"
           >
             Rating:
           </label>
@@ -100,7 +100,6 @@ function ReviewForm({ onSubmitReview }) {
             edit={true}
             isHalf={false}
             activeColor="#FCD34D"
-           
           />
         </div>
         <div className="mb-4 w-full">
