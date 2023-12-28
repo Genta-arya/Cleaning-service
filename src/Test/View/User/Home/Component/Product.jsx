@@ -150,7 +150,7 @@ const Product = () => {
       initial={{ opacity: 0, y: 40 }}
       animate={controls}
       transition={{ duration: 1 }}
-      onMouseEnter={startAnimation}
+      
       className="lg:p-12 md:p-12 p-3 lg:-mt-12 "
     >
       <div className="hidden lg:block ">
