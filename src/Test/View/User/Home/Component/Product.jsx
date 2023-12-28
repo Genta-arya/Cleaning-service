@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useAsyncError, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Slider from "react-slick";
@@ -126,31 +126,34 @@ const Product = () => {
     rootMargin: "-100px 0px",
   });
 
-  useEffect(() => {
-    if (inView) {
-      controls.start({ opacity: 1, y: 0 });
-    }
-  }, [controls, inView]);
-
   const filteredProducts = selectedCategory
     ? productsData.filter(
         (product) => product.category.nm_category === selectedCategory
       )
     : productsData;
-  const startAnimation = async () => {
-    await controls.start({
-      opacity: 1,
-      y: 0,
-      transition: { duration: 1, ease: "easeOut" },
-    });
-  };
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + window.innerHeight;
+      const elementPosition = document.getElementById("product").offsetTop;
+
+      if (scrollPosition > elementPosition) {
+        controls.start({ opacity: 1, y: 0, scale: 1, rotate: 0 });
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [controls]);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      id="product"
       animate={controls}
-      transition={{ duration: 1 }}
-      
+      initial={{ opacity: 0, y: 40, scale: 0.8, rotate: -15 }}
+      transition={{ duration: 1, ease: "easeOut" }}
       className="lg:p-12 md:p-12 p-3 lg:-mt-12 "
     >
       <div className="hidden lg:block ">
@@ -168,11 +171,7 @@ const Product = () => {
               <Category />
             </div>
 
-            <div
-              className="flex justify-center lg:gap-8 md:gap-8 gap-1"
-              ref={ref}
-              onMouseEnter={startAnimation}
-            >
+            <div className="flex justify-center lg:gap-8 md:gap-8 gap-1">
               {filteredProducts.map((product, index) => (
                 <motion.div
                   key={product.id}
