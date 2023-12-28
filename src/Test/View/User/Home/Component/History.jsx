@@ -10,12 +10,17 @@ import SkeletonTable from "./SkeletonTable";
 import SkeletonMobile from "./SkeletonMobile";
 import { useDispatch } from "react-redux";
 import { setLoggedIn } from "../../../../../Feature/Redux/Auth/AuthSlice";
-
+import { saveAs } from "file-saver";
+import jsPDF from "jspdf";
+import Modal from "react-modal";
+import "jspdf-autotable";
+Modal.setAppElement("#root");
 const History = () => {
   const [historyData, setHistoryData] = useState([]);
   const [sortingCriteria, setSortingCriteria] = useState("status");
   const [filterStatus, setFilterStatus] = useState("all");
   const [isLoading, setIsloading] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -97,7 +102,35 @@ const History = () => {
   };
 
   const sortedAndFilteredData = filterData(sortData(historyData));
-  console.log(sortedAndFilteredData);
+  const handleDownloadPDF = () => {
+    const username = localStorage.getItem("username");
+
+    const pdf = new jsPDF();
+    pdf.text(`History Pesanan , ${username}`, 20, 10);
+
+    const headers = ["Order ID", "Service", "Total Price", "Date", "Status"];
+
+    const data = sortedAndFilteredData.map((order) => [
+      order.id,
+      order.orderDetails.nm_product,
+      `Rp ${order.orderDetails.price.toLocaleString()}`,
+      formatDate(new Date(order.orderDetails.createdAt)),
+      order.orderDetails.status,
+    ]);
+
+    pdf.autoTable({
+      startY: 30,
+      head: [headers],
+      body: data,
+    });
+
+    pdf.save("order_history.pdf");
+  };
+
+  const formatDate = (date) => {
+    const options = { year: "numeric", month: "numeric", day: "numeric" };
+    return date.toLocaleDateString("id-ID", options);
+  };
 
   return (
     <div className="container mx-auto mt-8 p-4">
@@ -110,6 +143,12 @@ const History = () => {
             className="cursor-pointer"
           ></FontAwesomeIcon>
           <h2 className="text-3xl font-semibold mb-4 ">Pesanan</h2>
+          <button
+            className="bg-blue-500 text-white p-2 rounded-md"
+            onClick={handleDownloadPDF}
+          >
+            Download History
+          </button>
         </div>
       </div>
 
@@ -199,6 +238,7 @@ const History = () => {
               </tbody>
             )}
           </table>
+          <div className="flex justify-center mt-4"></div>
         </div>
       </div>
 
@@ -232,6 +272,12 @@ const History = () => {
                   <option value="pending">Diproses</option>
                   <option value="selesai">Selesai</option>
                 </select>
+                <button
+                  className="bg-blue-500 text-white p-2 rounded-md ml-4"
+                  onClick={handleDownloadPDF}
+                >
+                  Download History
+                </button>
               </div>
             )}
 
@@ -261,7 +307,7 @@ const History = () => {
                   <p
                     className={`${
                       order.orderDetails.status === "pending"
-                        ? "text-orange-500"
+                        ? "text-orange-500 border-orange-500 rounded-full border p-1"
                         : order.orderDetails.status === "selesai"
                         ? "text-green-500"
                         : "text-gray-500"
@@ -273,7 +319,7 @@ const History = () => {
                   </p>
                 </div>
 
-                <div className="flex justify-center mt-4 ">
+                <div className="flex flex-col justify-center mt-4 gap-2 ">
                   {order.orderDetails.status === "selesai" ? (
                     <button
                       className="bg-gray-500 text-white px-4 py-2 rounded-md w-full"
