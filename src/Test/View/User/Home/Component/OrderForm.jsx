@@ -118,9 +118,12 @@ const OrderForm = () => {
   };
 
   const handleQuantityChange = (e) => {
-    setQuantity(e.target.value);
+    const newQuantity = parseInt(e.target.value);
+  
+    if (!isNaN(newQuantity) && newQuantity >= 1 && newQuantity <= 3) {
+      setQuantity(newQuantity);
+    }
   };
-
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
