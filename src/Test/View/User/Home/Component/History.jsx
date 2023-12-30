@@ -103,6 +103,9 @@ const History = () => {
 
   const sortedAndFilteredData = filterData(sortData(historyData));
   const handleDownloadPDF = () => {
+    if (sortedAndFilteredData.length === 0) {
+      return;
+    }
     const username = localStorage.getItem("username");
 
     const pdf = new jsPDF();
@@ -143,12 +146,30 @@ const History = () => {
             className="cursor-pointer"
           ></FontAwesomeIcon>
           <h2 className="text-3xl font-semibold mb-4 ">Pesanan</h2>
-          <button
-            className="bg-blue-500 text-white p-2 rounded-md"
-            onClick={handleDownloadPDF}
-          >
-            Download History
-          </button>
+        </div>
+        <div>
+          <div className="mb-4 p-8 flex justify-center  ">
+            <div className="flex justify-end items-center">
+              <label className="mr-2">Status:</label>
+              <select
+                value={filterStatus}
+                onChange={(e) => handleFilterChange(e.target.value)}
+                className="p-1 border rounded-md"
+              >
+                <option value="all">Semua</option>
+                <option value="pending">Diproses</option>
+                <option value="selesai">Selesai</option>
+              </select>
+              {sortedAndFilteredData.length > 0 && (
+                <button
+                  className="bg-blue-500 text-white p-2 rounded-md ml-4"
+                  onClick={handleDownloadPDF}
+                >
+                  Download History
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -260,18 +281,19 @@ const History = () => {
           ))
         ) : (
           <div>
-            {sortedAndFilteredData != 0 && (
-              <div className="mb-4 p-2">
+            <div className="mb-4 p-2 ">
+              <div className="flex justify-end items-center">
                 <label className="mr-2">Status:</label>
                 <select
                   value={filterStatus}
                   onChange={(e) => handleFilterChange(e.target.value)}
-                  className="p-2 border rounded-md"
+                  className="p-1 border rounded-md"
                 >
                   <option value="all">Semua</option>
                   <option value="pending">Diproses</option>
                   <option value="selesai">Selesai</option>
                 </select>
+
                 <button
                   className="bg-blue-500 text-white p-2 rounded-md ml-4"
                   onClick={handleDownloadPDF}
@@ -279,7 +301,7 @@ const History = () => {
                   Download History
                 </button>
               </div>
-            )}
+            </div>
 
             {sortedAndFilteredData.map((order) => (
               <div
