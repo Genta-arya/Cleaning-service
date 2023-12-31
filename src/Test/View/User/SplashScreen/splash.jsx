@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { GridLoader } from 'react-spinners';
+import { GridLoader, PulseLoader } from 'react-spinners';
 
 const SplashScreen = () => {
   const [loading, setLoading] = useState(true);
@@ -15,7 +15,7 @@ const SplashScreen = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       {loading ? (
         <div className="text-center">
-          <GridLoader size={12} color="#007BFF" loading={loading} />
+          <PulseLoader size={12} color="#007BFF" loading={loading} />
         
         </div>
       ) : null}

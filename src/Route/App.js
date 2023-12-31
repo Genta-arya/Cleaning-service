@@ -37,7 +37,7 @@ function App() {
               element={
                 <>
                   <Helmet>
-                    <title>Main Page</title>
+                    <title>Tangkas Jaya Teknik </title>
                   </Helmet>
                   <Main />
                 </>
