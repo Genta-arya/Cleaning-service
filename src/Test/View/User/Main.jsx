@@ -5,10 +5,10 @@ import IndexHome from "./Home/IndexHome";
 const Main = () => {
   const pageTitle = "Tangkas  Jaya Teknik";
   const pageDescription =
-    "Selamat datang di Tangkas   Jaya Teknik ! Kami adalah mitra terpercaya Anda dalam layanan AC di Bali. Dengan tim teknisi berpengalaman, kami siap memberikan solusi cepat dan handal untuk perbaikan, perawatan, dan instalasi AC. Kami memprioritaskan kepuasan pelanggan dengan harga yang kompetitif. Percayakan kebutuhan AC Anda kepada kami dan rasakan kenyamanan yang optimal dalam ruangan Anda. Hubungi kami sekarang untuk pelayanan yang berkualitas";
+    "Tangkas Jaya Teknik, Profesional Layanan AC di Bali. Solusi Cepat & Handal, Kepuasan Pelanggan Prioritas Kami. Hubungi Sekarang!";
   const imageUrl =
-    "https://cleaning-service-brown.vercel.app/static/media/wayan%20logo.cb0052e55f7b1f9d551e.png";
-  const pageUrl = "https://cleaning-service-brown.vercel.app/";
+    "https://www.tangkasjayateknik.site/static/media/wayan%20logo.cb0052e55f7b1f9d551e.png";
+  const pageUrl = "https://www.tangkasjayateknik.site/";
 
   return (
     <div className="bg-biru">
@@ -17,8 +17,7 @@ const Main = () => {
         <meta name="description" content={pageDescription} />
         <meta
           name="keywords"
-          content="Jasa Service AC Tangkas  Jaya Teknik 
-, Service AC Terpercaya Tangkas Jaya Teknik , AC Service Tangkas  Jaya Teknik"
+          content="Jasa Service AC, Service AC Bali, Service AC Terpercaya, Instalasi AC, Perawatan AC, Perbaikan AC, Tangkas Jaya Teknik"
         />
         <meta name="author" content="wayan" />
 
@@ -27,7 +26,8 @@ const Main = () => {
         <meta property="og:image" content={imageUrl} />
         <meta property="og:url" content={pageUrl} />
         <meta property="og:type" content="website" />
-
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:creator" content="@YourTwitterHandle" />
         <meta name="twitter:title" content={pageTitle} />
