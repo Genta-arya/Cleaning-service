@@ -177,7 +177,7 @@ const Product = () => {
             )}
             {filteredProducts.length === 0 ? (
               <>
-                <div className="flex justify-center mb-4 -z-10">
+                <div className="flex justify-center mb-4 ">
                   <Lottie
                     animationData={animationData}
                     loop
@@ -202,7 +202,7 @@ const Product = () => {
                           product.url ||
                           "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
                         }
-                        alt={product.nm_product}
+                        alt="paket service ac"
                         className="mb-4 lg:w-full lg:h-48 md:w-full md:h-48 object-cover rounded-2xl hover:scale-105 transition-all transform duration-200 delay-200 ease-in cursor-pointer"
                         onClick={() => handleProductClick(product)}
                       />
