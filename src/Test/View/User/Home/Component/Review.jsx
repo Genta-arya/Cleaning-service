@@ -8,7 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ReviewForm from "./ReviewForm";
 import Lottie from "lottie-react";
-import animationData from "../../../../../Asset/Pesanan.json";
+import animationData from "../../../../../Asset/notfound.png";
 function CustomerReviews() {
   const [reviews, setReviews] = useState([]);
   const [activeDot, setActiveDot] = useState(0);
@@ -122,16 +122,12 @@ function CustomerReviews() {
       </h2>
 
       {reviews.length === 0 && (
-        <div>
-          <div className="flex justify-center">
-            <Lottie
-              animationData={animationData}
-              loop={false}
-              autoplay
-              className=" w-80 h-80"
-            />
+        <div  className="">
+          <div className="flex justify-center ">
+          <img src={animationData} alt="notounf"></img>
+         
           </div>
-          <h1 className="flex justify-center text-white font-bold">
+          <h1 className="flex justify-center text-white font-bold mt-4">
             Belum ada Ulasan
           </h1>
         </div>

@@ -44,7 +44,7 @@ const ModalLogin = ({ closeModalOrder, navigate }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50 p-4"
+      className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50  p-4"
     >
       <motion.div
         initial={{ opacity: 0, y: -40, scale: 0.8 }}
@@ -67,7 +67,7 @@ const ModalLogin = ({ closeModalOrder, navigate }) => {
             animationData={animationData}
             loop
             autoplay
-            className="-mb-16 "
+            className="-mb-16"
           />
         </div>
         <p className="text-gray-700 text-lg mb-4 mt-12 text-center font-serif">

@@ -177,7 +177,7 @@ const Product = () => {
             )}
             {filteredProducts.length === 0 ? (
               <>
-                <div className="flex justify-center mb-4">
+                <div className="flex justify-center mb-4 -z-10">
                   <Lottie
                     animationData={animationData}
                     loop
