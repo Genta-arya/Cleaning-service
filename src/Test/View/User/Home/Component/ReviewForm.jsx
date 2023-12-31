@@ -130,24 +130,7 @@ function ReviewForm({ onSubmitReview }) {
     <div className="border-2 border-gray-200 lg:p-12 mt-12 mb-8 rounded-xl p-4">
       <form onSubmit={handleSubmit} className="flex flex-col items-start">
         <div className="mb-4 w-full">
-          <label
-            htmlFor="username"
-            className="block text-sm font-medium text-white mb-1"
-          >
-            Username:
-          </label>
-
-          <input
-            type="text"
-            id="username"
-            onChange={handleUsernameChange}
-            placeholder="Isi nama kamu"
-            defaultValue={name}
-            value={name}
-            readOnly
-            required
-            className="input input-info  rounded-md w-full cursor-auto"
-          />
+         
         </div>
         <div className="mb-4 w-full cursor-pointer">
           <label
