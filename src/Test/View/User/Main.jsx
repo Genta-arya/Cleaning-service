@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import IndexHome from "./Home/IndexHome";
 
 const Main = () => {
-  const pageTitle = "Tangkas  Jaya Teknik";
+  const siteTitle = "Tangkas Jaya Teknik";
   const pageDescription =
     "Tangkas Jaya Teknik, Profesional Layanan AC di Bali. Solusi Cepat & Handal, Kepuasan Pelanggan Prioritas Kami. Hubungi Sekarang!";
   const imageUrl =
@@ -13,7 +13,7 @@ const Main = () => {
   return (
     <div className="bg-biru">
       <Helmet>
-        <title>{pageTitle}</title>
+        <title>{siteTitle}</title>
         <meta name="description" content={pageDescription} />
         <meta
           name="keywords"
@@ -21,7 +21,7 @@ const Main = () => {
         />
         <meta name="author" content="wayan" />
 
-        <meta property="og:title" content={pageTitle} />
+        <meta property="og:title" content={siteTitle} />
         <meta property="og:description" content={pageDescription} />
         <meta property="og:image" content={imageUrl} />
         <meta property="og:url" content={pageUrl} />
@@ -30,7 +30,7 @@ const Main = () => {
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:creator" content="@YourTwitterHandle" />
-        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:title" content={siteTitle} />
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={imageUrl} />
       </Helmet>
