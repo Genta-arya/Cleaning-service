@@ -49,7 +49,7 @@ const IndexMain = () => {
       <div className="lg:hidden md:hidden block">
         <div className=" flex items-center justify-center h-screen">
           <div className="flex flex-col">
-            <img src={logo} alt="logo" className="w-40 h-40 flex justify-center mx-auto mb-8" />
+            <img src={logo} alt="logo" className="w-40 h-40 flex justify-center mx-auto " />
             <h1 className="text-center">
               Maaf Versi Mobile sedang dalam pengembangan
             </h1>

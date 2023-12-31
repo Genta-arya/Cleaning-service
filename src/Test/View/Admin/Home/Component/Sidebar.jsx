@@ -140,12 +140,7 @@ const Sidebar = () => {
         </>
       )}
 
-      <div
-        className={`flex transition-all ml-${
-          isOpen ? "64 justify-between" : "20 justify-center"
-        }`}
-      >
-        {/* Render the appropriate component based on the current view */}
+      <div className={`flex transition-all ${isOpen ? "ml-60 justify-between" : "ml-auto justify-center"}`}>
         {currentView === "content" ? (
           <Content />
         ) : currentView === "productService" ? (
