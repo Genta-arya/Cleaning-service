@@ -18,6 +18,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Lottie from "lottie-react";
 import animationData from "../../../../../Asset/Verif.json";
+import { PulseLoader } from "react-spinners";
 
 function ReviewForm({ onSubmitReview }) {
   const [reviews, setReviews] = useState([]);
@@ -29,6 +30,7 @@ function ReviewForm({ onSubmitReview }) {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [activeColor, setActiveColor] = useState("#FCD34D");
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const [isLoading, setIsLoading] = useState(false);
   const [showLoginModal, setShowModalOrder] = useState(false);
   const navigate = useNavigate();
   const showAlertMessage = (message) => {
@@ -59,8 +61,10 @@ function ReviewForm({ onSubmitReview }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     if (!isAuthenticated) {
       setShowModalOrder(true);
+      setIsLoading(false);
       return;
     }
 
@@ -75,6 +79,7 @@ function ReviewForm({ onSubmitReview }) {
 
     try {
       await postComment(name, newReview, rating);
+      setIsLoading(false);
 
       setReviews([...reviews, { name, rating, comment: newReview }]);
       setNewReview("");
@@ -84,6 +89,7 @@ function ReviewForm({ onSubmitReview }) {
       setShowSuccessModal(true);
     } catch (error) {
       console.error("Error posting comment:", error);
+    
       showAlertMessage("Failed to post comment. Please try again later.");
     }
   };
@@ -129,9 +135,7 @@ function ReviewForm({ onSubmitReview }) {
   return (
     <div className="border-2 border-gray-200 lg:p-12 mt-12 mb-8 rounded-xl p-4">
       <form onSubmit={handleSubmit} className="flex flex-col items-start">
-        <div className="mb-4 w-full">
-         
-        </div>
+        <div className="mb-4 w-full"></div>
         <div className="mb-4 w-full cursor-pointer">
           <label
             htmlFor="rating"
@@ -166,7 +170,7 @@ function ReviewForm({ onSubmitReview }) {
             className="px-4 py-2 bg-white text-biru rounded-md hover:bg-gray-200"
             onClick={handleSubmit}
           >
-           <h1 className="text-base font-bold">Kirim</h1>
+            <h1 className="text-base font-bold">Kirim</h1>
           </button>
         </div>
       </form>
@@ -207,6 +211,16 @@ function ReviewForm({ onSubmitReview }) {
       )}
       {showLoginModal && (
         <ModalComment closeModalOrder={closeModalOrder} navigate={navigate} />
+      )}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-lg">
+            <div className="flex justify-center">
+              <PulseLoader color="#5F93C0" size={25} />
+            </div>
+            <p>Tunggu sebentar</p>
+          </div>
+        </div>
       )}
       <ToastContainer />
     </div>
