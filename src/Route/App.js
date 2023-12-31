@@ -15,6 +15,7 @@ import OrderForm from "../Test/View/User/Home/Component/OrderForm";
 import History from "../Test/View/User/Home/Component/History";
 import Register from "../Test/View/User/Auth/Register";
 import Login from "../Test/View/User/Auth/Login";
+import IndexMain from "../Test/View/Admin/IndexMain";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -40,6 +41,18 @@ function App() {
                     <title>Tangkas Jaya Teknik </title>
                   </Helmet>
                   <Main />
+                </>
+              }
+            />
+
+<Route
+              path="/admin/dashboard"
+              element={
+                <>
+                  <Helmet>
+                    <title>Tangkas Jaya Teknik - Admin</title>
+                  </Helmet>
+                  <IndexMain />
                 </>
               }
             />

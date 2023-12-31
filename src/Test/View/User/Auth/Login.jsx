@@ -5,12 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   selectIsAuthenticated,
   setLoggedIn,
+  setRole,
 } from "../../../../Feature/Redux/Auth/AuthSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { ClipLoader, PulseLoader } from "react-spinners";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { checkLoginStatus } from "../../../../Service/CheckAuth";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -43,7 +45,14 @@ const Login = () => {
 
       if (checkJwtResponse.success) {
         toast.success("Login berhasil");
-        navigate("/");
+        if (checkJwtResponse.role === "user") {
+          navigate("/");
+        } else if (checkJwtResponse.role === "admin") {
+          navigate("/admin/dashboard");
+        } else {
+          // Handle other roles or unexpected cases
+          console.error("Unexpected role:", checkJwtResponse.role);
+        }
       } else {
         toast.error("Login gagal: Token tidak valid");
       }

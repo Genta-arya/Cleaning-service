@@ -8,7 +8,9 @@ import ModalLogin from "./ModalLogin";
 import { checkJwt, getProduct } from "../../../../../Service/Api";
 import {
   selectIsAuthenticated,
+  selectIsRole,
   setLoggedIn,
+  setRole,
 } from "../../../../../Feature/Redux/Auth/AuthSlice";
 import ProductModal from "./ProductModal";
 import { motion, useAnimation } from "framer-motion";
@@ -42,16 +44,24 @@ const Product = () => {
   const productsStatus = useSelector(selectProductsStatus);
   const categories = useSelector(selectCategories);
   const selectedCategory = useSelector(selectSelectedCategory);
+  const isRole = useSelector(selectIsRole);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await checkJwt();
+      
         if (data.success) {
           dispatch(setLoggedIn(true));
+          dispatch(setRole(data.role));
+          
+          if (!data.success || (data.role && data.role === "admin")) {
+            navigate("/admin/dashboard");
+          }
         }
       } catch (error) {}
     };
+
 
     fetchData();
   }, [dispatch, navigate]);
@@ -71,7 +81,6 @@ const Product = () => {
         );
 
         dispatch(setCategories(uniqueCategories));
-       
       } catch (error) {
         console.error("Error fetching products:", error);
         setIsloading(false);

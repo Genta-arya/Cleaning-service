@@ -1,17 +1,14 @@
-import { setLoggedIn, setLoggedOut } from "../Feature/Redux/Auth/AuthSlice";
+import { useSelector } from "react-redux";
+import { selectIsRole, setLoggedIn, setRole } from "../Feature/Redux/Auth/AuthSlice";
 import { checkJwt } from "./Api";
 
 export const checkLoginStatus = async (dispatch) => {
   try {
     const response = await checkJwt();
-    console.log(response);
 
-    if (response.success && response.data) {
-      dispatch(
-        setLoggedIn({
-          isLoggedIn: true,
-        })
-      );
+    if (response.success && response.data && response.role) {
+      dispatch(setLoggedIn({ isLoggedIn: true }));
+      dispatch(setRole(response.role)); 
     }
 
     return response;
