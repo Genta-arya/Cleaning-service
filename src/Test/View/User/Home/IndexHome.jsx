@@ -23,7 +23,7 @@ const IndexHome = () => {
     const fetchData = async () => {
       try {
         const data = await checkJwt();
-        console.log(data);
+   
         if (data.success) {
           dispatch(setLoggedIn(true));
         }
@@ -32,7 +32,7 @@ const IndexHome = () => {
 
     fetchData();
 
-    // Event listener to show/hide scroll-to-top button
+
     const handleScroll = () => {
       if (window.scrollY > 100) {
         setShowScrollToTop(true);

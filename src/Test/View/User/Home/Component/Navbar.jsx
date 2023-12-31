@@ -22,7 +22,7 @@ const Navbar = () => {
   const dropdownRef = useRef(null);
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const navigate = useNavigate();
-  console.log(isAuthenticated);
+ 
 
   useEffect(() => {
     const handleClickOutside = (event) => {

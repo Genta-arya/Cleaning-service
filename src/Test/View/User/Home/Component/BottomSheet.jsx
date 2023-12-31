@@ -14,11 +14,13 @@ import { useSelector } from "react-redux";
 import { selectIsAuthenticated } from "../../../../../Feature/Redux/Auth/AuthSlice";
 import { useNavigate } from "react-router-dom";
 import ModalNotifikasi from "./ModalNotifikasi";
+import { PulseLoader } from "react-spinners";
 
 const BottomSheet = () => {
   const notificationCount = 0;
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const [isNotificationModalOpen, setNotificationModalOpen] = useState(false);
+  const [isLoading, setIsloading] = useState(false);
   const navigate = useNavigate();
 
   const handleNotificationClick = () => {
@@ -30,6 +32,7 @@ const BottomSheet = () => {
   };
 
   const handleLogout = async () => {
+    setIsloading(true);
     try {
       const accessToken = localStorage.getItem("token");
       const username = localStorage.getItem("username");
@@ -44,8 +47,8 @@ const BottomSheet = () => {
       if (response && response.data && response.data.success) {
         localStorage.removeItem("token");
         localStorage.removeItem("username");
-
-        window.location.href = "/";
+        setIsloading(false);
+        window.location.reload();
       } else {
         console.error("Gagal logout");
       }
@@ -139,8 +142,19 @@ const BottomSheet = () => {
           <p className="text-xs text-biru mt-1">Login</p>
         </div>
       )}
-       {isNotificationModalOpen && (
+      {isNotificationModalOpen && (
         <ModalNotifikasi onClose={closeNotificationModal} />
+      )}
+
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-lg">
+            <div className="flex justify-center">
+              <PulseLoader color="#5F93C0" size={25} />
+            </div>
+            <p>Tunggu sebentar</p>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -23,7 +23,6 @@ function CustomerReviews() {
       const latestReviews = fetchedComments.slice(-6).reverse();
 
       setReviews(latestReviews);
-      console.log(latestReviews);
     } catch (error) {
       console.error("Error fetching comments:", error);
     }
@@ -132,7 +131,9 @@ function CustomerReviews() {
               className=" w-80 h-80"
             />
           </div>
-          <h1 className="flex justify-center text-white font-bold">Belum ada Ulasan</h1>
+          <h1 className="flex justify-center text-white font-bold">
+            Belum ada Ulasan
+          </h1>
         </div>
       )}
 
