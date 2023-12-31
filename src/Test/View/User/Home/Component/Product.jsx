@@ -25,6 +25,7 @@ import {
 } from "../../../../../Feature/Redux/Product/ProductSlice";
 import Category from "./Category";
 import SkeletonProduct from "./SkeletonProduct";
+import { Helmet } from "react-helmet";
 
 const Product = () => {
   const maxDescriptionLength = 50;
@@ -55,17 +56,18 @@ const Product = () => {
   }, [dispatch, navigate]);
 
   useEffect(() => {
+    setIsloading(true);
     const fetchProducts = async () => {
       try {
         const response = await getProduct();
         const { products } = response;
+        setIsloading(false);
 
         dispatch(setProducts(products));
 
         const uniqueCategories = Array.from(
           new Set(products.map((product) => product.category.nm_category))
         );
-        setIsloading(true);
 
         dispatch(setCategories(uniqueCategories));
         console.log(uniqueCategories);
@@ -152,7 +154,7 @@ const Product = () => {
     <motion.div
       id="product"
       animate={controls}
-      initial={{ opacity: 0, y: 40, scale: 0.8, rotate: -15 }}
+      initial={{ opacity: 0, y: 40, scale: 0.8, rotate: 0 }}
       transition={{ duration: 1, ease: "easeOut" }}
       className="lg:p-12 md:p-12 p-3 lg:-mt-12 "
     >
@@ -163,7 +165,7 @@ const Product = () => {
           </h1>
         </div>
 
-        {!isLoading ? (
+        {isLoading || filteredProducts.length === 0 ? (
           <SkeletonProduct />
         ) : (
           <>
@@ -175,7 +177,7 @@ const Product = () => {
               {filteredProducts.map((product, index) => (
                 <motion.div
                   key={product.id}
-                  className="border p-10 lg:p-4  md:p-12 rounded-xl  bg-white w-96 shadow-xl border-gelap  transform transition-all "
+                  className="border p-10 lg:p-4 md:p-12 rounded-xl  bg-white w-96 shadow-xl border-gelap  transform transition-all "
                 >
                   <img
                     src={
@@ -223,48 +225,57 @@ const Product = () => {
             Layanan Kami
           </h1>
         </div>
-        <div className="flex px-4 ">
-          <Category />
-        </div>
-        <Slider
-          infinite={false}
-          arrows={false}
-          speed={500}
-          slidesToShow={1}
-          slidesToScroll={1}
-          className="p-4"
-        >
-          {filteredProducts.map((product, index) => (
-            <motion.div
-              key={product.id}
-              className="border p-10 lg:p-4  md:p-12 rounded-xl   bg-white shadow-xl border-gelap  transform transition-all "
+
+        {isLoading || filteredProducts.length === 0 ? (
+          <SkeletonProduct />
+        ) : (
+          <>
+            <div className="flex px-4 ">
+              <Category />
+            </div>
+            <Slider
+              infinite={false}
+              arrows={false}
+              speed={500}
+              slidesToShow={1}
+              slidesToScroll={1}
+              className="p-4"
             >
-              <img
-                src={product.url}
-                alt={product.nm_product}
-                className="mb-4 w-full h-48 object-cover rounded-2xl hover:scale-105 transition-all transform duration-200 delay-200 ease-in cursor-pointer"
-                onClick={() => handleProductClick(product)}
-              />
-              <h2 className="text-xl font-bold mb-2">{product.nm_product}</h2>
-              <p className="text-gray-600 mb-4">
-                {truncateDescription(product.desc, maxDescriptionLength)}
-              </p>
-              <div className="flex items-center justify-between">
-                <span className="text-green-500 font-bold text-base">
-                  Harga: {formatCurrency(product.price)}
-                </span>
-              </div>
-              <div className="flex justify-center mt-4">
-                <button
-                  className="bg-biru text-white px-4 py-2 rounded-md hover:bg-gelap w-full"
-                  onClick={() => handleOrder(product)}
+              {filteredProducts.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  className="border p-10 lg:p-4 md:p-12 rounded-xl   bg-white shadow-xl border-gelap  transform transition-all "
                 >
-                  Pesan
-                </button>
-              </div>
-            </motion.div>
-          ))}
-        </Slider>
+                  <img
+                    src={product.url}
+                    alt={product.nm_product}
+                    className="mb-4 w-full h-48 object-cover rounded-2xl hover:scale-105 transition-all transform duration-200 delay-200 ease-in cursor-pointer"
+                    onClick={() => handleProductClick(product)}
+                  />
+                  <h2 className="text-xl font-bold mb-2">
+                    {product.nm_product}
+                  </h2>
+                  <p className="text-gray-600 mb-4">
+                    {truncateDescription(product.desc, maxDescriptionLength)}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-green-500 font-bold text-base">
+                      Harga: {formatCurrency(product.price)}
+                    </span>
+                  </div>
+                  <div className="flex justify-center mt-4">
+                    <button
+                      className="bg-biru text-white px-4 py-2 rounded-md hover:bg-gelap w-full"
+                      onClick={() => handleOrder(product)}
+                    >
+                      Pesan
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </Slider>
+          </>
+        )}
       </div>
 
       {showModalOrder && (

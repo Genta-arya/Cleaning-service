@@ -6,7 +6,7 @@ const IndexPesanan = () => {
   return (
     <div>
       <Helmet>
-        <title>Tangkas Jaya Teknik - Order Service </title>
+        <title>Order Service</title>
       </Helmet>
       <MainOrder />
     </div>

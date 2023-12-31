@@ -294,12 +294,14 @@ const History = () => {
                   <option value="selesai">Selesai</option>
                 </select>
 
-                <button
-                  className="bg-blue-500 text-white p-2 rounded-md ml-4"
-                  onClick={handleDownloadPDF}
-                >
-                  Download History
-                </button>
+                {sortedAndFilteredData.length > 0 && (
+                  <button
+                    className="bg-blue-500 text-white p-1 rounded-md ml-4"
+                    onClick={handleDownloadPDF}
+                  >
+                    Download History
+                  </button>
+                )}
               </div>
             </div>
 

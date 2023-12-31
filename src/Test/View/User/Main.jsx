@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import IndexHome from "./Home/IndexHome";
 
 const Main = () => {
-  const pageTitle = "Tangkas  Jaya Teknik - HomePage";
+  const pageTitle = "Tangkas  Jaya Teknik";
   const pageDescription =
     "Selamat datang di Tangkas   Jaya Teknik ! Kami adalah mitra terpercaya Anda dalam layanan AC di Bali. Dengan tim teknisi berpengalaman, kami siap memberikan solusi cepat dan handal untuk perbaikan, perawatan, dan instalasi AC. Kami memprioritaskan kepuasan pelanggan dengan harga yang kompetitif. Percayakan kebutuhan AC Anda kepada kami dan rasakan kenyamanan yang optimal dalam ruangan Anda. Hubungi kami sekarang untuk pelayanan yang berkualitas";
   const imageUrl =

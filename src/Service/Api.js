@@ -94,3 +94,27 @@ export const getHistory = async () => {
     
   }
 }
+
+export const postComment = async (username, review, rating) => {
+  try {
+    const response = await axiosInstance.post(`/comment`, {
+      username,
+      review,
+      rating,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error posting comment:", error);
+    throw error; 
+  }
+};
+export const getAllComments = async () => {
+  try {
+    const response = await axiosInstance.get('/comment');
+    return response.data.comments;
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    throw error;
+  }
+};
