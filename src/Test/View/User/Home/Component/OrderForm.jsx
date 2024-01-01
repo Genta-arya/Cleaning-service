@@ -166,7 +166,7 @@ const OrderForm = () => {
           qty: parseInt(quantity) || 1,
           price: (productData?.price || 0) * (quantity || 1),
           name: name,
-          telp: phoneNumber.toString(),
+          telp: phoneNumber,
           url: productData.url,
         },
         location: {
@@ -185,14 +185,17 @@ const OrderForm = () => {
         setOrderSuccess(false);
         setIsLoading(false);
 
-        toast.error("Error submitting order. Please try again later.", {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          draggable: true,
-          progress: undefined,
-        });
+        toast.error(
+          "Sepertinya Server kami sedang dalam masalah , harap coba lagi ya ",
+          {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+            progress: undefined,
+          }
+        );
       }
     }
   };
