@@ -10,7 +10,7 @@ import {
 import Content from "./Content";
 import image from "../../../../../Asset/wayan logo.png";
 import ManageProduct from "./Product/ManageProduct";
-import Test from "./Test";
+import Test from "./Pesanan/ManagePesanan";
 import { logout } from "../../../../../Service/Api";
 import { PulseLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
@@ -107,7 +107,7 @@ const Sidebar = () => {
             </div>
 
             <div tabIndex={0} className="collapse collapse-arrow text-white">
-              <div className="collapse-title text-sm font-medium">Manage</div>
+              <div className="collapse-title text-sm font-medium">Management Data</div>
               <div className="collapse-content text-sm">
                 <p
                   className={`border p-2 rounded-full items-center text-center cursor-pointer hover:bg-slate-500 ${
@@ -115,7 +115,7 @@ const Sidebar = () => {
                   }`}
                   onClick={() => handleMenuClick("productService")}
                 >
-                  Product Service
+                  Data Layanan
                 </p>
               </div>
 
@@ -126,7 +126,7 @@ const Sidebar = () => {
                   }`}
                   onClick={() => handleMenuClick("status")}
                 >
-                  Status Pesanan
+                  Data Pesanan
                 </p>
               </div>
             </div>

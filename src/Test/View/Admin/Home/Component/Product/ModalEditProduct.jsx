@@ -8,6 +8,7 @@ import { PulseLoader } from "react-spinners";
 const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
   const MAX_PRODUCT_NAME_LENGTH = 30;
   const MAX_DESCRIPTION_LENGTH = 50;
+  console.log(productData.id)
 
   const [categories, setCategories] = useState([]);
   const [editedProductData, setEditedProductData] = useState({
@@ -15,7 +16,7 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
     desc: productData.desc,
     price: productData.price,
     categoryId: productData.category.id.toString(),
-    thumbnail: null, // Tambahkan properti thumbnail jika diperlukan
+    thumbnail: null,
   });
   const [loading, setLoading] = useState(false);
   const [thumbnailPreview, setThumbnailPreview] = useState(
@@ -66,17 +67,13 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
         if (response.status === 200) {
           setLoading(false);
           toast.success("Product updated successfully!");
-
-          setTimeout(() => {
-            window.location.reload();
-          }, 100);
+          window.location.reload();
         }
       }
     } catch (error) {
       setLoading(false);
-      toast.error(
-        "Periksa Kembali Data yang diisi ya, format dan gambar tidak boleh kosong"
-      );
+      toast.error("Periksa Kembali Data yang diisi ya");
+      console.log(error);
     }
   };
 
@@ -126,9 +123,7 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
       const acceptedFileTypes = ["image/png", "image/jpeg", "image/jpg"];
 
       if (!acceptedFileTypes.includes(selectedFile.type)) {
-        toast.error(
-          "Invalid file type. Please select a PNG, JPEG, or JPG file."
-        );
+        toast.error("Format harus png/jpeg/jpg ya");
         return;
       }
 
@@ -265,7 +260,7 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
           <button
             className={`relative bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue`}
             onClick={handleSave}
-            disabled={loading} // Disable the button when loading is true
+            disabled={loading}
           >
             {loading ? <PulseLoader size={8} color="#fff" /> : "Save Changes"}
           </button>

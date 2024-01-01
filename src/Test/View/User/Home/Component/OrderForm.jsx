@@ -119,7 +119,7 @@ const OrderForm = () => {
 
   const handleQuantityChange = (e) => {
     const newQuantity = parseInt(e.target.value);
-  
+
     if (!isNaN(newQuantity) && newQuantity >= 1 && newQuantity <= 3) {
       setQuantity(newQuantity);
     }
@@ -166,6 +166,7 @@ const OrderForm = () => {
           qty: parseInt(quantity) || 1,
           price: (productData?.price || 0) * (quantity || 1),
           name: name,
+          telp: phoneNumber.toString(),
           url: productData.url,
         },
         location: {
@@ -178,7 +179,7 @@ const OrderForm = () => {
         const response = await submitOrder(orderData);
 
         setOrderSuccess(true);
-        setIsLoading(false)
+        setIsLoading(false);
       } catch (error) {
         console.log("Error submitting order:", error);
         setOrderSuccess(false);

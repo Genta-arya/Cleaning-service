@@ -8,10 +8,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { deleteProduct, getProduct } from "../../../../../../Service/Api";
 import SkeletonRow from "./SkeletonRow";
-import ModalCreateCategory from "./ModalCreateCategory";
+
 import ModalCreateProduct from "./ModalCreateProduct";
 import ModalEditProduct from "./ModalEditProduct";
 import { PulseLoader } from "react-spinners";
+import MenuCategory from "./MenuCategory";
 
 const ManageProduct = () => {
   const [products, setProducts] = useState([]);
@@ -72,7 +73,7 @@ const ManageProduct = () => {
   const handleDeleteConfirm = async () => {
     if (selectedProductDelete && selectedProductDelete.id) {
       try {
-        setLoadingDelete(true); // Start loading spinner for delete operation
+        setLoadingDelete(true);
 
         await deleteProduct(selectedProductDelete.id);
 
@@ -84,7 +85,7 @@ const ManageProduct = () => {
       } catch (error) {
         console.error("Error deleting product:", error);
       } finally {
-        setLoadingDelete(false); // Stop loading spinner for delete operation
+        setLoadingDelete(false);
         handleCloseDeleteModal();
       }
     } else {
@@ -106,7 +107,7 @@ const ManageProduct = () => {
   const handleEditSave = (editedProductData) => {
     console.log("Edited Product Data:", editedProductData);
   };
-
+ 
   return (
     <div className="px-12 p-8">
       <div className="flex justify-center gap-4">
@@ -134,8 +135,7 @@ const ManageProduct = () => {
           className="bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-yellow-700 focus:outline-none focus:shadow-outline-green"
           onClick={handleOpenModal}
         >
-          <FontAwesomeIcon icon={faPlus} className="mr-2" />
-          Kategori
+          Manage Kategori
         </button>
       </div>
 
@@ -174,7 +174,6 @@ const ManageProduct = () => {
                 </td>
                 <td className="border border-gray-300 p-2">{product.desc}</td>
                 <td className="border border-gray-300 p-2">
-                  {/* Format price to IDR */}
                   {new Intl.NumberFormat("id-ID", {
                     style: "currency",
                     currency: "IDR",
@@ -202,7 +201,7 @@ const ManageProduct = () => {
           </tbody>
         </table>
       )}
-      {isModalOpen && <ModalCreateCategory onClose={handleCloseModal} />}
+      {isModalOpen && <MenuCategory onClose={handleCloseModal} />}
       {isProductModalOpen && (
         <ModalCreateProduct onClose={handleCloseProductModal} />
       )}
@@ -224,8 +223,8 @@ const ManageProduct = () => {
             <div className="flex justify-end">
               {loadingDelete ? (
                 <div className="flex items-center justify-center">
-                <PulseLoader color="#3498db" size={8} margin={2} />
-              </div>
+                  <PulseLoader color="#3498db" size={8} margin={2} />
+                </div>
               ) : (
                 <>
                   <button

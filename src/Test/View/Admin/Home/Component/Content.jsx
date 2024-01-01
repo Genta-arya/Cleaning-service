@@ -1,6 +1,6 @@
 import React from 'react'
 import ManageProduct from './Product/ManageProduct'
-import Test from './Test'
+import Test from './Pesanan/ManagePesanan'
 
 const Content = () => {
   return (

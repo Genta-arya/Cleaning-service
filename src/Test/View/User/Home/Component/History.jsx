@@ -5,12 +5,12 @@ import { faArrowLeft, faL } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import animationData from "../../../../../Asset/Pesanan.json";
 import Lottie from "lottie-react";
-import { RingLoader } from "react-spinners";
+
 import SkeletonTable from "./SkeletonTable";
 import SkeletonMobile from "./SkeletonMobile";
 import { useDispatch } from "react-redux";
 import { setLoggedIn } from "../../../../../Feature/Redux/Auth/AuthSlice";
-import { saveAs } from "file-saver";
+
 import jsPDF from "jspdf";
 import Modal from "react-modal";
 import "jspdf-autotable";
@@ -175,15 +175,16 @@ const History = () => {
 
       <div className="hidden lg:block md:block">
         <div className="overflow-x-auto">
-          <table className="table">
+          <table className="table text-center">
             <thead>
-              <tr>
-                <th>Image</th>
-                <th>Service</th>
-                <th>Total Price</th>
-                <th>Tanggal</th>
-                <th>Status</th>
-                <th>Aksi</th>
+              <tr className="border">
+                <th className="border p-2">Id pesanan</th>
+                <th className="border p-2">Image</th>
+                <th className="border p-2">Service</th>
+                <th className="border p-2">Total Price</th>
+                <th className="border p-2">Tanggal</th>
+                <th className="border p-2">Status</th>
+                <th className="border p-2">Action</th>
               </tr>
             </thead>
 
@@ -194,8 +195,9 @@ const History = () => {
             ) : (
               <tbody>
                 {sortedAndFilteredData.map((order) => (
-                  <tr key={order.id}>
-                    <td>
+                  <tr key={order.id} className="hover:bg-gray-100">
+                    <td className="border p-2">{order.orderDetails.orderId}</td>
+                    <td className="border p-2">
                       <div className="flex justify-center">
                         <img
                           src={
@@ -207,35 +209,24 @@ const History = () => {
                         />
                       </div>
                     </td>
-                    <td>
+
+                    <td className="border p-2">
                       <div className="text-gray-700">
                         Quantity: {order.orderDetails.qty} x{" "}
                         {order.orderDetails.nm_product}
                       </div>
                     </td>
-                    <td>Rp {order.orderDetails.price.toLocaleString()}</td>
+
+                    <td className="border p-2">Rp {order.orderDetails.price.toLocaleString()}</td>
                     <td>
                       {order.orderDetails.createdAt &&
                         new Date(order.orderDetails.createdAt).toLocaleString()}
                     </td>
 
-                    <td
-                      className={`${
-                        order.orderDetails.status === "pending"
-                          ? "text-orange-500"
-                          : order.orderDetails.status === "selesai"
-                          ? "text-green-500"
-                          : "text-gray-500"
-                      }`}
-                    >
-                      {order.orderDetails.status === "pending"
-                        ? "diproses"
-                        : order.orderDetails.status}
-                    </td>
-                    <td>
+                    <td className="border p-2">
                       {order.orderDetails.status === "selesai" ? (
                         <button
-                          className="bg-green-500 text-white px-4 py-2 rounded-md"
+                          className="bg-green-500 text-white px-4 py-2 rounded-md cursor-not-allowed"
                           disabled
                         >
                           <span className="mr-2">&#x1F4AC;</span>Chat
@@ -253,6 +244,20 @@ const History = () => {
                           <span className="mr-2">&#x1F4AC;</span>Chat
                         </button>
                       )}
+                    </td>
+
+                    <td
+                      className={`${
+                        order.orderDetails.status === "pending"
+                          ? "text-orange-500 border p-2"
+                          : order.orderDetails.status === "selesai"
+                          ? "text-green-500 border p-2"
+                          : "text-gray-500 border p-2"
+                      }`}
+                    >
+                      {order.orderDetails.status === "pending"
+                        ? "diproses"
+                        : order.orderDetails.status}
                     </td>
                   </tr>
                 ))}

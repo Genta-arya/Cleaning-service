@@ -206,12 +206,52 @@ export const editProduct = async (id, editedProductData) => {
   }
 };
 
-
 export const deleteProduct = async (productId) => {
   try {
     const response = await axiosInstance.delete(`/products/${productId}`);
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error.message;
+  }
+};
+
+export const editCategory = async (categoryId, editedCategory) => {
+  try {
+    const response = await axiosInstance.put(
+      `/category/${categoryId}`,
+      editedCategory
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error editing category:", error);
+    throw error;
+  }
+};
+
+export const DeleteCategory = async (categoryId) => {
+  try {
+    const response = await axiosInstance.delete(`/category/${categoryId}`);
+
+    const responseData = response.data;
+
+    return responseData;
+  } catch (error) {
+    console.error("API Error:", error);
+    throw new Error("Failed to delete category");
+  }
+};
+
+export const getOrder = async () => {};
+
+export const getAllOrders = async () => {
+  try {
+    const response = await axiosInstance.get("/get-orders");
+
+    // Assuming the response structure is { success, data, status }
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    throw error;
   }
 };
