@@ -70,10 +70,12 @@ function ReviewForm({ onSubmitReview }) {
 
     if (newReview.trim().length > 100) {
       toast.error("Komentar terlalu panjang, maksimal hanya 100 karakter ya");
+      setIsLoading(false);
       return;
     }
     if (newReview.trim() === "" || name.trim() === "" || rating === 0) {
       toast.error("Form komentar harus diisi semua ya");
+      setIsLoading(false);
       return;
     }
 
@@ -89,7 +91,8 @@ function ReviewForm({ onSubmitReview }) {
       setShowSuccessModal(true);
     } catch (error) {
       console.error("Error posting comment:", error);
-    
+      setIsLoading(false);
+
       showAlertMessage("Failed to post comment. Please try again later.");
     }
   };
