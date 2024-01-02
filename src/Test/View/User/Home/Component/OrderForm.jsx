@@ -51,7 +51,7 @@ const OrderForm = () => {
 
   const handleMapClick = (latlng) => {
     setSelectedLocation(latlng);
-    console.log("Clicked coordinates:", latlng);
+    
   };
 
   const MapClickHandler = () => {
@@ -67,7 +67,7 @@ const OrderForm = () => {
 
           if (data.results.length > 0) {
             const components = data.results[0].components;
-            console.log("All components:", components);
+        
 
             const city = components.city_district;
             const road = components.road;
@@ -101,7 +101,7 @@ const OrderForm = () => {
 
           if (data.results.length > 0) {
             const components = data.results[0].components;
-            console.log("All components:", components);
+          
 
             const city = components.city_district;
             const road = components.road;
@@ -183,7 +183,7 @@ const OrderForm = () => {
         setOrderSuccess(true);
         setIsLoading(false);
       } catch (error) {
-        console.log("Error submitting order:", error);
+     
         setOrderSuccess(false);
         setIsLoading(false);
 

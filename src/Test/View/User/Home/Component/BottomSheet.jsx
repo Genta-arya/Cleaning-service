@@ -60,7 +60,7 @@ const BottomSheet = () => {
 
         setOrderIdFromHistory(orderIds);
         setUrl(image)
-        console.log("Order IDs:", orderIds);
+       
       } catch (error) {
         console.error("Error fetching history:", error);
       }
@@ -70,7 +70,7 @@ const BottomSheet = () => {
   }, []);
 
   useEffect(() => {
-    console.log("Updated Notifications:", notifications);
+    
   }, [notifications]);
 
   useEffect(() => {
@@ -89,7 +89,7 @@ const BottomSheet = () => {
               message: orderDetails.message || "",
             }));
 
-          console.log("Filtered notifications:", filteredNotifications);
+        
 
           setNotifications(filteredNotifications);
         } else {

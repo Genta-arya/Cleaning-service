@@ -46,17 +46,7 @@ function App() {
               }
             />
 
-            <Route
-              path="/test"
-              element={
-                <>
-                  <Helmet>
-                    <title>Tangkas Jaya Teknik </title>
-                  </Helmet>
-                  <NotifTest />
-                </>
-              }
-            />
+            
 
             <Route
               path="/admin/dashboard"
@@ -85,7 +75,7 @@ function App() {
               element={
                 <>
                   <Helmet>
-                    <title>Tangkas Jaya Teknik - Login Page</title>
+                    <title>Tangkas Jaya Teknik - Login</title>
                   </Helmet>
                   <Login />
                 </>

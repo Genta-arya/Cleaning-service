@@ -37,7 +37,7 @@ const saveUserDataToBackend = async (userData) => {
     const data = await response.json();
 
     if (data.success) {
-      console.log("User data saved successfully:", data);
+  
       localStorage.setItem("email", data.email);
       localStorage.setItem("username", data.username);
       localStorage.setItem("token", data.token);
