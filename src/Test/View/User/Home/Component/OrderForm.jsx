@@ -8,6 +8,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowCircleLeft,
   faCommentAlt,
+  faMinus,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { submitOrder } from "../../../../../Service/Api";
 import ChatBotOrder from "./ChatBotOrder";
@@ -299,22 +301,28 @@ const OrderForm = () => {
                 <p className="text-sm mb-4 text-gray-500 ">
                   {productData.desc}
                 </p>
-                <div className="text-sm text-gray-600 flex items-center">
-                  <p className="mr-2">Jumlah:</p>
-                  <button onClick={handleDecrement} className="cursor-pointer">
-                    <FontAwesomeIcon icon={faMinus} size="sm" />
-                  </button>
-                  <input
-                    type="number"
-                    min="1"
-                    max="3"
-                    value={quantity}
-                    onChange={handleQuantityChange}
-                    className="border text-center mb-4 rounded-2xl p-1 w-16 ml-2"
-                  />
-                  <button onClick={handleIncrement} className="cursor-pointer">
-                    <FontAwesomeIcon icon={faPlus} size="sm" />
-                  </button>
+                <p className="mr-4 text-lg font-semibold">Jumlah:</p>
+                <div className="flex items-center mb-4 p-2">
+                  <div className="flex items-center border rounded-lg overflow-hidden ">
+                    <button
+                      onClick={handleDecrement}
+                      className="p-2 cursor-pointer bg-gray-200 hover:bg-gray-300 transition duration-300"
+                    >
+                      <FontAwesomeIcon icon={faMinus} size="sm" />
+                    </button>
+                    <input
+                      disabled
+                      value={quantity}
+                      onChange={handleQuantityChange}
+                      className="border-none text-center px-3 bg-white text-lg font-semibold"
+                    />
+                    <button
+                      onClick={handleIncrement}
+                      className="p-2 cursor-pointer bg-gray-200 hover:bg-gray-300 transition duration-300"
+                    >
+                      <FontAwesomeIcon icon={faPlus} size="sm" />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="lg:block md:hidden hidden ">
