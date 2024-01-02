@@ -48,7 +48,9 @@ const History = () => {
         } else {
           navigate("/");
         }
-      } catch (error) {}
+      } catch (error) {
+        navigate("/");
+      }
     };
 
     fetchData();
@@ -85,9 +87,12 @@ const History = () => {
   const sortData = (data) => {
     if (sortingCriteria === "status") {
       return data.sort((a, b) => {
-        if (a.orderDetails.status < b.orderDetails.status) return -1;
-        if (a.orderDetails.status > b.orderDetails.status) return 1;
-        return 0;
+        if (a.orderDetails && b.orderDetails) {
+          if (a.orderDetails.status < b.orderDetails.status) return -1;
+          if (a.orderDetails.status > b.orderDetails.status) return 1;
+          return 0;
+        }
+        return 0; // Handle the case where orderDetails is undefined for either a or b.
       });
     }
 
@@ -101,7 +106,10 @@ const History = () => {
     return data.filter((order) => order.orderDetails.status === filterStatus);
   };
 
-  const sortedAndFilteredData = filterData(sortData(historyData));
+  const sortedAndFilteredData = historyData
+    ? filterData(sortData(historyData))
+    : [];
+
   const handleDownloadPDF = () => {
     if (sortedAndFilteredData.length === 0) {
       return;
