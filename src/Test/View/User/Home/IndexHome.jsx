@@ -18,6 +18,7 @@ const IndexHome = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showScrollToTop, setShowScrollToTop] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,9 +52,13 @@ const IndexHome = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const toggleTheme = () => {
+    setIsDarkTheme((prevTheme) => !prevTheme);
+  };
+
   return (
-    <div>
-      <Navbar />
+    <div className={isDarkTheme ? "dark-theme" : "light-theme"}>
+      <Navbar toggleTheme={toggleTheme} isDarkTheme={isDarkTheme} />
       <LandingPage />
       <Product />
 
@@ -66,7 +71,7 @@ const IndexHome = () => {
 
       {showScrollToTop && (
         <button
-          className="fixed bottom-24 lg:bottom-12  right-4  z-50 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700 focus:outline-none"
+          className="fixed bottom-24 lg:bottom-12 right-4 z-50 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700 focus:outline-none"
           onClick={scrollToTop}
         >
           <FontAwesomeIcon icon={faArrowUp} />

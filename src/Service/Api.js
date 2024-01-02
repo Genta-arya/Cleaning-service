@@ -315,3 +315,44 @@ export const getNotifications = async (username) => {
     console.error("Error fetching notifications:", error.message);
   }
 };
+
+export const generateOTP = async (email) => {
+  try {
+    const response = await axiosInstance.post("/send-otp", { email });
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
+
+export const verifyOTP = async (otp) => {
+  try {
+    const response = await axiosInstance.post("/verify", { otp });
+    return response.data;
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    throw error;
+  }
+};
+
+export const changePassword = async ({ email, newPassword }) => {
+  try {
+    // Panggil endpoint API untuk mengubah kata sandi
+    const response = await axiosInstance.post(`/change-password`, {
+      email,
+      newPassword,
+    });
+
+    // Periksa respons dari server (jika diperlukan)
+    if (response.status === 200) {
+      console.log('Password changed successfully');
+    } else {
+      console.error('Failed to change password');
+      throw new Error('Failed to change password');
+    }
+  } catch (error) {
+    console.error('changePassword API error:', error);
+    throw error;
+  }
+};

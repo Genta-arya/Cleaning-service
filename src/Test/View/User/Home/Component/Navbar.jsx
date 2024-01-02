@@ -17,7 +17,7 @@ import { child, getDatabase, onValue, ref, remove } from "firebase/database";
 import firebaseApp from "../../../../../Feature/Firebase/FirebaseConfig";
 import { toast } from "react-toastify";
 
-const Navbar = () => {
+const Navbar = ({ toggleTheme, isDarkTheme }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isDropdownNotifikasi, setDropdownOpenNotifikasi] = useState(false);
   const [isLoading, setIsloading] = useState(false);
@@ -117,12 +117,12 @@ const Navbar = () => {
         window.location.reload();
       } else {
         console.error("Gagal logout");
-        toast.error("logout tidak berhasil")
+        toast.error("logout tidak berhasil");
         setIsloading(false);
       }
     } catch (error) {
       console.error("Error:", error);
-      toast.error("Maaf seperti nya server sedang bermasalah")
+      toast.error("Maaf seperti nya server sedang bermasalah");
       setIsloading(false);
     }
   };
@@ -152,7 +152,11 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-center w-full ">
+    <div
+      className={`flex justify-center w-full ${
+        isDarkTheme ? "dark-theme" : "light-theme"
+      }`}
+    >
       <img
         src={logo}
         alt="logo-wayan"
@@ -161,7 +165,11 @@ const Navbar = () => {
       <div className="lg:hidden md:hidden block">
         <BottomSheet />
       </div>
-      <div className="bg-white p-2 w-[95%] rounded-xl lg:block md:block hidden mt-8">
+      <div
+        className={`bg-white p-2 w-[95%] rounded-xl lg:block md:block hidden mt-8 ${
+          isDarkTheme ? "dark-theme" : "light-theme"
+        }`}
+      >
         <nav className="text-white">
           <div className=" flex justify-between items-center px-12 ">
             <img
@@ -198,7 +206,9 @@ const Navbar = () => {
                               className={`bg-gray-100 p-4 mb-2 rounded-md cursor-pointer${
                                 index % 2 === 0 ? "bg-gray-200" : ""
                               } animate__animated animate__fadeIn cursor-pointer`}
-                              onClick={() => handleNotificationClick(notification.orderId)}
+                              onClick={() =>
+                                handleNotificationClick(notification.orderId)
+                              }
                             >
                               {notification.message}
                             </li>

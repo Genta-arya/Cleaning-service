@@ -1,6 +1,20 @@
+/* index.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Dark Theme */
+.dark {
+  --bg-primary: #1a202c;
+  --text-primary: #ffffff;
+}
+
+/* Light Theme */
+.light {
+  --bg-primary: #ffffff;
+  --text-primary: #000000;
+}
 
 body {
   margin: 0;
@@ -9,9 +23,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
+/* Add other styling rules using the custom variables as needed */
