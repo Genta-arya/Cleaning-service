@@ -142,11 +142,10 @@ const Product = () => {
         (product) => product.category.nm_category === selectedCategory
       )
     : productsData;
-    useEffect(() => {
-      // Initialize animation when the component mounts
-      controls.start({ opacity: 1, y: 0, scale: 1, rotate: 0 });
-    }, []); // Empty dependency array means this effect runs once when the component mounts
-  
+  useEffect(() => {
+    controls.start({ opacity: 1, y: 0, scale: 1, rotate: 0 });
+  }, []);
+
   return (
     <motion.div
       id="products"
@@ -191,7 +190,7 @@ const Product = () => {
                   {filteredProducts.map((product, index) => (
                     <motion.div
                       key={product.id}
-                      className="border p-10 lg:p-4 md:p-12 rounded-xl  bg-white w-96 shadow-xl border-gelap  transform transition-all "
+                      className="border p-10 lg:p-4 md:p-12 rounded-xl bg-white shadow-xl border-gelap transform transition-all"
                     >
                       <img
                         src={
@@ -199,7 +198,7 @@ const Product = () => {
                           "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
                         }
                         alt="paket service ac"
-                        className="mb-4 lg:w-full lg:h-48 md:w-full md:h-48 object-cover rounded-2xl hover:scale-105 transition-all transform duration-200 delay-200 ease-in cursor-pointer"
+                        className="mb-4 lg:w-full lg:h-48   object-cover  rounded-2xl hover:scale-105 transition-all transform duration-200 delay-200 ease-in cursor-pointer "
                         onClick={() => handleProductClick(product)}
                       />
 
@@ -283,7 +282,7 @@ const Product = () => {
                     <img
                       src={product.url}
                       alt={product.nm_product}
-                      className="mb-4 w-full h-48 object-cover rounded-2xl hover:scale-105 transition-all transform duration-200 delay-200 ease-in cursor-pointer"
+                      className="mb-4 w-[105%]  flex object-fill rounded-2xl hover:scale-105 transition-all transform duration-200 delay-200 ease-in cursor-pointer"
                       onClick={() => handleProductClick(product)}
                     />
                     <h2 className="text-xl font-bold mb-2">

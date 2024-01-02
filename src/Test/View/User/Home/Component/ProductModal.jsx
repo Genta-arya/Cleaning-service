@@ -29,7 +29,7 @@ const ProductModal = ({ product, closeModal, showModal }) => {
       {showModal && (
         <div className="md:block hidden lg:block">
           <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center p-8 bg-black bg-opacity-80 z-50">
-            <div className="bg-white p-8 rounded-md relative w-fit">
+            <div className="bg-white p-8 rounded-md relative w-96">
               <button
                 className="absolute top-2 left-4 text-gray-500 hover:text-gray-700 cursor-pointer"
                 onClick={closeModal}
@@ -90,7 +90,7 @@ const ProductModal = ({ product, closeModal, showModal }) => {
                 onClick={closeModal}
               >
                 <div className="flex items-center">
-                  <button className="text-blue-500">
+                  <button className="text-black">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-6 w-6"
@@ -109,7 +109,7 @@ const ProductModal = ({ product, closeModal, showModal }) => {
                 </div>
               </button>
               <div className="flex justify-center">
-                <div className=" absolute top-5  border-2 border-blue-500 rounded-full ml-2 w-1/2"></div>
+                <div className=" absolute top-5  border-2 border-gray-500 rounded-full ml-2 w-1/2"></div>
               </div>
 
               <div className="text-gelap font-bold text-md mb-2 mt-4">
