@@ -26,6 +26,7 @@ import {
 import { initializeApp } from "firebase/app";
 import { set } from "date-fns";
 import firebaseApp from "../../../../../Feature/Firebase/FirebaseConfig";
+import { toast } from "react-toastify";
 
 const BottomSheet = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
@@ -125,10 +126,12 @@ const BottomSheet = () => {
         setIsloading(false);
         window.location.reload();
       } else {
-        console.error("Gagal logout");
+        toast.error("Gagal logout");
+        setIsloading(false);
       }
     } catch (error) {
-      console.error("Error:", error);
+      toast.error("Error:", error);
+      setIsloading(false);
     }
   };
 
