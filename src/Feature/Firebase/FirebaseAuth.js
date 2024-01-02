@@ -13,11 +13,9 @@ export const signInWithGoogle = async () => {
     const userData = {
       username: result.user.displayName,
       email: result.user.email,
-      googleId: result.user.uid, // assuming the Google ID is unique and can be used as an identifier
+      googleId: result.user.uid,
     };
-    
 
-    // Send the user data to your backend for saving to MySQL
     await saveUserDataToBackend(userData);
 
     return result.user;
@@ -28,7 +26,7 @@ export const signInWithGoogle = async () => {
 
 const saveUserDataToBackend = async (userData) => {
   try {
-    const response = await fetch("http://localhost:5001/login-google", {
+    const response = await fetch("https://tangkas-jaya-taknik-api-v1.vercel.app/login-google", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

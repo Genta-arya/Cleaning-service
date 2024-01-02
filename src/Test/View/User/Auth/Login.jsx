@@ -98,7 +98,7 @@ const Login = () => {
     try {
       const result = await signInWithGoogle();
 
-      const response = await fetch("http://localhost:5001/login-google", {
+      const response = await fetch("https://tangkas-jaya-taknik-api-v1.vercel.app/login-google", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
