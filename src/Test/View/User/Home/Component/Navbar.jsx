@@ -15,6 +15,7 @@ import logo from "../../../../../Asset/wayan logo.png";
 import { ClipLoader, PulseLoader } from "react-spinners";
 import { child, getDatabase, onValue, ref, remove } from "firebase/database";
 import firebaseApp from "../../../../../Feature/Firebase/FirebaseConfig";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -116,9 +117,13 @@ const Navbar = () => {
         window.location.reload();
       } else {
         console.error("Gagal logout");
+        toast.error("logout tidak berhasil")
+        setIsloading(false);
       }
     } catch (error) {
       console.error("Error:", error);
+      toast.error("Maaf seperti nya server sedang bermasalah")
+      setIsloading(false);
     }
   };
 
