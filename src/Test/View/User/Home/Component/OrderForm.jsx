@@ -246,6 +246,18 @@ const OrderForm = () => {
     navigate("/history");
   };
 
+  const handleIncrement = () => {
+    if (quantity < 3) {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center mt-8 py-8 p-4 h-full ">
       <ToastContainer />
@@ -287,17 +299,24 @@ const OrderForm = () => {
                 <p className="text-sm mb-4 text-gray-500 ">
                   {productData.desc}
                 </p>
-                <p className="text-sm text-gray-600">
-                  Jumlah:
+                <div className="text-sm text-gray-600 flex items-center">
+                  <p className="mr-2">Jumlah:</p>
+                  <button onClick={handleDecrement} className="cursor-pointer">
+                    <FontAwesomeIcon icon={faMinus} size="sm" />
+                  </button>
                   <input
                     type="number"
                     min="1"
                     max="3"
                     value={quantity}
                     onChange={handleQuantityChange}
-                    className="border text-center  mb-4 rounded-2xl p-1 w-16 ml-2 "
+                    className="border text-center mb-4 rounded-2xl p-1 w-16 ml-2"
                   />
-                </p>
+                  <button onClick={handleIncrement} className="cursor-pointer">
+                    <FontAwesomeIcon icon={faPlus} size="sm" />
+                  </button>
+                </div>
+
                 <div className="lg:block md:hidden hidden ">
                   <p className="text-lg font-semibold">Total Biaya :</p>
                   <p className="text-lg font-semibold">
