@@ -6,8 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import { PulseLoader } from "react-spinners";
 
 const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
-  const MAX_PRODUCT_NAME_LENGTH = 30;
-  const MAX_DESCRIPTION_LENGTH = 50;
+  const MAX_PRODUCT_NAME_LENGTH = 150;
+  const MAX_DESCRIPTION_LENGTH = 350;
   console.log(productData.id)
 
   const [categories, setCategories] = useState([]);
