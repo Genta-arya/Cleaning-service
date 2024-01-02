@@ -16,6 +16,7 @@ import History from "../Test/View/User/Home/Component/History";
 import Register from "../Test/View/User/Auth/Register";
 import Login from "../Test/View/User/Auth/Login";
 import IndexMain from "../Test/View/Admin/IndexMain";
+import NotifTest from "../Test/View/User/Home/Component/NotifTest";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -45,7 +46,19 @@ function App() {
               }
             />
 
-<Route
+            <Route
+              path="/test"
+              element={
+                <>
+                  <Helmet>
+                    <title>Tangkas Jaya Teknik </title>
+                  </Helmet>
+                  <NotifTest />
+                </>
+              }
+            />
+
+            <Route
               path="/admin/dashboard"
               element={
                 <>
@@ -78,7 +91,7 @@ function App() {
                 </>
               }
             />
-           
+
             <Route
               path="/order/:id/:name"
               element={
@@ -106,7 +119,7 @@ function App() {
               element={
                 <>
                   <Helmet>
-                    <title>Tangkas Jaya Teknik - Halaman  Tidak diTemukan</title>
+                    <title>Tangkas Jaya Teknik - Halaman Tidak diTemukan</title>
                   </Helmet>
                   <DetailNotFound />
                 </>

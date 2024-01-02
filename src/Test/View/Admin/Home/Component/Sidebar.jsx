@@ -62,8 +62,8 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="relative h-full gap-12">
-      <div className="flex justify-between p-4 px-12 bg-white items-center">
+    <div className="relative h-full gap-12 w-full">
+      <div className="flex justify-between p-4 px-12 bg-white items-center w-[100%]">
         <button
           className="text-black py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-blue z-30"
           onClick={openDrawer}

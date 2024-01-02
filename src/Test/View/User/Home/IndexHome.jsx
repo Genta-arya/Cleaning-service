@@ -23,7 +23,7 @@ const IndexHome = () => {
     const fetchData = async () => {
       try {
         const data = await checkJwt();
-   
+
         if (data.success) {
           dispatch(setLoggedIn(true));
         }
@@ -31,7 +31,6 @@ const IndexHome = () => {
     };
 
     fetchData();
-
 
     const handleScroll = () => {
       if (window.scrollY > 100) {
@@ -56,9 +55,11 @@ const IndexHome = () => {
     <div>
       <Navbar />
       <LandingPage />
-      <Testimoni />
-      <AboutMe />
       <Product />
+
+      <AboutMe />
+
+      <Testimoni />
       <CustomerReviews />
       <Footer />
       <Copyright />

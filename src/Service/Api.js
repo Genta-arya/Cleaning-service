@@ -1,5 +1,47 @@
-import axios from "axios";
 import axiosInstance from "./Config";
+import { getDatabase, ref, onValue } from "firebase/database";
+import { initializeApp } from "firebase/app";
+import {
+  getFirestore,
+  collection,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
+const firebaseConfig = {
+  apiKey: "AIzaSyByA2NbnXpFg4yM_h8pug8WgD9hnLyQv4g",
+  authDomain: "ac-service-34683.firebaseapp.com",
+  databaseURL: "https://ac-service-34683-default-rtdb.firebaseio.com",
+  projectId: "ac-service-34683",
+  storageBucket: "ac-service-34683.appspot.com",
+  messagingSenderId: "372535984207",
+  appId: "1:372535984207:web:0dcbc759cee5f2a85aea3a",
+  measurementId: "G-1XH4ZTDPQG",
+};
+
+// Initialize Firebase
+const firebaseApp = initializeApp(firebaseConfig);
+const firestore = getFirestore(firebaseApp);
+const database = getDatabase(firebaseApp);
+
+export const getNotificationsRealtime = (username, setNotifications) => {
+  const notificationsRef = ref(database, "notifications");
+
+  const unsubscribe = onValue(notificationsRef, (snapshot) => {
+    const notifications = [];
+    snapshot.forEach((childSnapshot) => {
+      const orderDetails = childSnapshot.val();
+      // Assuming orderId is the key in your notifications
+      const orderId = childSnapshot.key;
+      notifications.push({
+        orderId,
+        message: orderDetails.message || "", // Update with the correct field name
+      });
+    });
+    setNotifications(notifications);
+  });
+
+  return unsubscribe;
+};
 
 export const submitOrder = async (orderData) => {
   try {
@@ -242,16 +284,34 @@ export const DeleteCategory = async (categoryId) => {
   }
 };
 
-export const getOrder = async () => {};
-
 export const getAllOrders = async () => {
   try {
     const response = await axiosInstance.get("/get-orders");
 
-    // Assuming the response structure is { success, data, status }
     return response.data;
   } catch (error) {
     console.error("Error fetching orders:", error);
     throw error;
+  }
+};
+
+export const updateOrderStatus = async (orderId, newStatus) => {
+  try {
+    await axiosInstance.put(`/update-status`, { orderId, newStatus });
+
+    return { success: true, message: "Status Berhasil diupdate" };
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    throw error;
+  }
+};
+
+export const getNotifications = async (username) => {
+  try {
+    const response = await axiosInstance.get(`/notifications/${username}`);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching notifications:", error.message);
   }
 };

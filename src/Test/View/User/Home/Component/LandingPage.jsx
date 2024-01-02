@@ -25,6 +25,7 @@ const LandingPage = () => {
 
   return (
     <motion.div
+    id="products"
       className="flex justify-center"
       variants={containerVariants}
       initial="hidden"

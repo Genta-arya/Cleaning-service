@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -9,27 +9,102 @@ import {
   faPowerOff,
   faClipboard,
 } from "@fortawesome/free-solid-svg-icons";
-import { logout } from "../../../../../Service/Api";
+import { getHistory, logout } from "../../../../../Service/Api";
 import { useSelector } from "react-redux";
 import { selectIsAuthenticated } from "../../../../../Feature/Redux/Auth/AuthSlice";
 import { useNavigate } from "react-router-dom";
 import ModalNotifikasi from "./ModalNotifikasi";
 import { PulseLoader } from "react-spinners";
+import {
+  child,
+  get,
+  getDatabase,
+  onValue,
+  ref,
+  remove,
+} from "firebase/database";
+import { initializeApp } from "firebase/app";
+import { set } from "date-fns";
+import firebaseApp from "../../../../../Feature/Firebase/FirebaseConfig";
 
 const BottomSheet = () => {
-  const notificationCount = 0;
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const [isNotificationModalOpen, setNotificationModalOpen] = useState(false);
   const [isLoading, setIsloading] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [orderIdFromHistory, setOrderIdFromHistory] = useState([]);
+  const [url, setUrl] = useState([]);
   const navigate = useNavigate();
 
   const handleNotificationClick = () => {
+    
+
     setNotificationModalOpen(true);
   };
 
   const closeNotificationModal = () => {
     setNotificationModalOpen(false);
   };
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const historyData = await getHistory();
+
+        const orderIds = historyData.map(
+          (historyItem) => historyItem.orderDetails.orderId
+        );
+        const image = historyData.map(
+          (historyItem) => historyItem.orderDetails.url
+        );
+
+        setOrderIdFromHistory(orderIds);
+        setUrl(image)
+        console.log("Order IDs:", orderIds);
+      } catch (error) {
+        console.error("Error fetching history:", error);
+      }
+    };
+
+    fetchHistory();
+  }, []);
+
+  useEffect(() => {
+    console.log("Updated Notifications:", notifications);
+  }, [notifications]);
+
+  useEffect(() => {
+    try {
+      const database = getDatabase(firebaseApp);
+      const notificationsRef = ref(database, "notifications");
+
+      const unsubscribe = onValue(notificationsRef, (snapshot) => {
+        const notificationsData = snapshot.val();
+
+        if (notificationsData) {
+          const filteredNotifications = Object.entries(notificationsData)
+            .filter(([orderId]) => orderIdFromHistory.includes(Number(orderId)))
+            .map(([orderId, orderDetails]) => ({
+              orderId: Number(orderId),
+              message: orderDetails.message || "",
+            }));
+
+          console.log("Filtered notifications:", filteredNotifications);
+
+          setNotifications(filteredNotifications);
+        } else {
+          setNotifications([]);
+        }
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    } catch (error) {
+      console.error("Error fetching notifications:", error.message);
+    }
+  }, [orderIdFromHistory, setNotifications]);
+
+  const notificationCount = notifications.length;
 
   const handleLogout = async () => {
     setIsloading(true);
@@ -63,6 +138,7 @@ const BottomSheet = () => {
   const handleHistory = () => {
     navigate("/history");
   };
+
 
   return (
     <div className="fixed inset-x-0 bottom-0 bg-white p-4 shadow-md flex flex-row justify-around z-50 ">
@@ -143,7 +219,13 @@ const BottomSheet = () => {
         </div>
       )}
       {isNotificationModalOpen && (
-        <ModalNotifikasi onClose={closeNotificationModal} />
+        <ModalNotifikasi
+          onClose={closeNotificationModal}
+          notifications={notifications}
+          loading={isLoading}
+          image={url}
+          orderIdFromHistory={orderIdFromHistory}
+        />
       )}
 
       {isLoading && (

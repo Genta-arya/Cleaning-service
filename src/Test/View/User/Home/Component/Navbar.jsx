@@ -7,37 +7,86 @@ import {
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import BottomSheet from "./BottomSheet";
-import { handleLogout, logout } from "../../../../../Service/Api";
+import { getHistory, handleLogout, logout } from "../../../../../Service/Api";
 import { selectIsAuthenticated } from "../../../../../Feature/Redux/Auth/AuthSlice";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import logo from "../../../../../Asset/wayan logo.png";
 import { ClipLoader, PulseLoader } from "react-spinners";
+import { child, getDatabase, onValue, ref, remove } from "firebase/database";
+import firebaseApp from "../../../../../Feature/Firebase/FirebaseConfig";
 
 const Navbar = () => {
-  const notificationCount = 0;
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isDropdownNotifikasi, setDropdownOpenNotifikasi] = useState(false);
   const [isLoading, setIsloading] = useState(false);
+  const [orderIdFromHistory, setOrderIdFromHistory] = useState([]);
+  const [url, setUrl] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const dropdownRef = useRef(null);
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const navigate = useNavigate();
- 
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-        setDropdownOpenNotifikasi(false);
+    const fetchHistory = async () => {
+      try {
+        const historyData = await getHistory();
+
+        const orderIds = historyData.map(
+          (historyItem) => historyItem.orderDetails.orderId
+        );
+        const image = historyData.map(
+          (historyItem) => historyItem.orderDetails.url
+        );
+
+        setOrderIdFromHistory(orderIds);
+        setUrl(image);
+        console.log("Order IDs:", orderIds);
+      } catch (error) {
+        console.error("Error fetching history:", error);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    fetchHistory();
+  }, []);
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownRef]);
+  useEffect(() => {
+    console.log("Updated Notifications:", notifications);
+  }, [notifications]);
+
+  useEffect(() => {
+    try {
+      const database = getDatabase(firebaseApp);
+      const notificationsRef = ref(database, "notifications");
+
+      const unsubscribe = onValue(notificationsRef, (snapshot) => {
+        const notificationsData = snapshot.val();
+
+        if (notificationsData) {
+          const filteredNotifications = Object.entries(notificationsData)
+            .filter(([orderId]) => orderIdFromHistory.includes(Number(orderId)))
+            .map(([orderId, orderDetails]) => ({
+              orderId: Number(orderId),
+              message: orderDetails.message || "",
+            }));
+
+          console.log("Filtered notifications:", filteredNotifications);
+
+          setNotifications(filteredNotifications);
+        } else {
+          setNotifications([]);
+        }
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    } catch (error) {
+      console.error("Error fetching notifications:", error.message);
+    }
+  }, [orderIdFromHistory, setNotifications]);
+
+  const notificationCount = notifications.length;
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -73,14 +122,28 @@ const Navbar = () => {
     }
   };
 
+  const handleNotificationClick = async (orderId) => {
+    try {
+      const database = getDatabase(firebaseApp);
+      const notificationsRef = ref(database, "notifications");
+      const orderIdRef = child(notificationsRef, orderId.toString());
+
+      await remove(orderIdRef);
+      handleToPesanan();
+    } catch (error) {
+      console.error("Error clearing notifications:", error.message);
+    }
+  };
+
   const handleToLogin = () => {
     navigate("/login");
   };
-  const handleToPesanan = () => {
-    navigate("/history");
-  };
+
   const handleToRegister = () => {
     navigate("/register");
+  };
+  const handleToPesanan = () => {
+    navigate("/history");
   };
 
   return (
@@ -122,9 +185,25 @@ const Navbar = () => {
 
                   {isDropdownNotifikasi && (
                     <div className="absolute right-16 mt-2 w-80 bg-white text-black rounded-lg shadow-2xl drop-shadow-2xl border-2 border-gelap p-4">
-                      <div className="flex justify-center">
-                        Tidak ada pemberitahuan
-                      </div>
+                      {notifications.length > 0 ? (
+                        <ul className="list-none max-h-48 overflow-y-auto">
+                          {notifications.map((notification, index) => (
+                            <li
+                              key={notification.orderId}
+                              className={`bg-gray-100 p-4 mb-2 rounded-md cursor-pointer${
+                                index % 2 === 0 ? "bg-gray-200" : ""
+                              } animate__animated animate__fadeIn cursor-pointer`}
+                              onClick={() => handleNotificationClick(notification.orderId)}
+                            >
+                              {notification.message}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <div className="flex justify-center">
+                          Tidak ada pemberitahuan
+                        </div>
+                      )}
                     </div>
                   )}
 

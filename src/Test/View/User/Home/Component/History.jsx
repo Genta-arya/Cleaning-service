@@ -217,12 +217,26 @@ const History = () => {
                       </div>
                     </td>
 
-                    <td className="border p-2">Rp {order.orderDetails.price.toLocaleString()}</td>
+                    <td className="border p-2">
+                      Rp {order.orderDetails.price.toLocaleString()}
+                    </td>
                     <td>
                       {order.orderDetails.createdAt &&
                         new Date(order.orderDetails.createdAt).toLocaleString()}
                     </td>
-
+                    <td
+                      className={`${
+                        order.orderDetails.status === "pending"
+                          ? "text-orange-500 border p-2"
+                          : order.orderDetails.status === "selesai"
+                          ? "text-green-500 border p-2"
+                          : "text-blue-500 border p-2"
+                      }`}
+                    >
+                      {order.orderDetails.status === "pending"
+                        ? "diproses"
+                        : order.orderDetails.status}
+                    </td>
                     <td className="border p-2">
                       {order.orderDetails.status === "selesai" ? (
                         <button
@@ -244,20 +258,6 @@ const History = () => {
                           <span className="mr-2">&#x1F4AC;</span>Chat
                         </button>
                       )}
-                    </td>
-
-                    <td
-                      className={`${
-                        order.orderDetails.status === "pending"
-                          ? "text-orange-500 border p-2"
-                          : order.orderDetails.status === "selesai"
-                          ? "text-green-500 border p-2"
-                          : "text-gray-500 border p-2"
-                      }`}
-                    >
-                      {order.orderDetails.status === "pending"
-                        ? "diproses"
-                        : order.orderDetails.status}
                     </td>
                   </tr>
                 ))}

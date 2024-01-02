@@ -50,18 +50,17 @@ const Product = () => {
     const fetchData = async () => {
       try {
         const data = await checkJwt();
-      
+
         if (data.success) {
           dispatch(setLoggedIn(true));
           dispatch(setRole(data.role));
-          
+
           if (!data.success || (data.role && data.role === "admin")) {
             navigate("/admin/dashboard");
           }
         }
       } catch (error) {}
     };
-
 
     fetchData();
   }, [dispatch, navigate]);
@@ -143,26 +142,14 @@ const Product = () => {
         (product) => product.category.nm_category === selectedCategory
       )
     : productsData;
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + window.innerHeight;
-      const elementPosition = document.getElementById("product").offsetTop;
-
-      if (scrollPosition > elementPosition) {
-        controls.start({ opacity: 1, y: 0, scale: 1, rotate: 0 });
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [controls]);
-
+    useEffect(() => {
+      // Initialize animation when the component mounts
+      controls.start({ opacity: 1, y: 0, scale: 1, rotate: 0 });
+    }, []); // Empty dependency array means this effect runs once when the component mounts
+  
   return (
     <motion.div
-      id="product"
+      id="products"
       animate={controls}
       initial={{ opacity: 0, y: 40, scale: 0.8, rotate: 0 }}
       transition={{ duration: 1, ease: "easeOut" }}

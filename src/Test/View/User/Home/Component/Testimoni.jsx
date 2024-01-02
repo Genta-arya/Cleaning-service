@@ -80,10 +80,10 @@ const Testimoni = () => {
     <motion.div
       initial={{ opacity: 0, scale:0.8}}
       animate={controls}
-      className="bg-biru md:p-12 lg:p-8 p-8 -mt-12"
+      className="bg-biru md:p-12 lg:p-8 p-8  rounded-t-xl"
     >
       <div className="flex justify-center mb-4">
-        <h1 className="text-white font-bold font-serif lg:text-2xl md:text-2xl text-lg">
+        <h1 className="text-white font-bold font-serif lg:text-2xl md:text-2xl text-lg ">
           Testimoni Kami
         </h1>
       </div>

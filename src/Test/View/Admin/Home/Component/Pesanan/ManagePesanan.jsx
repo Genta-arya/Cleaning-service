@@ -1,32 +1,52 @@
 import React, { useEffect, useState } from "react";
-import { getAllOrders } from "../../../../../../Service/Api";
+import { getAllOrders, updateOrderStatus } from "../../../../../../Service/Api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faImage,
+  faTrash,
+  faUpload,
+} from "@fortawesome/free-solid-svg-icons";
 import SkeletonRow from "../Product/SkeletonRow";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import ModalStatus from "./ModalStatus";
+import { ToastContainer, toast } from "react-toastify";
 
 const ManagePesanan = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editedStatus, setEditedStatus] = useState("");
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [selectStatus, setSelectedStatus] = useState(null);
 
+  const fetchData = async () => {
+    try {
+      const result = await getAllOrders();
+      setOrders(result.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await getAllOrders();
-        setOrders(result.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching orders:", error);
-        setIsLoading(false);
-      }
-    };
-
     fetchData();
   }, []);
 
-  const handleEditStatus = async (orderId, newStatus) => {
+  const handleEditStatus = async (orderId, newStatus, refetchOrders) => {
     try {
+      const response = await updateOrderStatus(orderId, newStatus);
+
+      if (response.success) {
+        toast.success(response.message);
+
+        fetchData();
+      } else {
+        toast.error(`Failed to update order status: ${response.message}`);
+      }
     } catch (error) {
-      console.error("Error editing order status:", error);
+      toast.error(`Error editing order status: ${error.message}`);
     }
   };
 
@@ -43,8 +63,7 @@ const ManagePesanan = () => {
       const { nm_product, qty, price } = order.orderDetails;
 
       if (telp) {
-        // Format the phone number to international format
-        const formattedTelp = telp.replace(/^0/, "62"); // Replace leading 0 with country code 62
+        const formattedTelp = telp.replace(/^0/, "62");
 
         const message = `Hallo ${name}, saya mau konfirmasi untuk pemesanan Jasa ${nm_product} apakah semua data ini sudah benar?\nPastikan alamatnya juga sudah benar ya.\nOrder ID: ${id}\nAlamat: ${address},\nKoordinat: ${latitude}, ${longitude}\nPesanan: ${qty} x ${nm_product}\nHarga: Rp ${price.toLocaleString()}\nTrimakasih`;
 
@@ -60,6 +79,19 @@ const ManagePesanan = () => {
     }
   };
 
+  const openEditModal = (orderId) => {
+    setSelectedOrderId(orderId.orderDetails.orderId);
+    setSelectedStatus(orderId.orderDetails.status);
+
+    setIsModalVisible(true);
+  };
+
+  const closeEditModal = () => {
+    setSelectedOrderId(null);
+    setEditedStatus("");
+    setIsModalVisible(false);
+  };
+  console.log(selectStatus);
   return (
     <div className="px-12 p-8">
       {isLoading ? (
@@ -79,6 +111,7 @@ const ManagePesanan = () => {
                 <th className="border border-gray-300 p-2">Koordinat</th>
                 <th className="border border-gray-300 p-2">Status</th>
                 <th className="border border-gray-300 p-2">Actions</th>
+                <th className="border border-gray-300 p-2">Dokumentasi</th>
                 <th className="border border-gray-300 p-2">Chat</th>
               </tr>
             </thead>
@@ -122,30 +155,44 @@ const ManagePesanan = () => {
                       Open Maps
                     </a>
                   </td>
-                  <td
-                    className={`${
-                      order.orderDetails.status === "pending"
-                        ? "text-orange-500 border border-gray-300 p-2 font-bold"
-                        : order.orderDetails.status === "selesai"
-                        ? "text-green-500 border border-gray-300 p-2 font-bold"
-                        : "text-gray-500 border border-gray-300 p-2 font-bold"
-                    }`}
-                  >
-                    {order.orderDetails.status === "pending"
-                      ? "diproses"
-                      : order.orderDetails.status}
-                  </td>
-
-                  <td className="border border-gray-300 p-2">
-                    <div className="flex gap-4 p-4">
-                      <button
-                        onClick={() => handleEditStatus(order.id, "newStatus")}
+                  <td className="flex p-6 mt-1 gap-4 items-center text-center  ">
+                    <div
+                      className="border p-1 rounded-md border-gray-300  flex gap-2 cursor-pointer"
+                      onClick={() => openEditModal(order)}
+                    >
+                      <div
+                        className={`${
+                          order.orderDetails.status === "pending"
+                            ? "text-orange-500  font-bold"
+                            : order.orderDetails.status === "selesai"
+                            ? "text-green-500  font-bold"
+                            : "text-blue-500  font-bold"
+                        }`}
                       >
+                        {order.orderDetails.status === "pending"
+                          ? "diproses"
+                          : order.orderDetails.status}
+                      </div>
+                      <button>
                         <FontAwesomeIcon
                           icon={faEdit}
                           size="xl"
                           className="text-blue-500 "
                         />
+                      </button>
+                    </div>
+                  </td>
+
+                  <td className="border border-gray-300 p-2">
+                    <div className="flex gap-4 p-4">
+                      <button className="text-green-500 hover:underline">
+                        <div>
+                          <FontAwesomeIcon
+                            icon={faUpload}
+                            size="xl"
+                            className="text-blue-500"
+                          />
+                        </div>
                       </button>
                       <button onClick={() => handleDeleteOrder(order.id)}>
                         <FontAwesomeIcon icon={faTrash} size="xl" color="red" />
@@ -153,11 +200,25 @@ const ManagePesanan = () => {
                     </div>
                   </td>
                   <td className="border border-gray-300 p-2">
+                    <button className="text-green-500 hover:underline">
+                      <FontAwesomeIcon
+                        icon={faImage}
+                        size="xl"
+                        className="text-blue-500"
+                      />
+                      <p>lihat</p>
+                    </button>
+                  </td>
+                  <td className="border border-gray-300 p-2">
                     <button
                       onClick={() => handleWhatsAppChat(order)}
                       className="text-green-500 hover:underline"
                     >
-                      WhatsApp
+                      <FontAwesomeIcon
+                        icon={faWhatsapp}
+                        size="2xl"
+                        className="text-gre-500"
+                      />
                     </button>
                   </td>
                 </tr>
@@ -166,6 +227,15 @@ const ManagePesanan = () => {
           </table>
         </div>
       )}
+      {selectedOrderId && (
+        <ModalStatus
+          isVisible={isModalVisible}
+          onClose={closeEditModal}
+          onSubmit={(newStatus) => handleEditStatus(selectedOrderId, newStatus)}
+          currentStatus={selectStatus}
+        />
+      )}
+      <ToastContainer />
     </div>
   );
 };

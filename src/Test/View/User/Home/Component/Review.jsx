@@ -113,7 +113,7 @@ function CustomerReviews() {
   };
 
   return (
-    <div className="container mx-auto border-t-4 border-gray-400 p-4 lg:p-24 md:p-8">
+    <div className="container mx-auto border-t-4 border-gray-400 p-4 lg:p-24 md:p-8 ">
       <h2
         id="comment-section"
         className="text-3xl font-bold mb-10 text-center text-white w-80 lg:w-80 md:w-64 rounded-full mt-4"
@@ -122,10 +122,9 @@ function CustomerReviews() {
       </h2>
 
       {reviews.length === 0 && (
-        <div  className="">
+        <div className="">
           <div className="flex justify-center ">
-          <img src={animationData} alt="notounf"></img>
-         
+            <img src={animationData} alt="notounf"></img>
           </div>
           <h1 className="flex justify-center text-white font-bold mt-4">
             Belum ada Ulasan
@@ -133,7 +132,7 @@ function CustomerReviews() {
         </div>
       )}
 
-      <div className="lg:block md:block hidden">
+      <div className="lg:block md:block hidden ">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
           {reviews.map((review) => (
             <div
@@ -167,38 +166,37 @@ function CustomerReviews() {
         </div>
       </div>
 
-      <div className="lg:hidden md:hidden block p-8 mx-auto px-4">
-        <Slider {...settings}>
-          {reviews.map((review) => (
-            <div
-              key={review.id}
-              className="bg-gray-300 p-4 rounded-lg  hover:scale-90 transition-all delay-75 px-4"
-            >
-              <div className="flex items-center mb-4">
-                <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center">
-                  <span className="text-lg font-semibold text-white">
-                    {review.rating}
-                  </span>
-                </div>
-                <div className="ml-2">
-                  <h3 className="text-xl font-semibold">{review.username}</h3>
-                  <div className="text-gray-600">
-                    {getStarIcons(review.rating, review.username)}
+      <div className="lg:hidden md:hidden block p-8 mx-auto px-4  ">
+        <div className="">
+          <Slider {...settings} className="">
+            {reviews.map((review) => (
+              <div key={review.id} className="bg-gray-300 p-4 rounded-lg  px-4">
+                <div className="flex items-center mb-4 -z-50">
+                  <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center">
+                    <span className="text-lg font-semibold text-white">
+                      {review.rating}
+                    </span>
                   </div>
-                  <span className="text-lg font-bold text-gray-500">
-                    @{review.user.username}
-                  </span>
+                  <div className="ml-2">
+                    <h3 className="text-xl font-semibold">{review.username}</h3>
+                    <div className="text-gray-600">
+                      {getStarIcons(review.rating, review.username)}
+                    </div>
+                    <span className="text-lg font-bold text-gray-500">
+                      @{review.user.username}
+                    </span>
+                  </div>
+                </div>
+                <p className="text-gray-600">{review.review}</p>
+                <div className="flex justify-end">
+                  <h1 className="text-xs text-gray-600">
+                    {timeAgo(review.createdAt)}
+                  </h1>
                 </div>
               </div>
-              <p className="text-gray-600">{review.review}</p>
-              <div className="flex justify-end">
-                <h1 className="text-xs text-gray-600">
-                  {timeAgo(review.createdAt)}
-                </h1>
-              </div>
-            </div>
-          ))}
-        </Slider>
+            ))}
+          </Slider>
+        </div>
       </div>
 
       <ReviewForm onSubmitReview={addReview} />

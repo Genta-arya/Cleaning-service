@@ -40,13 +40,13 @@ const ModalCreateProduct = ({ onClose }) => {
     try {
       setIsCreating(true);
 
-      if (productData.nm_product.length > 30) {
-        toast.error("Product name cannot exceed 30 characters");
+      if (productData.nm_product.length > 100) {
+        toast.error("Product name cannot exceed 100 characters");
         return;
       }
 
-      if (productData.desc.length > 50) {
-        toast.error("Description cannot exceed 30 characters");
+      if (productData.desc.length > 350) {
+        toast.error("Description cannot exceed 350 characters");
         return;
       }
 
