@@ -124,7 +124,7 @@ const Register = () => {
       className="min-h-screen flex items-center justify-center p-4"
     >
       {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <PulseLoader color="#ffffff" size={25} loading={true} />
         </div>
       )}
