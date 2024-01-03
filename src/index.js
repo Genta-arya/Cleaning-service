@@ -1,5 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom";
+import { HelmetProvider } from "react-helmet-async"; // Import HelmetProvider
 import "./index.css";
 
 import reportWebVitals from "./reportWebVitals";
@@ -7,13 +8,17 @@ import App from "./Route/App";
 import { Provider } from "react-redux";
 import { store } from "./Feature/Redux/store";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
+const root = document.getElementById("root");
+
+ReactDOM.hydrate(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>
+    <HelmetProvider>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </HelmetProvider>
+  </React.StrictMode>,
+  root
 );
 
 reportWebVitals();
