@@ -10,7 +10,8 @@ import {
   setLoggedIn,
   setRole,
 } from "../../../Feature/Redux/Auth/AuthSlice";
-import logo from "../../../Asset/notfound.png"
+import logo from "../../../Asset/notfound.png";
+import ManagePesanan from "./Home/Component/Pesanan/ManagePesanan";
 const IndexMain = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -47,14 +48,7 @@ const IndexMain = () => {
       </div>
 
       <div className="lg:hidden md:hidden block">
-        <div className=" flex items-center justify-center h-screen">
-          <div className="flex flex-col">
-            <img src={logo} alt="logo" className="w-40 h-40 flex justify-center mx-auto " />
-            <h1 className="text-center">
-              Maaf Versi Mobile sedang dalam pengembangan
-            </h1>
-          </div>
-        </div>
+        <ManagePesanan />
       </div>
     </>
   );

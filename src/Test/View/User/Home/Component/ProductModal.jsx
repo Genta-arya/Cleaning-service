@@ -29,7 +29,7 @@ const ProductModal = ({ product, closeModal, showModal }) => {
     <AnimatePresence>
       {showModal && (
         <motion.div
-          className="md:block hidden lg:block"
+          className=""
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

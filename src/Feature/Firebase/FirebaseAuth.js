@@ -5,6 +5,7 @@ import firebaseApp from "./FirebaseConfig";
 
 const auth = getAuth(firebaseApp);
 
+const apiUrl = process.env.REACT_APP_API_URL;
 export const signInWithGoogle = async () => {
   try {
     const provider = new GoogleAuthProvider();
@@ -26,7 +27,7 @@ export const signInWithGoogle = async () => {
 
 const saveUserDataToBackend = async (userData) => {
   try {
-    const response = await fetch("https://tangkas-jaya-taknik-api-v1.vercel.app/login-google", {
+    const response = await fetch(`${apiUrl}/login-google`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

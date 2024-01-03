@@ -23,6 +23,8 @@ import logo from "../../../../Asset/wayan logo.png";
 import { motion } from "framer-motion";
 import ForgotPasswordModal from "./ForgotPasswordModa";
 import Copyright from "../Home/Component/Copyright";
+
+const apiUrl = process.env.REACT_APP_API_URL;
 const Login = () => {
   const [formData, setFormData] = useState({
     username: "",
@@ -95,16 +97,20 @@ const Login = () => {
   };
 
   const handleGoogleLogin = async () => {
+    setIsLoading(true);
+
     try {
       const result = await signInWithGoogle();
+      setIsLoading(true);
 
-      const response = await fetch("https://tangkas-jaya-taknik-api-v1.vercel.app/login-google", {
+      const response = await fetch(`${apiUrl}/login-google`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(result),
       });
+      setIsLoading(true);
 
       const data = await response.json();
 
@@ -170,19 +176,21 @@ const Login = () => {
               className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
             />
           </div>
-          <div className="mb-4 relative">
-            <label htmlFor="password" className="block text-gray-700">
-              Password:
-            </label>
-            <input
-              type={showPassword ? "text" : "password"}
-              id="password"
-              name="password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-            />
+          <div className="mb-4 -z-0 relative">
+   
+              <label htmlFor="password" className="block text-gray-700  ">
+                Password:
+              </label>
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                required
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+              />
+    
             <div
               className="absolute top-11 transform -translate-y-1/2 right-3 cursor-pointer"
               onClick={handleTogglePassword}
