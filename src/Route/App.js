@@ -37,6 +37,7 @@ function App() {
                         name="description"
                         content="Tangkas Jaya Teknik, Profesional Layanan AC di Bali. Solusi Cepat & Handal, Kepuasan Pelanggan Prioritas Kami. Hubungi Sekarang!"
                       />
+                      <link rel="canonical" href="https://www.tangkasjayateknik.site/"></link>
 
                       <meta
                         property="og:image"
@@ -105,6 +106,7 @@ function App() {
                   <>
                     <Helmet>
                       <title>Tangkas Jaya Teknik - Admin</title>
+                      <link rel="canonical" href="https://www.tangkasjayateknik.site/admin/dashboard"></link>
                       <meta
                         name="description"
                         content="Your description for the admin dashboard."
@@ -185,6 +187,7 @@ function App() {
                         name="description"
                         content="Tangkas Jaya Teknik, Profesional Layanan AC di Bali. Solusi Cepat & Handal, Kepuasan Pelanggan Prioritas Kami. Hubungi Sekarang!"
                       />
+                      <link rel="canonical" href="https://www.tangkasjayateknik.site/register"></link>
 
                       <meta
                         property="og:image"
@@ -257,6 +260,7 @@ function App() {
                         name="description"
                         content="Tangkas Jaya Teknik, Profesional Layanan AC di Bali. Solusi Cepat & Handal, Kepuasan Pelanggan Prioritas Kami. Hubungi Sekarang!"
                       />
+                      <link rel="canonical" href="https://www.tangkasjayateknik.site/login"></link>
 
                       <meta
                         property="og:image"
@@ -401,6 +405,7 @@ function App() {
                         name="description"
                         content="Tangkas Jaya Teknik, Profesional Layanan AC di Bali. Solusi Cepat & Handal, Kepuasan Pelanggan Prioritas Kami. Hubungi Sekarang!"
                       />
+                      <link rel="canonical" href="https://www.tangkasjayateknik.site/history"></link>
 
                       <meta
                         property="og:image"
@@ -471,6 +476,7 @@ function App() {
                       <title>
                         Tangkas Jaya Teknik - Halaman Tidak diTemukan
                       </title>
+
                       <meta
                         name="description"
                         content="Tangkas Jaya Teknik, Profesional Layanan AC di Bali. Solusi Cepat & Handal, Kepuasan Pelanggan Prioritas Kami. Hubungi Sekarang!"
