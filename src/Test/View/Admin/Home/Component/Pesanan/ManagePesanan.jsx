@@ -70,6 +70,7 @@ const ManagePesanan = () => {
 
         if (parsedStoredDataLength < newDataLength) {
           setIsNewOrderModalVisible(true);
+          fetchData();
 
           localStorage.removeItem("firebaseDataLength");
         }
@@ -183,12 +184,8 @@ const ManagePesanan = () => {
 
     const pesananRef = ref(getDatabase(firebaseApp), "pesanan");
     remove(pesananRef)
-      .then(() => {
-        window.location.reload();
-      })
-      .catch((error) => {
-    
-      });
+      .then(() => {})
+      .catch((error) => {});
   };
 
   return (
@@ -495,15 +492,16 @@ const ManagePesanan = () => {
                   animationData={animationData}
                   loop={false}
                   autoplay
-                  className="w-full h-full flex justify-center"
+                  className="w-full h-full flex justify-center -z-0"
                 />
               </div>
-              <p
-                className="-mt-12 flex justify-center text-lg bg-green-500 text-white p-1 rounded-full cursor-pointer ease-in transition-all hover:bg-green-700"
+
+              <div
                 onClick={handleCloseModal}
+                className="flex justify-center text-lg bg-green-500 text-white p-1 rounded-full cursor-pointer  hover:bg-green-700 -mt-5 z-50"
               >
                 Ada Pesanan Baru
-              </p>
+              </div>
             </div>
           </div>
         </>
