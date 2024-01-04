@@ -19,7 +19,7 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const username = localStorage.getItem("username");
-  const [currentView, setCurrentView] = useState("productService");
+  const [currentView, setCurrentView] = useState("status");
   const navigate = useNavigate();
   const openDrawer = () => {
     setIsOpen(true);
@@ -108,7 +108,21 @@ const Sidebar = () => {
 
             <div tabIndex={0} className="collapse collapse-arrow text-white">
               <div className="collapse-title text-sm font-medium">Management Data</div>
+
+
+
               <div className="collapse-content text-sm">
+                <p
+                  className={`border p-2 rounded-full items-center text-center cursor-pointer hover:bg-slate-500 ${
+                    currentView === "status" ? "border-green-500" : ""
+                  }`}
+                  onClick={() => handleMenuClick("status")}
+                >
+                  Data Pesanan
+                </p>
+              </div>
+
+              <div className="collapse-content text-sm mt-12">
                 <p
                   className={`border p-2 rounded-full items-center text-center cursor-pointer hover:bg-slate-500 ${
                     currentView === "productService" ? "border-green-500" : ""
@@ -119,16 +133,7 @@ const Sidebar = () => {
                 </p>
               </div>
 
-              <div className="collapse-content text-sm mt-12">
-                <p
-                  className={`border p-2 rounded-full items-center text-center cursor-pointer hover:bg-slate-500 ${
-                    currentView === "status" ? "border-green-500" : ""
-                  }`}
-                  onClick={() => handleMenuClick("status")}
-                >
-                  Data Pesanan
-                </p>
-              </div>
+           
             </div>
             <div
               className="flex justify-center bg-red-500 p-1 text-white rounded-lg cursor-pointer hover:bg-red-700 items-center gap-2"

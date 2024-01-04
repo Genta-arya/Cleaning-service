@@ -14,6 +14,7 @@ import {
   faMarker,
   faRoad,
   faSignOut,
+  faTimes,
   faTrash,
   faUpload,
 } from "@fortawesome/free-solid-svg-icons";
@@ -21,10 +22,15 @@ import SkeletonRow from "../Product/SkeletonRow";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import ModalStatus from "./ModalStatus";
 import { ToastContainer, toast } from "react-toastify";
-
+import animationData from "../../../../../../Asset/new.json";
 import image from "../../../../../../Asset/wayan logo.png";
 import { useNavigate } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
+import { firebaseApp } from "../../../../../../Feature/Firebase/FirebaseConfig";
+import { getDatabase, off, onValue, ref, remove } from "firebase/database";
+import { set } from "date-fns";
+import Lottie from "lottie-react";
+
 const ManagePesanan = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -34,20 +40,47 @@ const ManagePesanan = () => {
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [selectStatus, setSelectedStatus] = useState(null);
   const navigate = useNavigate();
+
+  const [isNewOrderModalVisible, setIsNewOrderModalVisible] = useState(false);
+
   const fetchData = async () => {
     try {
       const result = await getAllOrders();
       setOrders(result.data);
       setIsLoading(false);
-      setIsLoadingLogout(false);
     } catch (error) {
       console.error("Error fetching orders:", error);
       setIsLoading(false);
-      setIsLoadingLogout(false);
     }
   };
   useEffect(() => {
+    const storedDataLength = localStorage.getItem("firebaseDataLength");
+    const parsedStoredDataLength = storedDataLength
+      ? parseInt(storedDataLength, 10)
+      : 0;
+
     fetchData();
+    const ordersRef = ref(getDatabase(firebaseApp), "pesanan");
+
+    const handleNewData = (snapshot) => {
+      const newData = snapshot.val();
+
+      if (newData) {
+        const newDataLength = Object.keys(newData).length;
+
+        if (parsedStoredDataLength < newDataLength) {
+          setIsNewOrderModalVisible(true);
+
+          localStorage.removeItem("firebaseDataLength");
+        }
+      }
+    };
+
+    onValue(ordersRef, handleNewData);
+
+    return () => {
+      off(ordersRef, "value", handleNewData);
+    };
   }, []);
 
   const handleEditStatus = async (orderId, newStatus, refetchOrders) => {
@@ -145,9 +178,22 @@ const ManagePesanan = () => {
     }
   };
 
+  const handleCloseModal = () => {
+    setIsNewOrderModalVisible(false);
+
+    const pesananRef = ref(getDatabase(firebaseApp), "pesanan");
+    remove(pesananRef)
+      .then(() => {
+        console.log('Real-time data "pesanan" removed successfully.');
+      })
+      .catch((error) => {
+        console.error('Error removing real-time data "pesanan":', error);
+      });
+  };
+
   return (
     <div className="px-12 p-8">
-      <div className="flex justify-between items-center   w-auto bg-white p-4 mb-4 rounded-full lg:hidden md:hidden block">
+      <div className="flex justify-between items-center w-auto bg-white p-4 mb-4 rounded-full lg:hidden md:hidden block">
         <img src={image} alt="image" className="w-10 h-10" />
 
         <h1 className="font-bold text-biru ">Pesanan</h1>
@@ -169,70 +215,154 @@ const ManagePesanan = () => {
             ))}
           </div>
         </>
+      ) : orders.length === 0 ? (
+        <p className="mt-4 text-center text-red-500">
+          Belum Ada Pesanan
+        </p>
       ) : (
-        <div className="overflow-x-auto lg:block md:block hidden">
-          <table className="table table-xs">
-            <thead>
-              <tr className="text-center">
-                <th className="border border-gray-300 p-2">Id pesanan</th>
-                <th className="border border-gray-300 p-2">Username</th>
-                <th className="border border-gray-300 p-2">Image</th>
-                <th className="border border-gray-300 p-2">Service</th>
-                <th className="border border-gray-300 p-2">Total Price</th>
-                <th className="border border-gray-300 p-2">Tanggal</th>
-                <th className="border border-gray-300 p-2">Alamat</th>
-                <th className="border border-gray-300 p-2">Koordinat</th>
-                <th className="border border-gray-300 p-2">Status</th>
-                <th className="border border-gray-300 p-2">Actions</th>
-                <th className="border border-gray-300 p-2">Dokumentasi</th>
-                <th className="border border-gray-300 p-2">Chat</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-100 text-center">
-                  <td className="border border-gray-300 p-2">{order.id}</td>
-                  <td className="border border-gray-300 p-2">
-                    {order.username}
-                  </td>
+        <>
+          <div className="overflow-x-auto lg:block md:block hidden">
+            <table className="table table-xs">
+              <thead>
+                <tr className="text-center">
+                  <th className="border border-gray-300 p-2">Id pesanan</th>
+                  <th className="border border-gray-300 p-2">Username</th>
+                  <th className="border border-gray-300 p-2">Image</th>
+                  <th className="border border-gray-300 p-2">Service</th>
+                  <th className="border border-gray-300 p-2">Total Price</th>
+                  <th className="border border-gray-300 p-2">Tanggal</th>
+                  <th className="border border-gray-300 p-2">Alamat</th>
+                  <th className="border border-gray-300 p-2">Koordinat</th>
+                  <th className="border border-gray-300 p-2">Status</th>
+                  <th className="border border-gray-300 p-2">Actions</th>
+                  <th className="border border-gray-300 p-2">Dokumentasi</th>
+                  <th className="border border-gray-300 p-2">Chat</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map((order) => (
+                  <tr key={order.id} className="hover:bg-gray-100 text-center">
+                    <td className="border border-gray-300 p-2">{order.id}</td>
+                    <td className="border border-gray-300 p-2">
+                      {order.username}
+                    </td>
 
-                  <td className="border border-gray-300 p-2">
-                    <img
-                      src={order.orderDetails.url || "default-image-url"}
-                      alt="image"
-                      className="w-16 h-16 object-cover rounded"
-                    />
-                  </td>
-                  <td className="border border-gray-300 p-2">
-                    Quantity: {order.orderDetails.qty} x{" "}
-                    {order.orderDetails.nm_product}
-                  </td>
-                  <td className="border border-gray-300 p-2">
-                    Rp {order.orderDetails.price.toLocaleString()}
-                  </td>
-                  <td className="border border-gray-300 p-2">
-                    {order.orderDetails.createdAt &&
-                      new Date(order.orderDetails.createdAt).toLocaleString()}
-                  </td>
-                  <td className="border border-gray-300 p-2">
-                    {" "}
-                    {order.location.address},{" "}
-                  </td>
-                  <td className="border border-gray-300 p-2 text-blue-500 font-bold">
-                    <a
-                      href={`https://www.google.com/maps/place/${order.location.latitude},${order.location.longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="underline"
-                    >
-                      Open Maps
-                    </a>
-                  </td>
-                  <td className="flex p-6 mt-1 gap-4 items-center text-center  ">
-                    <div
-                      className="border p-1 rounded-md border-gray-300  flex gap-2 cursor-pointer"
-                      onClick={() => openEditModal(order)}
-                    >
+                    <td className="border border-gray-300 p-2">
+                      <img
+                        src={order.orderDetails.url || "default-image-url"}
+                        alt="image"
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                    </td>
+                    <td className="border border-gray-300 p-2">
+                      Quantity: {order.orderDetails.qty} x{" "}
+                      {order.orderDetails.nm_product}
+                    </td>
+                    <td className="border border-gray-300 p-2">
+                      Rp {order.orderDetails.price.toLocaleString()}
+                    </td>
+                    <td className="border border-gray-300 p-2">
+                      {order.orderDetails.createdAt &&
+                        new Date(order.orderDetails.createdAt).toLocaleString()}
+                    </td>
+                    <td className="border border-gray-300 p-2">
+                      {" "}
+                      {order.location.address},{" "}
+                    </td>
+                    <td className="border border-gray-300 p-2 text-blue-500 font-bold">
+                      <a
+                        href={`https://www.google.com/maps/place/${order.location.latitude},${order.location.longitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline"
+                      >
+                        Open Maps
+                      </a>
+                    </td>
+                    <td className="flex p-6 mt-1 gap-4 items-center text-center  ">
+                      <div
+                        className="border p-1 rounded-md border-gray-300  flex gap-2 cursor-pointer"
+                        onClick={() => openEditModal(order)}
+                      >
+                        <div
+                          className={`${
+                            order.orderDetails.status === "pending"
+                              ? "text-orange-500  font-bold"
+                              : order.orderDetails.status === "selesai"
+                              ? "text-green-500  font-bold"
+                              : "text-blue-500  font-bold"
+                          }`}
+                        >
+                          {order.orderDetails.status === "pending"
+                            ? "diproses"
+                            : order.orderDetails.status}
+                        </div>
+                        <button>
+                          <FontAwesomeIcon
+                            icon={faEdit}
+                            size="xl"
+                            className="text-blue-500 "
+                          />
+                        </button>
+                      </div>
+                    </td>
+
+                    <td className="border border-gray-300 p-2">
+                      <div className="flex gap-4 p-4">
+                        <button className="text-green-500 hover:underline">
+                          <div>
+                            <FontAwesomeIcon
+                              icon={faUpload}
+                              size="xl"
+                              className="text-blue-500"
+                            />
+                          </div>
+                        </button>
+                        <button onClick={() => handleDeleteOrder(order.id)}>
+                          <FontAwesomeIcon
+                            icon={faTrash}
+                            size="xl"
+                            color="red"
+                          />
+                        </button>
+                      </div>
+                    </td>
+                    <td className="border border-gray-300 p-2">
+                      <button className="text-green-500 hover:underline">
+                        <FontAwesomeIcon
+                          icon={faImage}
+                          size="xl"
+                          className="text-blue-500"
+                        />
+                        <p>lihat</p>
+                      </button>
+                    </td>
+                    <td className="border border-gray-300 p-2">
+                      <button
+                        onClick={() => handleWhatsAppChat(order)}
+                        className="text-green-500 hover:underline"
+                      >
+                        <FontAwesomeIcon
+                          icon={faWhatsapp}
+                          size="2xl"
+                          className="text-gre-500"
+                        />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="lg:hidden md:hidden block ">
+            <div className="flex flex-col ">
+              {orders.map((order) => (
+                <div key={order.id} className="border mb-4 p-4 rounded-lg">
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="font-bold text-sm">
+                      Id Pesanan: {order.id}
+                    </div>
+                    <div className="flex items-center gap-2">
                       <div
                         className={`${
                           order.orderDetails.status === "pending"
@@ -246,159 +376,87 @@ const ManagePesanan = () => {
                           ? "diproses"
                           : order.orderDetails.status}
                       </div>
-                      <button>
-                        <FontAwesomeIcon
-                          icon={faEdit}
-                          size="xl"
-                          className="text-blue-500 "
-                        />
-                      </button>
-                    </div>
-                  </td>
-
-                  <td className="border border-gray-300 p-2">
-                    <div className="flex gap-4 p-4">
-                      <button className="text-green-500 hover:underline">
-                        <div>
-                          <FontAwesomeIcon
-                            icon={faUpload}
-                            size="xl"
-                            className="text-blue-500"
-                          />
-                        </div>
-                      </button>
-                      <button onClick={() => handleDeleteOrder(order.id)}>
-                        <FontAwesomeIcon icon={faTrash} size="xl" color="red" />
-                      </button>
-                    </div>
-                  </td>
-                  <td className="border border-gray-300 p-2">
-                    <button className="text-green-500 hover:underline">
-                      <FontAwesomeIcon
-                        icon={faImage}
-                        size="xl"
+                      <button
+                        onClick={() => openEditModal(order)}
                         className="text-blue-500"
-                      />
-                      <p>lihat</p>
-                    </button>
-                  </td>
-                  <td className="border border-gray-300 p-2">
+                      >
+                        <FontAwesomeIcon icon={faEdit} size="lg" />
+                      </button>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="text-green-500 hover:underline">
+                        <FontAwesomeIcon icon={faUpload} size="lg" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteOrder(order.id)}
+                        className="text-red-500"
+                      >
+                        <FontAwesomeIcon icon={faTrash} size="lg" />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex  gap-2 items-center mb-2 border p-2 rounded-xl ">
+                    <img
+                      src={order.orderDetails.url || "default-image-url"}
+                      alt="image"
+                      className="w-20 h-16 object-cover rounded-md "
+                    />
+                    <div className="ml-2 items-center text-sm border-b-4 rounded-xl p-2">
+                      <div className="mt-3">
+                        Nama: {order.orderDetails.username}
+                      </div>
+                      <div className="">
+                        Service: {order.orderDetails.nm_product}
+                      </div>
+                      <div>Qty: {order.orderDetails.qty}</div>
+                      <div>
+                        Harga: Rp {order.orderDetails.price.toLocaleString()}
+                      </div>
+                      <div>
+                        Tanggal:{" "}
+                        {order.orderDetails.createdAt &&
+                          new Date(
+                            order.orderDetails.createdAt
+                          ).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mb-2 flex justify-center border p-1 rounded-md items-center gap-4">
+                    <FontAwesomeIcon icon={faRoad}> </FontAwesomeIcon>
+                    {order.location.address},
+                  </div>
+
+                  <div className="mb-2">
+                    <a
+                      href={`https://www.google.com/maps/place/${order.location.latitude},${order.location.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline text-blue-500"
+                    >
+                      <button className="bg-blue-500 w-full p-1 rounded-md hover:bg-blue-700 ease-in transition-all delay-75">
+                        <h1 className="text-white text-sm font-bold">
+                          Buka Lokasi
+                        </h1>
+                      </button>
+                    </a>
+                  </div>
+                  <div className="flex gap-4 items-center mb-4 ">
                     <button
                       onClick={() => handleWhatsAppChat(order)}
-                      className="text-green-500 hover:underline"
+                      className="text-green-500  bg-gray-200 w-full rounded-md p-1 ease-in transition-all delay-75 hover:bg-gray-300"
                     >
-                      <FontAwesomeIcon
-                        icon={faWhatsapp}
-                        size="2xl"
-                        className="text-gre-500"
-                      />
+                      <div className="flex justify-center gap-2 items-center ">
+                        <h1>WhatsApp</h1>
+                        <FontAwesomeIcon icon={faWhatsapp} size="lg" />
+                      </div>
                     </button>
-                  </td>
-                </tr>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-      <div className="lg:hidden md:hidden block ">
-        <div className="flex flex-col ">
-          {orders.map((order) => (
-            <div key={order.id} className="border mb-4 p-4 rounded-lg">
-              <div className="flex justify-between items-center mb-2">
-                <div className="font-bold text-sm">Id Pesanan: {order.id}</div>
-                <div className="flex items-center gap-2">
-                  <div
-                    className={`${
-                      order.orderDetails.status === "pending"
-                        ? "text-orange-500  font-bold"
-                        : order.orderDetails.status === "selesai"
-                        ? "text-green-500  font-bold"
-                        : "text-blue-500  font-bold"
-                    }`}
-                  >
-                    {order.orderDetails.status === "pending"
-                      ? "diproses"
-                      : order.orderDetails.status}
-                  </div>
-                  <button
-                    onClick={() => openEditModal(order)}
-                    className="text-blue-500"
-                  >
-                    <FontAwesomeIcon icon={faEdit} size="lg" />
-                  </button>
-                </div>
-                <div className="flex gap-2">
-                  <button className="text-green-500 hover:underline">
-                    <FontAwesomeIcon icon={faUpload} size="lg" />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteOrder(order.id)}
-                    className="text-red-500"
-                  >
-                    <FontAwesomeIcon icon={faTrash} size="lg" />
-                  </button>
-                </div>
-              </div>
-              <div className="flex  gap-2 items-center mb-2 border p-2 rounded-xl ">
-                <img
-                  src={order.orderDetails.url || "default-image-url"}
-                  alt="image"
-                  className="w-20 h-16 object-cover rounded-md "
-                />
-                <div className="ml-2 items-center text-sm border-b-4 rounded-xl p-2">
-                  <div className="mt-3">
-                    Nama: {order.orderDetails.username}
-                  </div>
-                  <div className="">
-                    Service: {order.orderDetails.nm_product}
-                  </div>
-                  <div>Qty: {order.orderDetails.qty}</div>
-                  <div>
-                    Harga: Rp {order.orderDetails.price.toLocaleString()}
-                  </div>
-                  <div>
-                    Tanggal:{" "}
-                    {order.orderDetails.createdAt &&
-                      new Date(
-                        order.orderDetails.createdAt
-                      ).toLocaleDateString()}
-                  </div>
-                </div>
-              </div>
-              <div className="mb-2 flex justify-center border p-1 rounded-md items-center gap-4">
-                <FontAwesomeIcon icon={faRoad}> </FontAwesomeIcon>
-                {order.location.address},
-              </div>
-
-              <div className="mb-2">
-                <a
-                  href={`https://www.google.com/maps/place/${order.location.latitude},${order.location.longitude}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline text-blue-500"
-                >
-                  <button className="bg-blue-500 w-full p-1 rounded-md hover:bg-blue-700 ease-in transition-all delay-75">
-                    <h1 className="text-white text-sm font-bold">
-                      Buka Lokasi
-                    </h1>
-                  </button>
-                </a>
-              </div>
-              <div className="flex gap-4 items-center mb-4 ">
-                <button
-                  onClick={() => handleWhatsAppChat(order)}
-                  className="text-green-500  bg-gray-200 w-full rounded-md p-1 ease-in transition-all delay-75 hover:bg-gray-300"
-                >
-                  <div className="flex justify-center gap-2 items-center ">
-                    <h1>WhatsApp</h1>
-                    <FontAwesomeIcon icon={faWhatsapp} size="lg" />
-                  </div>
-                </button>
-              </div>
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+        </>
+      )}
 
       {isLoadingLogout && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -409,6 +467,27 @@ const ManagePesanan = () => {
             <p>Tunggu sebentar</p>
           </div>
         </div>
+      )}
+
+      {isNewOrderModalVisible && (
+        <>
+          <div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 p-4 "
+          >
+            <div
+              initial={{ opacity: 0, y: -40, scale: 0.8 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -40, scale: 0.8 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="bg-white w-96 p-12 rounded-md shadow-lg z-50"
+            >
+              {/* Rest of the code for the new order modal */}
+            </div>
+          </div>
+        </>
       )}
 
       {selectedOrderId && (

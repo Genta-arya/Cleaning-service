@@ -14,8 +14,9 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../../../../Asset/wayan logo.png";
 import { ClipLoader, PulseLoader } from "react-spinners";
 import { child, getDatabase, onValue, ref, remove } from "firebase/database";
-import firebaseApp from "../../../../../Feature/Firebase/FirebaseConfig";
+
 import { toast } from "react-toastify";
+import { firebaseApp } from "../../../../../Feature/Firebase/FirebaseConfig";
 
 const Navbar = ({ toggleTheme, isDarkTheme }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);

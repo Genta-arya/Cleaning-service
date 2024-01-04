@@ -14,6 +14,9 @@ import {
 import { submitOrder } from "../../../../../Service/Api";
 import ChatBotOrder from "./ChatBotOrder";
 import SuccessModal from "./SuccesModal";
+import { initializeApp } from "firebase/app";
+import { getDatabase, push, ref, serverTimestamp } from "firebase/database";
+import { firebaseApp } from "../../../../../Feature/Firebase/FirebaseConfig";
 
 const OrderForm = () => {
   const { state } = useLocation();
@@ -30,6 +33,9 @@ const OrderForm = () => {
   const [mapVisible, setMapVisible] = useState(false);
   const [mapdetail, setMapdetail] = useState("");
   const [isOrderSuccess, setOrderSuccess] = useState(false);
+
+  const db = getDatabase(firebaseApp);
+
   const username = localStorage.getItem("username");
   // const referenceCoordinates = {
   //   lat: -7.761981,
@@ -134,6 +140,7 @@ const OrderForm = () => {
   const handleAddressChange = (e) => {
     setAddress(e.target.value);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -142,7 +149,6 @@ const OrderForm = () => {
 
     const distance = calculateHaversineDistance(
       selectedLocation,
-      // referenceCoordinates
       selectedLocation
     );
 
@@ -180,12 +186,36 @@ const OrderForm = () => {
 
         setOrderSuccess(true);
         setIsLoading(false);
+
+        await push(ref(db, "pesanan"), {
+          message: "ada pesanan baru",
+          createdAt: serverTimestamp(),
+        });
+
+        const apiUrl = process.env.REACT_APP_API_URL;
+        const sendEmailResponse = await fetch(`${apiUrl}send-email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: 'mgentaarya@gmail.com',
+            orderData: orderData,
+          }),
+        });
+
+        if (sendEmailResponse.ok) {
+          console.log("Email sent successfully");
+        } else {
+          console.error("Failed to send email");
+        }
       } catch (error) {
+        // Handle error
         setOrderSuccess(false);
         setIsLoading(false);
 
         toast.error(
-          "Sepertinya Server kami sedang dalam masalah , harap coba lagi ya ",
+          "Sepertinya Server kami sedang dalam masalah, harap coba lagi ya ",
           {
             position: "top-center",
             autoClose: 3000,
@@ -198,6 +228,7 @@ const OrderForm = () => {
       }
     }
   };
+
   const handleBack = () => {
     navigate("/");
   };

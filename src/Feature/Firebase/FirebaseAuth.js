@@ -1,7 +1,8 @@
 // File: "../../../../Feature/Firebase/FirebaseAuth.js"
 
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import firebaseApp from "./FirebaseConfig";
+import { firebaseApp } from "./FirebaseConfig";
+
 
 const auth = getAuth(firebaseApp);
 

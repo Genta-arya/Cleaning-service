@@ -6,7 +6,8 @@ import animationData from "../../../../../Asset/notif.json";
 import Lottie from "lottie-react";
 import { getNotifications } from "../../../../../Service/Api";
 import { child, getDatabase, ref, remove } from "firebase/database";
-import firebaseApp from "../../../../../Feature/Firebase/FirebaseConfig";
+import { firebaseApp } from "../../../../../Feature/Firebase/FirebaseConfig";
+
 
 const ModalNotifikasi = ({ onClose, notifications, loading }) => {
   const handleNotificationClick = async (orderId) => {
