@@ -27,7 +27,7 @@ export const signInWithGoogle = async () => {
 
 const saveUserDataToBackend = async (userData) => {
   try {
-    const response = await fetch(`${apiUrl}/login-google`, {
+    const response = await fetch(`${apiUrl}login-google`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
