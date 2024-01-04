@@ -120,9 +120,11 @@ const Login = () => {
         navigate("/");
       } else {
         toast.error("Login failed: " + data.error);
+        setIsLoading(false);
       }
     } catch (error) {
-      console.error("Google Login Error:", error.message);
+      toast.error("maaf seperti nya terjadi kesalahan pada server");
+      setIsLoading(false);
     }
   };
 
@@ -177,20 +179,19 @@ const Login = () => {
             />
           </div>
           <div className="mb-4 -z-0 relative">
-   
-              <label htmlFor="password" className="block text-gray-700  ">
-                Password:
-              </label>
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                name="password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-              />
-    
+            <label htmlFor="password" className="block text-gray-700  ">
+              Password:
+            </label>
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              name="password"
+              required
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+            />
+
             <div
               className="absolute top-11 transform -translate-y-1/2 right-3 cursor-pointer"
               onClick={handleTogglePassword}

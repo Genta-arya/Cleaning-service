@@ -84,7 +84,7 @@ const Testimoni = () => {
     >
       <div className="flex justify-center mb-4">
         <h1 className="text-white font-bold font-serif lg:text-2xl md:text-2xl text-lg ">
-          Testimoni Kami
+          Dokumentasi Service Kami
         </h1>
       </div>
 
