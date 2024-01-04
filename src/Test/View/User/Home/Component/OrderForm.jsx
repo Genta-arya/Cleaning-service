@@ -518,6 +518,7 @@ const OrderForm = () => {
             referenceCoordinates={referenceCoordinates}
             locationPermission={locationPermission}
             routePolyline={routePolyline}
+            distance={distance}
           />
 
           <button
