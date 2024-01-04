@@ -42,18 +42,13 @@ const Navbar = ({ toggleTheme, isDarkTheme }) => {
 
         setOrderIdFromHistory(orderIds);
         setUrl(image);
-     
-      } catch (error) {
-        console.error("Error fetching history:", error);
-      }
+      } catch (error) {}
     };
 
     fetchHistory();
   }, []);
 
-  useEffect(() => {
-
-  }, [notifications]);
+  useEffect(() => {}, [notifications]);
 
   useEffect(() => {
     try {
@@ -70,8 +65,6 @@ const Navbar = ({ toggleTheme, isDarkTheme }) => {
               orderId: Number(orderId),
               message: orderDetails.message || "",
             }));
-
-         
 
           setNotifications(filteredNotifications);
         } else {

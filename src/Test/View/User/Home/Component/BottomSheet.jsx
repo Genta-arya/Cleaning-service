@@ -62,7 +62,7 @@ const BottomSheet = () => {
         setUrl(image)
        
       } catch (error) {
-        console.error("Error fetching history:", error);
+        
       }
     };
 

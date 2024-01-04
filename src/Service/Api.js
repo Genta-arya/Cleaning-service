@@ -137,8 +137,8 @@ export const getHistory = async (page) => {
 
     return response.data;
   } catch (error) {
-    // Handle error
-    console.error("Error fetching history:", error);
+
+
     throw error; // Rethrow the error to be handled by the calling function
   }
 };
