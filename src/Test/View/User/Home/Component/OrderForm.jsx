@@ -67,22 +67,47 @@ const OrderForm = () => {
     checkLocationPermission();
   }, []);
 
+  useEffect(() => {
+    if (locationPermission === true) {
+      const unwatchLocation = watchLocation();
+      return () => unwatchLocation();
+    }
+  }, [locationPermission]);
+  useEffect(() => {
+    checkLocationPermission();
+  }, []);
   const watchLocation = () => {
-    const watchId = navigator.geolocation.watchPosition(
-      (position) => {
-        handleGetCurrentLocation();
-        fetchRoute();
-      },
-      (error) => {
-        setLocationPermission(false);
-        setLoadingLocation(false);
+    let isFetching = false;
+    let watchId;
+
+    const handleSuccess = async (position) => {
+      handleGetCurrentLocation();
+
+      if (!isFetching) {
+        isFetching = true;
+
+        try {
+          await fetchRoute();
+        } catch (error) {
+          console.error("Error fetching route:", error);
+        } finally {
+          isFetching = false;
+        }
       }
-    );
+    };
+
+    const handleError = (error) => {
+      setLocationPermission(false);
+      setLoadingLocation(false);
+    };
+
+    watchId = navigator.geolocation.watchPosition(handleSuccess, handleError);
 
     return () => {
       navigator.geolocation.clearWatch(watchId);
     };
   };
+
   const calculateHaversineDistance = (coord1, coord2) => {
     const toRadians = (angle) => (angle * Math.PI) / 180;
 
@@ -136,18 +161,20 @@ const OrderForm = () => {
         setRoute(response.data.features[0].geometry.coordinates);
       }
     } catch (error) {
+      setLoadingLocation(false);
     } finally {
       setLoadingLocation(false);
     }
   };
 
   useEffect(() => {
+   
     if (locationPermission === true) {
-      fetchRoute();
-
       const unwatchLocation = watchLocation();
-
-      return () => unwatchLocation();
+      return () => {
+       
+        unwatchLocation();
+      };
     }
   }, [locationPermission]);
 

@@ -25,13 +25,8 @@ const Maps = ({
   locationPermission,
 }) => {
   const [yourLocationMarkerRef, setYourLocationMarkerRef] = useState(null);
-  const [toastId, setToastId] = useState(null);
 
-  useEffect(() => {
-    if (toastId !== null) {
-      return () => toast.dismiss(toastId);
-    }
-  }, [toastId]);
+
 
   return (
     <div className="">
