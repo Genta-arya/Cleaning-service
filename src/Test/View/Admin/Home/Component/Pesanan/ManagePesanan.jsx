@@ -184,10 +184,10 @@ const ManagePesanan = () => {
     const pesananRef = ref(getDatabase(firebaseApp), "pesanan");
     remove(pesananRef)
       .then(() => {
-        console.log('Real-time data "pesanan" removed successfully.');
+        window.location.reload();
       })
       .catch((error) => {
-        console.error('Error removing real-time data "pesanan":', error);
+    
       });
   };
 
@@ -216,9 +216,7 @@ const ManagePesanan = () => {
           </div>
         </>
       ) : orders.length === 0 ? (
-        <p className="mt-4 text-center text-red-500">
-          Belum Ada Pesanan
-        </p>
+        <p className="mt-4 text-center text-red-500">Belum Ada Pesanan</p>
       ) : (
         <>
           <div className="overflow-x-auto lg:block md:block hidden">
@@ -484,7 +482,28 @@ const ManagePesanan = () => {
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="bg-white w-96 p-12 rounded-md shadow-lg z-50"
             >
-              {/* Rest of the code for the new order modal */}
+              <div className="flex justify-end">
+                <button
+                  className="text-gray-500 hover:text-gray-700"
+                  onClick={handleCloseModal}
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                </button>
+              </div>
+              <div className="flex justify-center mb-4 ">
+                <Lottie
+                  animationData={animationData}
+                  loop={false}
+                  autoplay
+                  className="w-full h-full flex justify-center"
+                />
+              </div>
+              <p
+                className="-mt-12 flex justify-center text-lg bg-green-500 text-white p-1 rounded-full cursor-pointer ease-in transition-all hover:bg-green-700"
+                onClick={handleCloseModal}
+              >
+                Ada Pesanan Baru
+              </p>
             </div>
           </div>
         </>
