@@ -152,7 +152,7 @@ const Product = () => {
       animate={controls}
       initial={{ opacity: 0, y: 40, scale: 0.8, rotate: 0 }}
       transition={{ duration: 1, ease: "easeOut" }}
-      className="lg:p-12 md:p-12 p-3 lg:-mt-12 "
+      className="lg:p-12 md:p-12 p-3 "
     >
       <div className="hidden lg:block ">
         {isLoading ? (
@@ -186,7 +186,7 @@ const Product = () => {
               </>
             ) : (
               <>
-                <div className="flex justify-center lg:gap-8 md:gap-8 gap-1">
+                <div className="flex justify-center gap-1">
                   {filteredProducts.map((product, index) => (
                     <motion.div
                       key={product.id}

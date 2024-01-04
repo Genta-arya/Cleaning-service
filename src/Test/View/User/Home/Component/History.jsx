@@ -20,6 +20,8 @@ const History = () => {
   const [sortingCriteria, setSortingCriteria] = useState("status");
   const [filterStatus, setFilterStatus] = useState("all");
   const [isLoading, setIsloading] = useState(false);
+  const [totalItems, setTotalItems] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,8 +30,9 @@ const History = () => {
     const fetchHistory = async () => {
       setIsloading(true);
       try {
-        const data = await getHistory();
-        setHistoryData(data);
+        const { orders } = await getHistory(currentPage);
+        setHistoryData(orders);
+        setTotalItems(orders.length); // Update total items based on your API response
         setIsloading(false);
       } catch (error) {
         console.error("Error fetching history:", error);
@@ -37,7 +40,7 @@ const History = () => {
     };
 
     fetchHistory();
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,6 +58,10 @@ const History = () => {
 
     fetchData();
   }, [dispatch, navigate]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const handleWhatsAppChat = (phoneNumber, orderDetails) => {
     const message =
@@ -92,7 +99,7 @@ const History = () => {
           if (a.orderDetails.status > b.orderDetails.status) return 1;
           return 0;
         }
-        return 0; // Handle the case where orderDetails is undefined for either a or b.
+        return 0;
       });
     }
 
@@ -392,11 +399,28 @@ const History = () => {
             />
           </div>
 
-          <p className="text-gray-700 text-lg mb-4 text-center font-serif">
+          <p className="text-gray-700 text-lg mb-4 text-center font-serif ">
             Belum ada Pesanan.
           </p>
         </div>
       )}
+      <div className="join flex justify-center ">
+        <button
+          className="join-item btn"
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          <p className="text-black font-bold">«</p>
+        </button>
+        <h1 className="join-item btn cursor-default">{currentPage}</h1>
+        <button
+          className="join-item btn"
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={totalItems <= currentPage}
+        >
+          <p className="text-black font-bold">»</p>
+        </button>
+      </div>
     </div>
   );
 };

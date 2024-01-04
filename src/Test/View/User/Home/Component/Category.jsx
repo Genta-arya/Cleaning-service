@@ -16,22 +16,24 @@ const Category = () => {
   };
 
   return (
-    <div className="mb-4 lg:p-24">
-      <select
-        id="category"
-        className="mt-1 p-3 px-4 border border-gray-300 lg:w-full focus:outline-none focus:border-blue-500 text-xs lg:text-lg font-serif rounded-xl "
-        value={selectedCategory}
-        onChange={(e) => handleCategoryChange(e.target.value)}
-      >
-        <option value="" className="text-xs lg:text-lg ">
-          Semua Service
-        </option>
-        {categories.map((category, index) => (
-          <option key={index} value={category}>
-            {category}
+    <div className="flex justify-center">
+      <div className="mb-8 w-40">
+        <select
+          id="category"
+          className="mt-1 p-3 px-4 border border-gray-300 focus:outline-none focus:border-blue-500 text-xs lg:text-lg font-serif rounded-xl "
+          value={selectedCategory}
+          onChange={(e) => handleCategoryChange(e.target.value)}
+        >
+          <option value="" className="text-xs lg:text-lg ">
+            Semua Service
           </option>
-        ))}
-      </select>
+          {categories.map((category, index) => (
+            <option key={index} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 };

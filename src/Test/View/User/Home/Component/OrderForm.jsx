@@ -35,10 +35,10 @@ const OrderForm = () => {
   //   lat: -7.761981,
   //   lng: 110.40567,
   // };
-  const referenceCoordinates = {
-    lat: -6.977425299234734,
-    lng: 110.41103205296062,
-  };
+  // const referenceCoordinates = {
+  //   lat: -6.977425299234734,
+  //   lng: 110.41103205296062,
+  // };
 
   const formatCurrency = (price) => {
     if (price >= 1000) {
@@ -51,7 +51,6 @@ const OrderForm = () => {
 
   const handleMapClick = (latlng) => {
     setSelectedLocation(latlng);
-    
   };
 
   const MapClickHandler = () => {
@@ -67,7 +66,6 @@ const OrderForm = () => {
 
           if (data.results.length > 0) {
             const components = data.results[0].components;
-        
 
             const city = components.city_district;
             const road = components.road;
@@ -101,7 +99,6 @@ const OrderForm = () => {
 
           if (data.results.length > 0) {
             const components = data.results[0].components;
-          
 
             const city = components.city_district;
             const road = components.road;
@@ -145,6 +142,7 @@ const OrderForm = () => {
 
     const distance = calculateHaversineDistance(
       selectedLocation,
+      // referenceCoordinates
       selectedLocation
     );
 
@@ -183,7 +181,6 @@ const OrderForm = () => {
         setOrderSuccess(true);
         setIsLoading(false);
       } catch (error) {
-     
         setOrderSuccess(false);
         setIsLoading(false);
 

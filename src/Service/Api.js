@@ -46,7 +46,7 @@ export const getNotificationsRealtime = (username, setNotifications) => {
 export const submitOrder = async (orderData) => {
   try {
     const response = await axiosInstance.post("/order", orderData);
-    console.log("Order submitted successfully:", response.data);
+   
     return response.data;
   } catch (error) {
     throw error;
@@ -115,7 +115,7 @@ export const logout = async (accessToken, username) => {
 
     return response;
   } catch (error) {
-    console.log("Error during logout:", error);
+  
     throw error;
   }
 };
@@ -125,19 +125,24 @@ export const getProduct = async () => {
     const response = await axiosInstance.get("/product");
     return response.data;
   } catch (error) {
-    console.log(error);
+    
     throw error;
   }
 };
 
-export const getHistory = async () => {
+export const getHistory = async (page) => {
   const username = localStorage.getItem("username");
   try {
-    const response = await axiosInstance.get(`/history/${username}`);
+    const response = await axiosInstance.get(`/history/${username}?page=${page}`);
 
     return response.data;
-  } catch (error) {}
+  } catch (error) {
+    // Handle error
+    console.error("Error fetching history:", error);
+    throw error; // Rethrow the error to be handled by the calling function
+  }
 };
+
 
 export const postComment = async (username, review, rating) => {
   try {
@@ -149,7 +154,7 @@ export const postComment = async (username, review, rating) => {
 
     return response.data;
   } catch (error) {
-    console.error("Error posting comment:", error);
+    
     throw error;
   }
 };
@@ -158,7 +163,7 @@ export const getAllComments = async () => {
     const response = await axiosInstance.get("/comment");
     return response.data.comments;
   } catch (error) {
-    console.error("Error fetching comments:", error);
+    
     throw error;
   }
 };
@@ -181,7 +186,7 @@ export const createCategory = async (nm_category) => {
 
     return data;
   } catch (error) {
-    console.error("Error creating category:", error);
+   
     throw error;
   }
 };
@@ -203,7 +208,7 @@ export const createProduct = async (productData) => {
 
     return response.data;
   } catch (error) {
-    console.error("Error creating product:", error);
+   
     throw new Error("Failed to create product");
   }
 };
@@ -218,7 +223,7 @@ export const getAllCategories = async () => {
 
     return response.data;
   } catch (error) {
-    console.error("Error fetching categories:", error.message);
+   
     throw new Error("Failed to fetch categories");
   }
 };
@@ -266,7 +271,7 @@ export const editCategory = async (categoryId, editedCategory) => {
 
     return response.data;
   } catch (error) {
-    console.error("Error editing category:", error);
+   
     throw error;
   }
 };
@@ -290,7 +295,7 @@ export const getAllOrders = async () => {
 
     return response.data;
   } catch (error) {
-    console.error("Error fetching orders:", error);
+   
     throw error;
   }
 };
@@ -301,7 +306,7 @@ export const updateOrderStatus = async (orderId, newStatus) => {
 
     return { success: true, message: "Status Berhasil diupdate" };
   } catch (error) {
-    console.error("Error updating order status:", error);
+  
     throw error;
   }
 };
@@ -312,7 +317,7 @@ export const getNotifications = async (username) => {
 
     return response.data;
   } catch (error) {
-    console.error("Error fetching notifications:", error.message);
+   
   }
 };
 
@@ -321,7 +326,7 @@ export const generateOTP = async (email) => {
     const response = await axiosInstance.post("/send-otp", { email });
     return response.data;
   } catch (error) {
-    console.error("API Error:", error);
+   
     throw error;
   }
 };
@@ -331,7 +336,7 @@ export const verifyOTP = async (otp) => {
     const response = await axiosInstance.post("/verify", { otp });
     return response.data;
   } catch (error) {
-    console.error("Error verifying OTP:", error);
+  
     throw error;
   }
 };
@@ -346,13 +351,13 @@ export const changePassword = async ({ email, newPassword }) => {
 
     // Periksa respons dari server (jika diperlukan)
     if (response.status === 200) {
-      console.log('Password changed successfully');
+     
     } else {
-      console.error('Failed to change password');
+     
       throw new Error('Failed to change password');
     }
   } catch (error) {
-    console.error('changePassword API error:', error);
+  
     throw error;
   }
 };

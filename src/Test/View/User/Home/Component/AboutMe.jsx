@@ -34,16 +34,31 @@ const AboutMe = () => {
 
   const controls = useAnimation();
 
-  useEffect(() => {
-    const handleScroll = () => {
+  const handleScroll = () => {
+    const aboutMeSection = document.getElementById("aboutMeSection");
+  
+    if (aboutMeSection) {
       const scrollPosition = window.scrollY + window.innerHeight;
-      const elementPosition =
-        document.getElementById("aboutMeSection").offsetTop;
-
+      const elementPosition = aboutMeSection.offsetTop;
+  
       if (scrollPosition > elementPosition) {
         controls.start({ opacity: 1, y: 0 });
       }
-    };
+    }
+  };
+
+  useEffect(() => {
+    const aboutMeSection = document.getElementById("aboutMeSection");
+
+    if (aboutMeSection && controls) {
+      const scrollPosition = window.scrollY + window.innerHeight;
+      const elementPosition = aboutMeSection.offsetTop;
+  
+      if (scrollPosition > elementPosition) {
+        controls.start({ opacity: 1, y: 0 });
+      }
+    }
+
 
     window.addEventListener("scroll", handleScroll);
 

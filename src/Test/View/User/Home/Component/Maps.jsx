@@ -6,12 +6,13 @@ import {
   Popup,
   Polyline,
 } from "react-leaflet";
-import L, { Icon } from "leaflet";
+import L from "leaflet";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "leaflet/dist/leaflet.css";
 import marker from "../../../../../Asset/mark.png";
+
 const Maps = ({
   mapKey,
   handleGetCurrentLocation,
@@ -36,9 +37,9 @@ const Maps = ({
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setLocationPermission(true);
+          handleGetCurrentLocation();
         },
         (error) => {
-          console.error("Error getting location:", error);
           setLocationPermission(false);
         }
       );
@@ -47,8 +48,24 @@ const Maps = ({
     }
   };
 
+  const watchLocation = () => {
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        handleGetCurrentLocation();
+        fetchRoute();
+      },
+      (error) => {
+        setLocationPermission(false);
+        setLoadingLocation(false);
+      }
+    );
+
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
+  };
+
   const getLocation = () => {
-    handleGetCurrentLocation();
     if (loadingLocation) {
       return;
     }
@@ -58,6 +75,10 @@ const Maps = ({
     if (locationPermission === true) {
       handleGetCurrentLocation();
       fetchRoute();
+
+      const unwatchLocation = watchLocation();
+
+      return () => unwatchLocation();
     } else {
       const newToastId = toast.error(
         "Please enable location services to use this feature.",
@@ -94,7 +115,6 @@ const Maps = ({
         setRoute(response.data.features[0].geometry.coordinates);
       }
     } catch (error) {
-      console.error("Error fetching route:", error);
     } finally {
       setLoadingLocation(false);
     }
@@ -103,6 +123,10 @@ const Maps = ({
   useEffect(() => {
     if (locationPermission === true) {
       fetchRoute();
+
+      const unwatchLocation = watchLocation();
+
+      return () => unwatchLocation();
     }
   }, [locationPermission]);
 
@@ -111,16 +135,6 @@ const Maps = ({
   return (
     <div className="">
       <ToastContainer />
-
-      <div className="mb-4 flex justify-center ">
-        <button
-          type="button"
-          onClick={getLocation}
-          className="bg-biru text-white p-1 lg:w-52 md:w-52 w-40 rounded-full hover:bg-blue-300 mr-2 font-bold"
-        >
-          Cek Lokasi kamu
-        </button>
-      </div>
 
       {mapVisible && locationPermission !== false && (
         <div className="mb-4 border-2 border-gray-500 rounded-xl p-2 ">
@@ -177,7 +191,8 @@ const Maps = ({
       {locationPermission === false && (
         <div className="mb-4">
           <p className="text-red-500">
-           Lokasimu tidak aktif , tolong aktifkan lokasimu untuk melanjutkan pesanan.
+            Lokasimu tidak aktif, tolong aktifkan lokasimu untuk melanjutkan
+            pesanan ya.
           </p>
         </div>
       )}
