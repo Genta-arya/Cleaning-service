@@ -15,122 +15,23 @@ import marker from "../../../../../Asset/mark.png";
 
 const Maps = ({
   mapKey,
-  handleGetCurrentLocation,
+
   selectedLocation,
   mapVisible,
-  MapClickHandler,
+  routePolyline,
+
   mapdetail,
   referenceCoordinates,
+  locationPermission,
 }) => {
-  const [locationPermission, setLocationPermission] = useState(null);
-  const [loadingLocation, setLoadingLocation] = useState(false);
-  const [route, setRoute] = useState(null);
   const [yourLocationMarkerRef, setYourLocationMarkerRef] = useState(null);
   const [toastId, setToastId] = useState(null);
-
-  useEffect(() => {
-    checkLocationPermission();
-  }, []);
-
-  const checkLocationPermission = () => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocationPermission(true);
-          handleGetCurrentLocation();
-        },
-        (error) => {
-          setLocationPermission(false);
-        }
-      );
-    } else {
-      setLocationPermission(false);
-    }
-  };
-
-  const watchLocation = () => {
-    const watchId = navigator.geolocation.watchPosition(
-      (position) => {
-        handleGetCurrentLocation();
-        fetchRoute();
-      },
-      (error) => {
-        setLocationPermission(false);
-        setLoadingLocation(false);
-      }
-    );
-
-    return () => {
-      navigator.geolocation.clearWatch(watchId);
-    };
-  };
-
-  const getLocation = () => {
-    if (loadingLocation) {
-      return;
-    }
-
-    setLoadingLocation(true);
-
-    if (locationPermission === true) {
-      handleGetCurrentLocation();
-      fetchRoute();
-
-      const unwatchLocation = watchLocation();
-
-      return () => unwatchLocation();
-    } else {
-      const newToastId = toast.error(
-        "Please enable location services to use this feature.",
-        {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          onClose: () => {
-            setLoadingLocation(false);
-          },
-        }
-      );
-      setToastId(newToastId);
-    }
-  };
 
   useEffect(() => {
     if (toastId !== null) {
       return () => toast.dismiss(toastId);
     }
   }, [toastId]);
-
-  const fetchRoute = async () => {
-    try {
-      const response = await axios.get(
-        `https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248a051d454575342b29dc4d8f60ac3efd2&start=${selectedLocation.lng},${selectedLocation.lat}&end=${referenceCoordinates.lng},${referenceCoordinates.lat}`
-      );
-
-      if (response.data && response.data.features) {
-        setRoute(response.data.features[0].geometry.coordinates);
-      }
-    } catch (error) {
-    } finally {
-      setLoadingLocation(false);
-    }
-  };
-
-  useEffect(() => {
-    if (locationPermission === true) {
-      fetchRoute();
-
-      const unwatchLocation = watchLocation();
-
-      return () => unwatchLocation();
-    }
-  }, [locationPermission]);
-
-  const routePolyline = route && route.map((coord) => [coord[1], coord[0]]);
 
   return (
     <div className="">
@@ -190,7 +91,7 @@ const Maps = ({
 
       {locationPermission === false && (
         <div className="mb-4">
-          <p className="text-red-500">
+          <p className="text-red-500 flex justify-center">
             Lokasimu tidak aktif, tolong aktifkan lokasimu untuk melanjutkan
             pesanan ya.
           </p>

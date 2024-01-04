@@ -17,6 +17,7 @@ import SuccessModal from "./SuccesModal";
 import { initializeApp } from "firebase/app";
 import { getDatabase, push, ref, serverTimestamp } from "firebase/database";
 import { firebaseApp } from "../../../../../Feature/Firebase/FirebaseConfig";
+import axios from "axios";
 
 const OrderForm = () => {
   const { state } = useLocation();
@@ -33,18 +34,124 @@ const OrderForm = () => {
   const [mapVisible, setMapVisible] = useState(false);
   const [mapdetail, setMapdetail] = useState("");
   const [isOrderSuccess, setOrderSuccess] = useState(false);
+  const [locationPermission, setLocationPermission] = useState(null);
+  const [loadingLocation, setLoadingLocation] = useState(false);
+  const [route, setRoute] = useState(null);
 
   const db = getDatabase(firebaseApp);
 
+  const checkLocationPermission = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocationPermission(true);
+        },
+        (error) => {
+          setLocationPermission(false);
+          toast.error("Please enable location services to submit the order.", {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+      );
+    } else {
+      setLocationPermission(false);
+    }
+  };
+
+  useEffect(() => {
+    checkLocationPermission();
+  }, []);
+
+  const watchLocation = () => {
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        handleGetCurrentLocation();
+        fetchRoute();
+      },
+      (error) => {
+        setLocationPermission(false);
+        setLoadingLocation(false);
+      }
+    );
+
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
+  };
+  const calculateHaversineDistance = (coord1, coord2) => {
+    const toRadians = (angle) => (angle * Math.PI) / 180;
+
+    const R = 6371;
+
+    const lat1 = toRadians(coord1.lat);
+    const lon1 = toRadians(coord1.lng);
+    const lat2 = toRadians(coord2.lat);
+    const lon2 = toRadians(coord2.lng);
+
+    const dLat = lat2 - lat1;
+    const dLon = lon2 - lon1;
+
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const distanceInKilometers = R * c;
+
+    const roundedDistance = parseFloat(distanceInKilometers.toFixed(2));
+
+    return roundedDistance;
+  };
+  const referenceCoordinates = {
+    lat: -8.785069834299154,
+    lng: 115.17231948094826,
+  };
+
+  const location = {
+    lat: -8.547924506814734,
+    lng: 115.27673336678515,
+  };
+
+  const distance = calculateHaversineDistance(
+    selectedLocation,
+    referenceCoordinates
+  );
+
+  const fetchRoute = async () => {
+    try {
+      const response = await axios.get(
+        `https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248a051d454575342b29dc4d8f60ac3efd2&start=${selectedLocation.lng},${selectedLocation.lat}&end=${referenceCoordinates.lng},${referenceCoordinates.lat}`
+      );
+      // const response = await axios.get(
+      //   `https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248a051d454575342b29dc4d8f60ac3efd2&start=${selectedLocation.lng},${selectedLocation.lat}&end=${selectedLocation.lng},${selectedLocation.lat}`
+      // );
+
+      if (response.data && response.data.features) {
+        setRoute(response.data.features[0].geometry.coordinates);
+      }
+    } catch (error) {
+    } finally {
+      setLoadingLocation(false);
+    }
+  };
+
+  useEffect(() => {
+    if (locationPermission === true) {
+      fetchRoute();
+
+      const unwatchLocation = watchLocation();
+
+      return () => unwatchLocation();
+    }
+  }, [locationPermission]);
+
   const username = localStorage.getItem("username");
-  // const referenceCoordinates = {
-  //   lat: -7.761981,
-  //   lng: 110.40567,
-  // };
-  // const referenceCoordinates = {
-  //   lat: -6.977425299234734,
-  //   lng: 110.41103205296062,
-  // };
 
   const formatCurrency = (price) => {
     if (price >= 1000) {
@@ -99,7 +206,7 @@ const OrderForm = () => {
 
         try {
           const response = await fetch(
-            `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=e80f453b74fc44c498014ee19ed91bff`
+            `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=60ca4fc1658d48dab960502a905511c8`
           );
           const data = await response.json();
 
@@ -147,22 +254,21 @@ const OrderForm = () => {
 
     const uid = "123";
 
-    const distance = calculateHaversineDistance(
-      selectedLocation,
-      selectedLocation
-    );
-
     const maxDistance = 25;
 
     if (distance > maxDistance) {
-      toast.error(`Location is too far ${distance} km. You can't order now!`, {
-        position: "top-center",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.error(
+        `Lokasi kamu terlalu jauh ${distance} km. maksimal 25 km untuk melakukan pesanan`,
+        {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+      setIsLoading(false);
     } else {
       const orderData = {
         uid,
@@ -199,7 +305,7 @@ const OrderForm = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: 'andiarta150898@gmail.com',
+            email: "andiarta150898@gmail.com",
             orderData: orderData,
           }),
         });
@@ -232,31 +338,6 @@ const OrderForm = () => {
   const handleBack = () => {
     navigate("/");
   };
-  const calculateHaversineDistance = (coord1, coord2) => {
-    const toRadians = (angle) => (angle * Math.PI) / 180;
-
-    const R = 6371;
-
-    const lat1 = toRadians(coord1.lat);
-    const lon1 = toRadians(coord1.lng);
-    const lat2 = toRadians(coord2.lat);
-    const lon2 = toRadians(coord2.lng);
-
-    const dLat = lat2 - lat1;
-    const dLon = lon2 - lon1;
-
-    const a =
-      Math.sin(dLat / 2) ** 2 +
-      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
-
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    const distanceInKilometers = R * c;
-
-    const roundedDistance = parseFloat(distanceInKilometers.toFixed(2));
-
-    return roundedDistance;
-  };
 
   useEffect(() => {
     handleGetCurrentLocation();
@@ -287,6 +368,8 @@ const OrderForm = () => {
       setQuantity(quantity - 1);
     }
   };
+
+  const routePolyline = route && route.map((coord) => [coord[1], coord[0]]);
 
   return (
     <div className="flex items-center justify-center mt-8 py-8 p-4 h-full ">
@@ -432,13 +515,19 @@ const OrderForm = () => {
             mapVisible={mapVisible}
             MapClickHandler={MapClickHandler}
             mapdetail={mapdetail}
-            referenceCoordinates={selectedLocation}
+            referenceCoordinates={referenceCoordinates}
+            locationPermission={locationPermission}
+            routePolyline={routePolyline}
           />
 
           <button
             type="submit"
-            className="bg-biru text-white py-2 px-4 rounded-md hover:bg-blue-400 min-w-full font-bold"
-            disabled={isLoading}
+            className={`${
+              isLoading || !locationPermission
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-biru text-white hover:bg-blue-400"
+            } py-2 px-4 rounded-md min-w-full font-bold`}
+            disabled={isLoading || !locationPermission}
           >
             {isLoading ? (
               <div className="flex items-center justify-center">
@@ -446,7 +535,7 @@ const OrderForm = () => {
                 <span className="ml-2">Tunggu sebentar ya...</span>
               </div>
             ) : (
-              "Submit"
+              "Pesan sekarang"
             )}
           </button>
         </form>
