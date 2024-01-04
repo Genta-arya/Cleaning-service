@@ -28,13 +28,13 @@ const OrderForm = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const navigate = useNavigate();
-  const [selectedLocation, setSelectedLocation] = useState({ lat: 0, lng: 0 });
+  const [selectedLocation, setSelectedLocation] = useState({});
   const [isChatBotOpen, setChatBotOpen] = useState(false);
   const [mapKey, setMapKey] = useState(0);
   const [mapVisible, setMapVisible] = useState(false);
   const [mapdetail, setMapdetail] = useState("");
   const [isOrderSuccess, setOrderSuccess] = useState(false);
-  const [locationPermission, setLocationPermission] = useState(null);
+  const [locationPermission, setLocationPermission] = useState(false);
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [route, setRoute] = useState(null);
 
@@ -61,51 +61,6 @@ const OrderForm = () => {
     } else {
       setLocationPermission(false);
     }
-  };
-
-  useEffect(() => {
-    checkLocationPermission();
-  }, []);
-
-  useEffect(() => {
-    if (locationPermission === true) {
-      const unwatchLocation = watchLocation();
-      return () => unwatchLocation();
-    }
-  }, [locationPermission]);
-  useEffect(() => {
-    checkLocationPermission();
-  }, []);
-  const watchLocation = () => {
-    let isFetching = false;
-    let watchId;
-
-    const handleSuccess = async (position) => {
-      handleGetCurrentLocation();
-
-      if (!isFetching) {
-        isFetching = true;
-
-        try {
-          await fetchRoute();
-        } catch (error) {
-          console.error("Error fetching route:", error);
-        } finally {
-          isFetching = false;
-        }
-      }
-    };
-
-    const handleError = (error) => {
-      setLocationPermission(false);
-      setLoadingLocation(false);
-    };
-
-    watchId = navigator.geolocation.watchPosition(handleSuccess, handleError);
-
-    return () => {
-      navigator.geolocation.clearWatch(watchId);
-    };
   };
 
   const calculateHaversineDistance = (coord1, coord2) => {
@@ -148,36 +103,6 @@ const OrderForm = () => {
     referenceCoordinates
   );
 
-  const fetchRoute = async () => {
-    try {
-      const response = await axios.get(
-        `https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248a051d454575342b29dc4d8f60ac3efd2&start=${selectedLocation.lng},${selectedLocation.lat}&end=${referenceCoordinates.lng},${referenceCoordinates.lat}`
-      );
-      // const response = await axios.get(
-      //   `https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248a051d454575342b29dc4d8f60ac3efd2&start=${selectedLocation.lng},${selectedLocation.lat}&end=${selectedLocation.lng},${selectedLocation.lat}`
-      // );
-
-      if (response.data && response.data.features) {
-        setRoute(response.data.features[0].geometry.coordinates);
-      }
-    } catch (error) {
-      setLoadingLocation(false);
-    } finally {
-      setLoadingLocation(false);
-    }
-  };
-
-  useEffect(() => {
-   
-    if (locationPermission === true) {
-      const unwatchLocation = watchLocation();
-      return () => {
-       
-        unwatchLocation();
-      };
-    }
-  }, [locationPermission]);
-
   const username = localStorage.getItem("username");
 
   const formatCurrency = (price) => {
@@ -189,72 +114,71 @@ const OrderForm = () => {
     }
   };
 
-  const handleMapClick = (latlng) => {
-    setSelectedLocation(latlng);
-  };
+  const fetchRoute = async (location) => {
+    try {
+      const response = await axios.get(
+        `https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf62486b9e5cbb12784e9daa1693e76cfbbce7&start=${location.lng},${location.lat}&end=${referenceCoordinates.lng},${referenceCoordinates.lat}`
+      );
 
-  const MapClickHandler = () => {
-    const map = useMapEvents({
-      click: async (e) => {
-        setSelectedLocation(e.latlng);
-
-        try {
-          const response = await fetch(
-            `https://api.opencagedata.com/geocode/v1/json?q=${e.latlng.lat}+${e.latlng.lng}&key=e80f453b74fc44c498014ee19ed91bff`
-          );
-          const data = await response.json();
-
-          if (data.results.length > 0) {
-            const components = data.results[0].components;
-
-            const city = components.city_district;
-            const road = components.road;
-            const state = components.state;
-            const addressString = `${road}, ${city}, ${state}`;
-            setMapdetail(addressString);
-          }
-        } catch (error) {
-          console.error("Error fetching reverse geocoding data:", error);
-        }
-      },
-    });
-
-    return null;
-  };
-
-  const handleGetCurrentLocation = () => {
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-
-        setSelectedLocation({ lat: latitude, lng: longitude });
-        setMapKey((prevKey) => prevKey + 1);
-        setMapVisible(true);
-
-        try {
-          const response = await fetch(
-            `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=60ca4fc1658d48dab960502a905511c8`
-          );
-          const data = await response.json();
-
-          if (data.results.length > 0) {
-            const components = data.results[0].components;
-
-            const city = components.city_district;
-            const road = components.road;
-            const state = components.state;
-            const addressString = `${road}, ${city}, ${state}`;
-            setMapdetail(addressString);
-          }
-        } catch (error) {
-          console.error("Error fetching reverse geocoding data:", error);
-        }
-      },
-      (error) => {
-        console.error("Error getting current location:", error.message);
+      if (response.data && response.data.features) {
+        setRoute(response.data.features[0].geometry.coordinates);
       }
-    );
+    } catch (error) {
+      setLoadingLocation(false);
+      console.error("Error fetching route data:", error);
+    } finally {
+      setLoadingLocation(false);
+    }
   };
+
+  useEffect(() => {
+    const handleGetCurrentLocation = async () => {
+      try {
+        await checkLocationPermission();
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+
+            const location = { lat: latitude, lng: longitude };
+
+            setSelectedLocation(location);
+
+            try {
+              const response = await fetch(
+                `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=60ca4fc1658d48dab960502a905511c8`
+              );
+              const data = await response.json();
+
+              if (data.results.length > 0) {
+                const components = data.results[0].components;
+
+                const city = components.city_district;
+                const road = components.road;
+                const state = components.state;
+                const addressString = `${road}, ${city}, ${state}`;
+                setMapdetail(addressString);
+              }
+
+              // Call fetchRoute with the obtained location
+              fetchRoute(location);
+
+              setMapKey((prevKey) => prevKey + 1);
+              setMapVisible(true);
+            } catch (error) {
+              console.error("Error fetching reverse geocoding data:", error);
+            }
+          },
+          (error) => {
+            console.error("Error getting current location:", error.message);
+          }
+        );
+      } catch (error) {
+        console.error("Error checking location permission:", error);
+      }
+    };
+
+    handleGetCurrentLocation();
+  }, []);
 
   const handleQuantityChange = (e) => {
     const newQuantity = parseInt(e.target.value);
@@ -365,10 +289,6 @@ const OrderForm = () => {
   const handleBack = () => {
     navigate("/");
   };
-
-  useEffect(() => {
-    handleGetCurrentLocation();
-  }, []);
 
   const toggleChatBot = () => {
     setChatBotOpen((prev) => !prev);
@@ -535,12 +455,9 @@ const OrderForm = () => {
           </div>
 
           <Maps
-            handleGetCurrentLocation={handleGetCurrentLocation}
-            handleMapClick={handleMapClick}
             mapKey={mapKey}
             selectedLocation={selectedLocation}
             mapVisible={mapVisible}
-            MapClickHandler={MapClickHandler}
             mapdetail={mapdetail}
             referenceCoordinates={referenceCoordinates}
             locationPermission={locationPermission}
