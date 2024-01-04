@@ -46,7 +46,7 @@ export const getNotificationsRealtime = (username, setNotifications) => {
 export const submitOrder = async (orderData) => {
   try {
     const response = await axiosInstance.post("/order", orderData);
-   
+
     return response.data;
   } catch (error) {
     throw error;
@@ -115,7 +115,6 @@ export const logout = async (accessToken, username) => {
 
     return response;
   } catch (error) {
-  
     throw error;
   }
 };
@@ -125,7 +124,6 @@ export const getProduct = async () => {
     const response = await axiosInstance.get("/product");
     return response.data;
   } catch (error) {
-    
     throw error;
   }
 };
@@ -133,16 +131,13 @@ export const getProduct = async () => {
 export const getHistory = async (page) => {
   const username = localStorage.getItem("username");
   try {
-    const response = await axiosInstance.get(`/history/${username}?page=${page}`);
+    const response = await axiosInstance.get(
+      `/history/${username}?page=${page}`
+    );
 
     return response.data;
-  } catch (error) {
-
-
-    throw error; // Rethrow the error to be handled by the calling function
-  }
+  } catch (error) {}
 };
-
 
 export const postComment = async (username, review, rating) => {
   try {
@@ -154,7 +149,6 @@ export const postComment = async (username, review, rating) => {
 
     return response.data;
   } catch (error) {
-    
     throw error;
   }
 };
@@ -163,7 +157,6 @@ export const getAllComments = async () => {
     const response = await axiosInstance.get("/comment");
     return response.data.comments;
   } catch (error) {
-    
     throw error;
   }
 };
@@ -186,7 +179,6 @@ export const createCategory = async (nm_category) => {
 
     return data;
   } catch (error) {
-   
     throw error;
   }
 };
@@ -208,7 +200,6 @@ export const createProduct = async (productData) => {
 
     return response.data;
   } catch (error) {
-   
     throw new Error("Failed to create product");
   }
 };
@@ -223,7 +214,6 @@ export const getAllCategories = async () => {
 
     return response.data;
   } catch (error) {
-   
     throw new Error("Failed to fetch categories");
   }
 };
@@ -271,7 +261,6 @@ export const editCategory = async (categoryId, editedCategory) => {
 
     return response.data;
   } catch (error) {
-   
     throw error;
   }
 };
@@ -295,7 +284,6 @@ export const getAllOrders = async () => {
 
     return response.data;
   } catch (error) {
-   
     throw error;
   }
 };
@@ -306,7 +294,6 @@ export const updateOrderStatus = async (orderId, newStatus) => {
 
     return { success: true, message: "Status Berhasil diupdate" };
   } catch (error) {
-  
     throw error;
   }
 };
@@ -316,9 +303,7 @@ export const getNotifications = async (username) => {
     const response = await axiosInstance.get(`/notifications/${username}`);
 
     return response.data;
-  } catch (error) {
-   
-  }
+  } catch (error) {}
 };
 
 export const generateOTP = async (email) => {
@@ -326,7 +311,6 @@ export const generateOTP = async (email) => {
     const response = await axiosInstance.post("/send-otp", { email });
     return response.data;
   } catch (error) {
-   
     throw error;
   }
 };
@@ -336,7 +320,6 @@ export const verifyOTP = async (otp) => {
     const response = await axiosInstance.post("/verify", { otp });
     return response.data;
   } catch (error) {
-  
     throw error;
   }
 };
@@ -351,13 +334,10 @@ export const changePassword = async ({ email, newPassword }) => {
 
     // Periksa respons dari server (jika diperlukan)
     if (response.status === 200) {
-     
     } else {
-     
-      throw new Error('Failed to change password');
+      throw new Error("Failed to change password");
     }
   } catch (error) {
-  
     throw error;
   }
 };
