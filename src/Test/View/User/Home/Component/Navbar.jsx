@@ -31,18 +31,17 @@ const Navbar = ({ toggleTheme, isDarkTheme }) => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const historyData = await getHistory();
+        const { orders } = await getHistory(0);
 
-        const orderIds = historyData.map(
-          (historyItem) => historyItem.orderDetails.orderId
-        );
-        const image = historyData.map(
-          (historyItem) => historyItem.orderDetails.url
-        );
+        const orderIds = orders.map((order) => order.orderDetails.orderId);
+        const images = orders.map((order) => order.orderDetails.url);
 
         setOrderIdFromHistory(orderIds);
-        setUrl(image);
-      } catch (error) {}
+
+        setUrl(images);
+      } catch (error) {
+        console.error("Error fetching history:", error);
+      }
     };
 
     fetchHistory();
@@ -109,12 +108,10 @@ const Navbar = ({ toggleTheme, isDarkTheme }) => {
         setIsloading(false);
         window.location.reload();
       } else {
-        console.error("Gagal logout");
         toast.error("logout tidak berhasil");
         setIsloading(false);
       }
     } catch (error) {
-      console.error("Error:", error);
       toast.error("Maaf seperti nya server sedang bermasalah");
       setIsloading(false);
     }
@@ -128,9 +125,7 @@ const Navbar = ({ toggleTheme, isDarkTheme }) => {
 
       await remove(orderIdRef);
       handleToPesanan();
-    } catch (error) {
-      console.error("Error clearing notifications:", error.message);
-    }
+    } catch (error) {}
   };
 
   const handleToLogin = () => {
@@ -191,14 +186,17 @@ const Navbar = ({ toggleTheme, isDarkTheme }) => {
 
                   {isDropdownNotifikasi && (
                     <div className="absolute right-16 mt-2 w-80 bg-white text-black rounded-lg shadow-2xl drop-shadow-2xl border-2 border-gelap p-4">
+                      <div className="flex justify-center p-2 mb-4 bg-biru text-white rounded-full font-bold">
+                        <h1>Pemberitahuan</h1>
+                      </div>
                       {notifications.length > 0 ? (
-                        <ul className="list-none max-h-48 overflow-y-auto">
+                        <ul className="list-none max-h-48 overflow-y-auto p-2">
                           {notifications.map((notification, index) => (
                             <li
                               key={notification.orderId}
                               className={`bg-gray-100 p-4 mb-2 rounded-md cursor-pointer${
                                 index % 2 === 0 ? "bg-gray-200" : ""
-                              } animate__animated animate__fadeIn cursor-pointer`}
+                              } animate__animated animate__fadeIn cursor-pointer hover:bg-gray-300`}
                               onClick={() =>
                                 handleNotificationClick(notification.orderId)
                               }

@@ -38,8 +38,6 @@ const BottomSheet = () => {
   const navigate = useNavigate();
 
   const handleNotificationClick = () => {
-    
-
     setNotificationModalOpen(true);
   };
 
@@ -49,29 +47,23 @@ const BottomSheet = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const historyData = await getHistory();
+        const { orders } = await getHistory(0);
 
-        const orderIds = historyData.map(
-          (historyItem) => historyItem.orderDetails.orderId
-        );
-        const image = historyData.map(
-          (historyItem) => historyItem.orderDetails.url
-        );
+        const orderIds = orders.map((order) => order.orderDetails.orderId);
+        const images = orders.map((order) => order.orderDetails.url);
 
         setOrderIdFromHistory(orderIds);
-        setUrl(image)
-       
+
+        setUrl(images);
       } catch (error) {
-        
+        console.error("Error fetching history:", error);
       }
     };
 
     fetchHistory();
   }, []);
 
-  useEffect(() => {
-    
-  }, [notifications]);
+  useEffect(() => {}, [notifications]);
 
   useEffect(() => {
     try {
@@ -88,8 +80,6 @@ const BottomSheet = () => {
               orderId: Number(orderId),
               message: orderDetails.message || "",
             }));
-
-        
 
           setNotifications(filteredNotifications);
         } else {
@@ -141,7 +131,6 @@ const BottomSheet = () => {
   const handleHistory = () => {
     navigate("/history");
   };
-
 
   return (
     <div className="fixed inset-x-0 bottom-0 bg-white p-4 shadow-md flex flex-row justify-around z-50 ">

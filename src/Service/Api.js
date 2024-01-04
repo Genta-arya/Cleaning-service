@@ -284,7 +284,7 @@ export const getAllOrders = async () => {
 
     return response.data;
   } catch (error) {
-    throw error;
+  
   }
 };
 

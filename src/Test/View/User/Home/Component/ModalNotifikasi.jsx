@@ -31,7 +31,7 @@ const ModalNotifikasi = ({ onClose, notifications, loading }) => {
         </div>
 
         <div className="flex justify-center mb-6">
-          <h1 className="border-b-2 border-gray-400 p-2 font-bold rounded-full">
+          <h1 className="flex justify-center p-2 mb-4 bg-biru text-white rounded-full font-bold">
             Pemberitahuan
           </h1>
         </div>
@@ -68,7 +68,7 @@ const ModalNotifikasi = ({ onClose, notifications, loading }) => {
                       key={notification.orderId}
                       className={`bg-gray-100 p-4 mb-2 rounded-md ${
                         index % 2 === 0 ? "bg-gray-200" : ""
-                      } animate__animated animate__fadeIn`}
+                      } animate__animated animate__fadeIn  hover:bg-gray-300`}
                     >
                       <Link
                         to="/history"
