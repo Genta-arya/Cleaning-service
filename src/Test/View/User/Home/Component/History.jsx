@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { checkJwt, getHistory } from "../../../../../Service/Api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faL } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faImage, faL } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import animationData from "../../../../../Asset/Pesanan.json";
 import Lottie from "lottie-react";
@@ -14,6 +14,8 @@ import { setLoggedIn } from "../../../../../Feature/Redux/Auth/AuthSlice";
 import jsPDF from "jspdf";
 import Modal from "react-modal";
 import "jspdf-autotable";
+import { ToastContainer, toast } from "react-toastify";
+import ViewImage from "../../../Admin/Home/Component/Pesanan/ViewImage";
 Modal.setAppElement("#root");
 const History = () => {
   const [historyData, setHistoryData] = useState([]);
@@ -22,6 +24,8 @@ const History = () => {
   const [isLoading, setIsloading] = useState(false);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [viewImages, setViewImages] = useState([]);
+  const [isViewImageModalOpen, setIsViewImageModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -159,6 +163,17 @@ const History = () => {
     return date.toLocaleDateString("id-ID", options);
   };
 
+  const handleViewImages = (order) => {
+    const images = order.images;
+
+    setViewImages(images);
+    setIsViewImageModalOpen(true);
+  };
+
+  const handleCloseViewImageModal = () => {
+    setIsViewImageModalOpen(false);
+  };
+
   return (
     <div className="container mx-auto mt-8 p-4">
       <div className="hidden lg:block md:block">
@@ -182,6 +197,7 @@ const History = () => {
               >
                 <option value="all">Semua</option>
                 <option value="pending">Diproses</option>
+                <option value="konfirmasi">Konfirmasi</option>
                 <option value="selesai">Selesai</option>
               </select>
               {sortedAndFilteredData.length > 0 && (
@@ -207,8 +223,9 @@ const History = () => {
                 <th className="border p-2">Service</th>
                 <th className="border p-2">Total Price</th>
                 <th className="border p-2">Tanggal</th>
+                <th className="border p-2">Detail Service</th>
                 <th className="border p-2">Status</th>
-                <th className="border p-2">Action</th>
+                <th className="border p-2">Layanan</th>
               </tr>
             </thead>
 
@@ -248,6 +265,7 @@ const History = () => {
                       {order.orderDetails.createdAt &&
                         new Date(order.orderDetails.createdAt).toLocaleString()}
                     </td>
+                    <td>-</td>
                     <td
                       className={`${
                         order.orderDetails.status === "pending"
@@ -263,12 +281,38 @@ const History = () => {
                     </td>
                     <td className="border p-2">
                       {order.orderDetails.status === "selesai" ? (
-                        <button
-                          className="bg-green-500 text-white px-4 py-2 rounded-md cursor-not-allowed"
-                          disabled
-                        >
-                          <span className="mr-2">&#x1F4AC;</span>Chat
-                        </button>
+                        <>
+                          <div className="flex justify-center gap-2">
+                            <button
+                              className="bg-gray-500 text-white px-4 py-2 rounded-md w-full"
+                              disabled
+                            >
+                              <span className="mr-2">&#x1F4AC;</span>Chat
+                            </button>
+
+                            <button
+                              className="bg-green-500 text-white px-4 py-2 rounded-md w-32 ease-in transition-all "
+                              onClick={() => {
+                                if (order.orderDetails.status === "selesai") {
+                                  handleViewImages(order);
+                                } else {
+                                  toast.error(
+                                    "Status pesanan belum selesai. Tidak bisa melihat gambar."
+                                  );
+                                }
+                              }}
+                              disabled={order.orderDetails.status !== "selesai"}
+                            >
+                              <div>
+                                <FontAwesomeIcon
+                                  icon={faImage}
+                                  className="xl"
+                                ></FontAwesomeIcon>
+                                <h1 className="text-xs">Dokumentasi</h1>
+                              </div>
+                            </button>
+                          </div>
+                        </>
                       ) : (
                         <button
                           onClick={() =>
@@ -413,6 +457,10 @@ const History = () => {
           </p>
         </div>
       )}
+
+      {isViewImageModalOpen && (
+        <ViewImage images={viewImages} onClose={handleCloseViewImageModal} />
+      )}
       <div className="join flex justify-center ">
         <button
           className="join-item btn"
@@ -430,6 +478,7 @@ const History = () => {
           <p className="text-black font-bold">»</p>
         </button>
       </div>
+      <ToastContainer />
     </div>
   );
 };

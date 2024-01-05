@@ -10,6 +10,7 @@ const Category = () => {
   const categories = useSelector(selectCategories);
   const selectedCategory = useSelector(selectSelectedCategory);
   const dispatch = useDispatch();
+  
 
   const handleCategoryChange = (categoryId) => {
     dispatch(setSelectedCategory(categoryId));

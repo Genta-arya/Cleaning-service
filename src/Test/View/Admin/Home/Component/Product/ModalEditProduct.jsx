@@ -8,7 +8,7 @@ import { PulseLoader } from "react-spinners";
 const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
   const MAX_PRODUCT_NAME_LENGTH = 150;
   const MAX_DESCRIPTION_LENGTH = 350;
-  console.log(productData.id)
+ 
 
   const [categories, setCategories] = useState([]);
   const [editedProductData, setEditedProductData] = useState({
@@ -73,7 +73,7 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
     } catch (error) {
       setLoading(false);
       toast.error("Periksa Kembali Data yang diisi ya");
-      console.log(error);
+    
     }
   };
 

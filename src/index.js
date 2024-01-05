@@ -1,6 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { HelmetProvider } from "react-helmet-async"; // Import HelmetProvider
+import { createRoot } from "react-dom/client";  // Correct import statement
+import { HelmetProvider } from "react-helmet-async";
 import "./index.css";
 
 import reportWebVitals from "./reportWebVitals";
@@ -10,17 +10,16 @@ import { store } from "./Feature/Redux/store";
 
 const root = document.getElementById("root");
 
-ReactDOM.hydrate(
+const rootElement = createRoot(root);  // Use createRoot from "react-dom/client"
+
+rootElement.render(
   <React.StrictMode>
     <HelmetProvider>
       <Provider store={store}>
         <App />
       </Provider>
     </HelmetProvider>
-  </React.StrictMode>,
-  root
+  </React.StrictMode>
 );
-
-
 
 reportWebVitals();

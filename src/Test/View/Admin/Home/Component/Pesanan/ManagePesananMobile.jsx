@@ -1,18 +1,26 @@
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import {
   faEdit,
+  faImage,
   faRoad,
   faTrash,
   faUpload,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import ViewImage from "./ViewImage";
+import { toast } from "react-toastify";
 
 const ManagePesananMobile = ({
   orders,
   openEditModal,
   handleDeleteOrder,
   handleWhatsAppChat,
+  openUploadModal,
+  handleViewImages,
+  handleCloseViewImageModal,
+  isViewImageModalOpen,
+  viewImages,
 }) => {
   return (
     <>
@@ -44,7 +52,34 @@ const ManagePesananMobile = ({
                   </button>
                 </div>
                 <div className="flex gap-2">
-                  <button className="text-green-500 hover:underline">
+                  <button
+                    className="text-blue-500 hover:underline"
+                    onClick={() => {
+                      if (order.orderDetails.status === "selesai") {
+                        handleViewImages(order);
+                      } else {
+                        toast.error(
+                          "Status pesanan belum selesai. Tidak bisa melihat gambar."
+                        );
+                      }
+                    }}
+                    disabled={order.orderDetails.status !== "selesai"}
+                  >
+                    <FontAwesomeIcon icon={faImage} size="lg" />
+                  </button>
+                  <button
+                    className="text-green-500 hover:underline"
+                    onClick={() => {
+                      if (order.orderDetails.status === "selesai") {
+                        openUploadModal(
+                          order.orderDetails.orderId,
+                          order.orderDetails.nm_product,
+                          order.id,
+                          order.orderDetails.status
+                        );
+                      }
+                    }}
+                  >
                     <FontAwesomeIcon icon={faUpload} size="lg" />
                   </button>
                   <button

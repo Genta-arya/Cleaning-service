@@ -49,9 +49,9 @@ const ModalEditCategory = ({ onClose }) => {
       await editCategory(categoryId, editedCategory);
       window.location.reload();
 
-      console.log("Category edited successfully");
+
     } catch (error) {
-      console.error("Error editing category:", error);
+
     } finally {
       setLoading(false);
     }

@@ -12,7 +12,7 @@ const ModalCreateCategory = ({ onClose }) => {
   const handleCreateCategory = async () => {
     try {
       if (!categoryName.trim()) {
-        console.log("Category Name:", categoryName);
+     
         toast.error("Nama kategori harus diisi");
         return;
       }
@@ -26,7 +26,7 @@ const ModalCreateCategory = ({ onClose }) => {
     } catch (error) {
       if (error.message === "Failed to create category") {
         toast.error("Gagal membuat kategori");
-        console.log("Category Name:", categoryName);
+     
       } else {
         console.error("Error creating category:", error);
         toast.error("Terjadi kesalahan saat membuat kategori");

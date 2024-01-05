@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const ModalStatus = ({ isVisible, onClose, onSubmit, currentStatus }) => {
   const [newStatus, setNewStatus] = useState(currentStatus);
-  console.log(newStatus);
+  
 
   const handleStatusChange = (e) => {
     setNewStatus(e.target.value);

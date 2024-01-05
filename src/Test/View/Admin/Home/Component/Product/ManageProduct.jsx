@@ -80,8 +80,6 @@ const ManageProduct = () => {
         const response = await getProduct();
         const { products } = response;
         setProducts(products);
-
-        console.log(`Deleted product with ID ${selectedProductDelete.id}`);
       } catch (error) {
         console.error("Error deleting product:", error);
       } finally {
@@ -104,10 +102,8 @@ const ManageProduct = () => {
     setIsProductModalOpen(false);
   };
 
-  const handleEditSave = (editedProductData) => {
-    console.log("Edited Product Data:", editedProductData);
-  };
- 
+  const handleEditSave = (editedProductData) => {};
+
   return (
     <div className="px-12 p-8">
       <div className="flex justify-center gap-4">

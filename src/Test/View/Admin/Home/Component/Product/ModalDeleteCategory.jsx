@@ -48,9 +48,9 @@ const ModalDeleteCategory = ({ onClose }) => {
       await DeleteCategory(categoryId);
       window.location.reload();
 
-      console.log("Category deleted successfully");
+    
     } catch (error) {
-      console.error("Error deleting category:", error);
+
     } finally {
       setLoading(false);
     }

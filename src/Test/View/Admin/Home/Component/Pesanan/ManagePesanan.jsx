@@ -3,16 +3,12 @@ import {
   getAllOrders,
   updateOrderStatus,
   logout,
+  deleteImage,
 } from "../../../../../../Service/Api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
   faImage,
-  faLocation,
-  faMapLocation,
-  faMapPin,
-  faMarker,
-  faRoad,
   faSignOut,
   faTimes,
   faTrash,
@@ -28,10 +24,11 @@ import { useNavigate } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
 import { firebaseApp } from "../../../../../../Feature/Firebase/FirebaseConfig";
 import { getDatabase, off, onValue, ref, remove } from "firebase/database";
-import { set } from "date-fns";
+
 import Lottie from "lottie-react";
 import ManagePesananMobile from "./ManagePesananMobile";
 import ModalUploadGambar from "./ModalUploadGambar";
+import ViewImage from "./ViewImage";
 
 const ManagePesanan = () => {
   const [orders, setOrders] = useState([]);
@@ -40,6 +37,16 @@ const ManagePesanan = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalUpload, setIsModaUpload] = useState(false);
   const [editedStatus, setEditedStatus] = useState("");
+  const [selectedOrderInfo, setSelectedOrderInfo] = useState({
+    orderId: null,
+    nm_product: null,
+    id: null,
+    status: null,
+  });
+ 
+  const [viewImages, setViewImages] = useState([]);
+  const [isViewImageModalOpen, setIsViewImageModalOpen] = useState(false);
+
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [selectStatus, setSelectedStatus] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -113,12 +120,30 @@ const ManagePesanan = () => {
     setCurrentPage(pageNumber);
   };
 
+
   const handleDeleteOrder = async (orderId) => {
     try {
+      // Ensure orderId is an integer
+      const parsedOrderId = parseInt(orderId);
+
+      // Panggil fungsi deleteImage dengan orderId yang dihapus
+      const response = await deleteImage(parsedOrderId);
+
+      if (response.success) {
+        toast.success(response.message);
+
+        fetchData();
+      } else {
+        toast.error(`Failed to delete image: ${response.message}`);
+      }
     } catch (error) {
-      console.error("Error deleting order:", error);
+      console.error("Error deleting image:", error);
+      toast.error(`Error deleting image: ${error.message}`);
     }
+
+    // Rest of your logic...
   };
+
   const handleWhatsAppChat = (order) => {
     if (order && order.orderDetails) {
       const { name, telp, id } = order.orderDetails;
@@ -201,12 +226,29 @@ const ManagePesanan = () => {
       .catch((error) => {});
   };
 
-  const openUploadModal = (orderId) => {
+  const openUploadModal = (orderId, nm_product, id, status) => {
+    setSelectedOrderInfo({
+      orderId,
+      nm_product,
+      id,
+      status,
+    });
     setIsModaUpload(true);
   };
 
   const closeUploadModal = () => {
     setIsModaUpload(false);
+  };
+
+  const handleViewImages = (order) => {
+    const images = order.orderDetails.images;
+
+    setViewImages(images);
+    setIsViewImageModalOpen(true);
+  };
+
+  const handleCloseViewImageModal = () => {
+    setIsViewImageModalOpen(false);
   };
 
   return (
@@ -345,17 +387,42 @@ const ManagePesanan = () => {
                       <div className="flex gap-4 p-4">
                         <button
                           className="text-green-500 hover:underline"
-                          onClick={openUploadModal}
+                          onClick={() => {
+                            if (order.orderDetails.status === "selesai") {
+                              openUploadModal(
+                                order.orderDetails.orderId,
+                                order.orderDetails.nm_product,
+                                order.id,
+                                order.orderDetails.status
+                              );
+                            } else {
+                              toast.error(
+                                "Status pesanan belum selesai. Tidak bisa melakukan aksi."
+                              );
+                            }
+                          }}
                         >
                           <div>
                             <FontAwesomeIcon
                               icon={faUpload}
                               size="xl"
-                              className="text-blue-500"
+                              className={`text-blue-500 
+                              }`}
                             />
                           </div>
                         </button>
-                        <button onClick={() => handleDeleteOrder(order.id)}>
+                        <button
+                          onClick={() => {
+                            if (order.orderDetails.status === "selesai") {
+                              // handleDeleteOrder(order, order.id);
+                              handleDeleteOrder(order.id);
+                            } else {
+                              toast.error(
+                                "Status pesanan belum selesai. Tidak bisa melakukan aksi."
+                              );
+                            }
+                          }}
+                        >
                           <FontAwesomeIcon
                             icon={faTrash}
                             size="xl"
@@ -365,11 +432,27 @@ const ManagePesanan = () => {
                       </div>
                     </td>
                     <td className="border border-gray-300 p-2">
-                      <button className="text-green-500 hover:underline">
+                      <button
+                        className="text-green-500 hover:underline"
+                        onClick={() => {
+                          if (order.orderDetails.status === "selesai") {
+                            handleViewImages(order);
+                          } else {
+                            toast.error(
+                              "Status pesanan belum selesai. Tidak bisa melihat gambar."
+                            );
+                          }
+                        }}
+                        disabled={order.orderDetails.status !== "selesai"}
+                      >
                         <FontAwesomeIcon
                           icon={faImage}
                           size="xl"
-                          className="text-blue-500"
+                          className={`text-blue-500 ${
+                            order.orderDetails.status !== "selesai"
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }`}
                         />
                         <p>lihat</p>
                       </button>
@@ -396,12 +479,21 @@ const ManagePesanan = () => {
             handleDeleteOrder={handleDeleteOrder}
             openEditModal={openEditModal}
             handleWhatsAppChat={handleWhatsAppChat}
+            openUploadModal={openUploadModal}
+            handleViewImages={handleViewImages}
+            handleCloseViewImageModal={handleCloseViewImageModal}
+            isViewImageModalOpen={isViewImageModalOpen}
+            viewImages={viewImages}
           />
         </>
       )}
 
       {isModalUpload && (
-        <ModalUploadGambar closeUploadModal={closeUploadModal} />
+        <ModalUploadGambar
+          closeUploadModal={closeUploadModal}
+          selectedOrderInfo={selectedOrderInfo}
+          orders={orders}
+        />
       )}
 
       {isLoadingLogout && (
@@ -456,6 +548,10 @@ const ManagePesanan = () => {
             </div>
           </div>
         </>
+      )}
+
+      {isViewImageModalOpen && (
+        <ViewImage images={viewImages} onClose={handleCloseViewImageModal} />
       )}
 
       {selectedOrderId && (

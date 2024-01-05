@@ -56,7 +56,7 @@ export const submitOrder = async (orderData) => {
 export const handleRegister = async (userData) => {
   try {
     const response = await axiosInstance.post("/register", userData);
-    console.log("User registered successfully:", response.data);
+
     return response.data;
   } catch (error) {
     throw error;
@@ -92,8 +92,6 @@ export const checkJwt = async () => {
 
     return response.data;
   } catch (error) {
-    console.log("Error checking JWT:", error);
-
     throw error;
   }
 };
@@ -300,7 +298,6 @@ export const getNotifications = async (username) => {
     const response = await axiosInstance.get(`/notifications/${username}`);
 
     return response.data.notifications || [];
-
   } catch (error) {
     console.error("Error fetching notifications:", error);
     throw error;
@@ -326,17 +323,39 @@ export const verifyOTP = async (otp) => {
 
 export const changePassword = async ({ email, newPassword }) => {
   try {
-    // Panggil endpoint API untuk mengubah kata sandi
     const response = await axiosInstance.post(`/change-password`, {
       email,
       newPassword,
     });
 
-    // Periksa respons dari server (jika diperlukan)
     if (response.status === 200) {
     } else {
       throw new Error("Failed to change password");
     }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const uploadImage = async (formData) => {
+  try {
+    const response = await axiosInstance.post("/upload/dokumentasi", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading images:", error);
+    throw error;
+  }
+};
+
+export const deleteImage = async (orderId) => {
+  try {
+    const response = await axiosInstance.delete(`/delete/dokument/${orderId}`);
+    return response.data;
   } catch (error) {
     throw error;
   }

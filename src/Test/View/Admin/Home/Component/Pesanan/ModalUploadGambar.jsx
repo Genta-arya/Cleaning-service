@@ -1,17 +1,18 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import axiosInstance from "../../../../../../Service/Config";
 
-const ModalUploadGambar = ({ closeUploadModal }) => {
+const ModalUploadGambar = ({ closeUploadModal, selectedOrderInfo, orders }) => {
   const [selectedImages, setSelectedImages] = useState([]);
 
+  const orderIds = orders.map((dataObject) => dataObject.id);
 
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
 
-    // Filter out any invalid files and only allow jpg, jpeg, png
     const validFiles = files.filter((file) => {
       const allowedExtensions = ["jpg", "jpeg", "png"];
       const fileExtension = file.name.split(".").pop().toLowerCase();
@@ -20,7 +21,6 @@ const ModalUploadGambar = ({ closeUploadModal }) => {
         allowedExtensions.includes(fileExtension);
 
       if (!isValid) {
-        // Menampilkan pesan toast jika file tidak sesuai format
         toast.error(
           `File ${file.name} tidak sesuai format. Hanya menerima jpg, jpeg, dan png.`
         );
@@ -38,12 +38,43 @@ const ModalUploadGambar = ({ closeUploadModal }) => {
     setSelectedImages(updatedImages);
   };
 
-  const handleUpload = () => {
-    console.log("Upload logic goes here");
+  const handleUpload = async () => {
+    try {
+      const formData = new FormData();
+
+      selectedImages.forEach((image) => {
+        formData.append(`thumbnail`, image);
+      });
+
+      formData.append("orderDetailId", selectedOrderInfo.id);
+      formData.append("orderId", selectedOrderInfo.orderId);
+      formData.append("nm_product", selectedOrderInfo.nm_product);
+
+      const response = await axiosInstance.post("/upload/dokument", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success("Upload successful!");
+        closeUploadModal();
+      } else if (response.status === 400) {
+        toast.error("Client-side error. Check your request.");
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.error(`${error.response.data.error}`);
+      } else if (error.request) {
+        toast.error("No response received from the server.");
+      } else {
+        toast.error("Error setting up the request. Please try again.");
+      }
+    }
   };
 
   return (
-    <div className="fixed inset-0  bg-gray-900 bg-opacity-50 overflow-auto">
+    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 overflow-auto">
       <ToastContainer />
       <div className="flex items-center justify-center min-h-screen">
         <div className="bg-white w-96 p-6 rounded-md">
