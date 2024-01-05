@@ -30,36 +30,45 @@ import { firebaseApp } from "../../../../../../Feature/Firebase/FirebaseConfig";
 import { getDatabase, off, onValue, ref, remove } from "firebase/database";
 import { set } from "date-fns";
 import Lottie from "lottie-react";
+import ManagePesananMobile from "./ManagePesananMobile";
+import ModalUploadGambar from "./ModalUploadGambar";
 
 const ManagePesanan = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingLogout, setIsLoadingLogout] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalUpload, setIsModaUpload] = useState(false);
   const [editedStatus, setEditedStatus] = useState("");
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [selectStatus, setSelectedStatus] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const navigate = useNavigate();
 
   const [isNewOrderModalVisible, setIsNewOrderModalVisible] = useState(false);
-
   const fetchData = async () => {
     try {
-      const result = await getAllOrders();
-      setOrders(result.data);
+      const result = await getAllOrders(currentPage);
+      setOrders(result.data.data);
+      setTotalPages(result.data.totalPages);
+      setCurrentPage(result.data.currentPage);
       setIsLoading(false);
     } catch (error) {
-      console.error("Error fetching orders:", error);
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage]);
+
   useEffect(() => {
     const storedDataLength = localStorage.getItem("firebaseDataLength");
     const parsedStoredDataLength = storedDataLength
       ? parseInt(storedDataLength, 10)
       : 0;
 
-    fetchData();
     const ordersRef = ref(getDatabase(firebaseApp), "pesanan");
 
     const handleNewData = (snapshot) => {
@@ -98,6 +107,10 @@ const ManagePesanan = () => {
     } catch (error) {
       toast.error(`Error editing order status: ${error.message}`);
     }
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   const handleDeleteOrder = async (orderId) => {
@@ -188,6 +201,14 @@ const ManagePesanan = () => {
       .catch((error) => {});
   };
 
+  const openUploadModal = (orderId) => {
+    setIsModaUpload(true);
+  };
+
+  const closeUploadModal = () => {
+    setIsModaUpload(false);
+  };
+
   return (
     <div className="px-12 p-8">
       <div className="flex justify-between items-center w-auto bg-white p-4 mb-4 rounded-full lg:hidden md:hidden block">
@@ -200,6 +221,24 @@ const ManagePesanan = () => {
             className="text-red-500 hover:text-red-700"
           ></FontAwesomeIcon>
         </h1>
+      </div>
+
+      <div className="join flex justify-center py-4">
+        <button
+          className="join-item btn"
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          <p className="text-black font-bold">«</p>
+        </button>
+        <h1 className="join-item btn cursor-default">{currentPage}</h1>
+        <button
+          className="join-item btn"
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          <p className="text-black font-bold">»</p>
+        </button>
       </div>
       {isLoading ? (
         <>
@@ -304,7 +343,10 @@ const ManagePesanan = () => {
 
                     <td className="border border-gray-300 p-2">
                       <div className="flex gap-4 p-4">
-                        <button className="text-green-500 hover:underline">
+                        <button
+                          className="text-green-500 hover:underline"
+                          onClick={openUploadModal}
+                        >
                           <div>
                             <FontAwesomeIcon
                               icon={faUpload}
@@ -349,108 +391,17 @@ const ManagePesanan = () => {
               </tbody>
             </table>
           </div>
-          <div className="lg:hidden md:hidden block ">
-            <div className="flex flex-col ">
-              {orders.map((order) => (
-                <div key={order.id} className="border mb-4 p-4 rounded-lg">
-                  <div className="flex justify-between items-center mb-2">
-                    <div className="font-bold text-sm">
-                      Id Pesanan: {order.id}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`${
-                          order.orderDetails.status === "pending"
-                            ? "text-orange-500  font-bold"
-                            : order.orderDetails.status === "selesai"
-                            ? "text-green-500  font-bold"
-                            : "text-blue-500  font-bold"
-                        }`}
-                      >
-                        {order.orderDetails.status === "pending"
-                          ? "diproses"
-                          : order.orderDetails.status}
-                      </div>
-                      <button
-                        onClick={() => openEditModal(order)}
-                        className="text-blue-500"
-                      >
-                        <FontAwesomeIcon icon={faEdit} size="lg" />
-                      </button>
-                    </div>
-                    <div className="flex gap-2">
-                      <button className="text-green-500 hover:underline">
-                        <FontAwesomeIcon icon={faUpload} size="lg" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteOrder(order.id)}
-                        className="text-red-500"
-                      >
-                        <FontAwesomeIcon icon={faTrash} size="lg" />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex  gap-2 items-center mb-2 border p-2 rounded-xl ">
-                    <img
-                      src={order.orderDetails.url || "default-image-url"}
-                      alt="image"
-                      className="w-20 h-16 object-cover rounded-md "
-                    />
-                    <div className="ml-2 items-center text-sm border-b-4 rounded-xl p-2">
-                      <div className="mt-3">
-                        Nama: {order.orderDetails.username}
-                      </div>
-                      <div className="">
-                        Service: {order.orderDetails.nm_product}
-                      </div>
-                      <div>Qty: {order.orderDetails.qty}</div>
-                      <div>
-                        Harga: Rp {order.orderDetails.price.toLocaleString()}
-                      </div>
-                      <div>
-                        Tanggal:{" "}
-                        {order.orderDetails.createdAt &&
-                          new Date(
-                            order.orderDetails.createdAt
-                          ).toLocaleDateString()}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mb-2 flex justify-center border p-1 rounded-md items-center gap-4">
-                    <FontAwesomeIcon icon={faRoad}> </FontAwesomeIcon>
-                    {order.location.address},
-                  </div>
-
-                  <div className="mb-2">
-                    <a
-                      href={`https://www.google.com/maps/place/${order.location.latitude},${order.location.longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="underline text-blue-500"
-                    >
-                      <button className="bg-blue-500 w-full p-1 rounded-md hover:bg-blue-700 ease-in transition-all delay-75">
-                        <h1 className="text-white text-sm font-bold">
-                          Buka Lokasi
-                        </h1>
-                      </button>
-                    </a>
-                  </div>
-                  <div className="flex gap-4 items-center mb-4 ">
-                    <button
-                      onClick={() => handleWhatsAppChat(order)}
-                      className="text-green-500  bg-gray-200 w-full rounded-md p-1 ease-in transition-all delay-75 hover:bg-gray-300"
-                    >
-                      <div className="flex justify-center gap-2 items-center ">
-                        <h1>WhatsApp</h1>
-                        <FontAwesomeIcon icon={faWhatsapp} size="lg" />
-                      </div>
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <ManagePesananMobile
+            orders={orders}
+            handleDeleteOrder={handleDeleteOrder}
+            openEditModal={openEditModal}
+            handleWhatsAppChat={handleWhatsAppChat}
+          />
         </>
+      )}
+
+      {isModalUpload && (
+        <ModalUploadGambar closeUploadModal={closeUploadModal} />
       )}
 
       {isLoadingLogout && (

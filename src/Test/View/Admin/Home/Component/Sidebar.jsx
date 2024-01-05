@@ -19,7 +19,7 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const username = localStorage.getItem("username");
-  const [currentView, setCurrentView] = useState("statusf");
+  const [currentView, setCurrentView] = useState("status");
   const navigate = useNavigate();
   const openDrawer = () => {
     setIsOpen(true);

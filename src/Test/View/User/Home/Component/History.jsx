@@ -30,9 +30,18 @@ const History = () => {
     const fetchHistory = async () => {
       setIsloading(true);
       try {
-        const { orders } = await getHistory(currentPage);
+        const response = await getHistory(currentPage);
+
+        if (!response || !response.totalPages) {
+          console.error("Invalid response format");
+          return;
+        }
+
+        const { orders, totalPages } = response;
+
         setHistoryData(orders);
-        setTotalItems(orders.length); // Update total items based on your API response
+        setTotalItems(totalPages);
+
         setIsloading(false);
       } catch (error) {
         console.error("Error fetching history:", error);

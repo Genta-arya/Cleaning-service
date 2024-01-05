@@ -7,7 +7,7 @@ import {
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import BottomSheet from "./BottomSheet";
-import { getHistory, handleLogout, logout } from "../../../../../Service/Api";
+import { getNotifications, logout } from "../../../../../Service/Api";
 import { selectIsAuthenticated } from "../../../../../Feature/Redux/Auth/AuthSlice";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ import { child, getDatabase, onValue, ref, remove } from "firebase/database";
 
 import { toast } from "react-toastify";
 import { firebaseApp } from "../../../../../Feature/Firebase/FirebaseConfig";
+import { or } from "firebase/firestore";
 
 const Navbar = ({ toggleTheme, isDarkTheme }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -27,19 +28,23 @@ const Navbar = ({ toggleTheme, isDarkTheme }) => {
   const [notifications, setNotifications] = useState([]);
   const dropdownRef = useRef(null);
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const { orders } = await getHistory(0);
+        const username = localStorage.getItem("username");
 
-        const orderIds = orders.map((order) => order.orderDetails.orderId);
-        const images = orders.map((order) => order.orderDetails.url);
+        if (!username) {
+          console.error("Username not found in localStorage");
+          return;
+        }
+
+        const orders = await getNotifications(username);
+
+        const orderIds = orders.map((order) => order.orderId);
 
         setOrderIdFromHistory(orderIds);
-
-        setUrl(images);
       } catch (error) {
         console.error("Error fetching history:", error);
       }

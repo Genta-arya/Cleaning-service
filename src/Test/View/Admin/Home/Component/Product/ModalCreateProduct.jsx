@@ -40,31 +40,17 @@ const ModalCreateProduct = ({ onClose }) => {
     try {
       setIsCreating(true);
 
-      if (productData.nm_product.length > 100) {
-        toast.error("Product name cannot exceed 100 characters");
+      if (
+        !productData.nm_product.trim() ||
+        !productData.desc.trim() ||
+        productData.price <= 0 ||
+        productData.categoryId <= 0
+      ) {
+        toast.error("Periksa semua form lagi ya");
         return;
       }
 
-      if (productData.desc.length > 350) {
-        toast.error("Description cannot exceed 350 characters");
-        return;
-      }
-
-      if (productData.price <= 0) {
-        toast.error("Price must be greater than 0");
-        return;
-      }
-
-      const thumbnailFile = productData.thumbnail;
-      if (thumbnailFile) {
-        const validFormats = ["image/png", "image/jpeg"];
-        if (!validFormats.includes(thumbnailFile.type)) {
-          toast.error(
-            "Invalid thumbnail format. Only PNG and JPEG are allowed."
-          );
-          return;
-        }
-      }
+    
 
       const response = await createProduct(productData);
 

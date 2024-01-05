@@ -278,14 +278,11 @@ export const DeleteCategory = async (categoryId) => {
   }
 };
 
-export const getAllOrders = async () => {
+export const getAllOrders = async (page) => {
   try {
-    const response = await axiosInstance.get("/get-orders");
-
-    return response.data;
-  } catch (error) {
-  
-  }
+    const response = await axiosInstance.get(`/get-orders?page=${page}`);
+    return response;
+  } catch (error) {}
 };
 
 export const updateOrderStatus = async (orderId, newStatus) => {
@@ -302,10 +299,13 @@ export const getNotifications = async (username) => {
   try {
     const response = await axiosInstance.get(`/notifications/${username}`);
 
-    return response.data;
-  } catch (error) {}
-};
+    return response.data.notifications || [];
 
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    throw error;
+  }
+};
 export const generateOTP = async (email) => {
   try {
     const response = await axiosInstance.post("/send-otp", { email });

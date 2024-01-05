@@ -9,7 +9,7 @@ import {
   faPowerOff,
   faClipboard,
 } from "@fortawesome/free-solid-svg-icons";
-import { getHistory, logout } from "../../../../../Service/Api";
+import {  getNotifications, logout } from "../../../../../Service/Api";
 import { useSelector } from "react-redux";
 import { selectIsAuthenticated } from "../../../../../Feature/Redux/Auth/AuthSlice";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +23,6 @@ import {
   ref,
   remove,
 } from "firebase/database";
-
 
 import { toast } from "react-toastify";
 import { firebaseApp } from "../../../../../Feature/Firebase/FirebaseConfig";
@@ -47,14 +46,18 @@ const BottomSheet = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const { orders } = await getHistory(0);
+        const username = localStorage.getItem("username");
 
-        const orderIds = orders.map((order) => order.orderDetails.orderId);
-        const images = orders.map((order) => order.orderDetails.url);
+        if (!username) {
+          console.error("Username not found in localStorage");
+          return;
+        }
+
+        const orders = await getNotifications(username);
+
+        const orderIds = orders.map((order) => order.orderId);
 
         setOrderIdFromHistory(orderIds);
-
-        setUrl(images);
       } catch (error) {
         console.error("Error fetching history:", error);
       }

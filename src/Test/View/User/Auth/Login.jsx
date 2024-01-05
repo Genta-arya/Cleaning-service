@@ -123,7 +123,7 @@ const Login = () => {
         setIsLoading(false);
       }
     } catch (error) {
-      toast.error("maaf seperti nya terjadi kesalahan pada server");
+      toast.error("maaf seperti nya terjadi kesalahan , coba lagi ya");
       setIsLoading(false);
     }
   };
