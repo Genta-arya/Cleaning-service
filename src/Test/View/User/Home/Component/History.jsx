@@ -16,6 +16,7 @@ import Modal from "react-modal";
 import "jspdf-autotable";
 import { ToastContainer, toast } from "react-toastify";
 import ViewImage from "../../../Admin/Home/Component/Pesanan/ViewImage";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 Modal.setAppElement("#root");
 const History = () => {
   const [historyData, setHistoryData] = useState([]);
@@ -53,7 +54,6 @@ const History = () => {
       setIsloading(false);
     } catch (error) {
       console.error("Error fetching history:", error);
-     
 
       setIsloading(false);
     }
@@ -210,10 +210,10 @@ const History = () => {
               </select>
               {sortedAndFilteredData.length > 0 && (
                 <button
-                  className="bg-blue-500 text-white p-2 rounded-md ml-4"
+                  className="bg-biru text-white p-2  rounded-xl ml-4 hover:scale-105 delay-95 duration-300"
                   onClick={handleDownloadPDF}
                 >
-                  Download History
+                  <p className="text-sm">Download History</p>
                 </button>
               )}
             </div>
@@ -372,15 +372,16 @@ const History = () => {
                 >
                   <option value="all">Semua</option>
                   <option value="pending">Diproses</option>
+                  <option value="konfirmasi">Konfirmasi</option>
                   <option value="selesai">Selesai</option>
                 </select>
 
                 {sortedAndFilteredData.length > 0 && (
                   <button
-                    className="bg-blue-500 text-white p-1 rounded-md ml-4"
+                    className="bg-biru text-white p-2  rounded-xl ml-4 hover:scale-105 delay-95 duration-300"
                     onClick={handleDownloadPDF}
                   >
-                    Download History
+                    <p className="text-sm">Download History</p>
                   </button>
                 )}
               </div>
@@ -389,57 +390,101 @@ const History = () => {
             {sortedAndFilteredData.map((order) => (
               <div
                 key={order.id}
-                className={`bg-white shadow-md rounded-md p-6 mb-4`}
+                className={`bg-white shadow-md  p-8 mb-4 rounded-xl ease-in transition-all w-full hover:scale-105 delay-95 duration-300`}
               >
-                <h3 className="text-lg font-semibold mb-2">
-                  {order.createdAt}
-                </h3>
+                <div className="flex justify-around space-x-0">
+                  <div className="flex justify-center">
+                    <img
+                      src={order.orderDetails.url}
+                      alt="image"
+                      className="w-32 h-auto rounded-lg border-black border-2 shadow-2xl"
+                    />
+                  </div>
 
-                <div className="flex justify-center">
-                  <img src={order.orderDetails.url} alt="image" />
-                </div>
+                  <div className="text-gray-700 text-sm">
+                    <div>
+                      {order.orderDetails.qty} x {order.orderDetails.nm_product}{" "}
+                    </div>
 
-                <div className="text-gray-700">
-                  Quantity: {order.orderDetails.qty} x{" "}
-                  {order.orderDetails.nm_product} - Rp{" "}
-                  {order.orderDetails.price.toLocaleString()}
-                </div>
+                    <div className="text-gray-800 font-bold">
+                      <h1 className="font-serif ">
+                        Rp {order.orderDetails.price.toLocaleString()}
+                      </h1>
+                    </div>
+                  </div>
 
-                <div className="flex items-center mx-auto justify-between">
-                  <p className="mt-2 text-gray-800 font-bold">
-                    Total: Rp {order.orderDetails.price.toLocaleString()}
-                  </p>
-                  <p
-                    className={`${
-                      order.orderDetails.status === "pending"
-                        ? "text-orange-500 border-orange-500 rounded-full border p-1"
-                        : order.orderDetails.status === "selesai"
-                        ? "text-green-500"
-                        : "text-gray-500"
-                    }`}
-                  >
-                    {order.orderDetails.status === "pending"
-                      ? "diproses"
-                      : order.orderDetails.status}
-                  </p>
+                  <div className="flex items-center mx-auto">
+                    <h3 className="font-bold mb-2 flex justify-end  text-xs">
+                      <p
+                        className={`${
+                          order.orderDetails.status === "pending"
+                            ? "text-orange-500 border-orange-500 rounded-full border p-1"
+                            : order.orderDetails.status === "selesai"
+                            ? "text-green-500 border-green-500 rounded-full border p-1"
+                            : "text-gray-500"
+                        }`}
+                      >
+                        {order.orderDetails.status === "pending"
+                          ? "diproses"
+                          : order.orderDetails.status}
+                      </p>
+                    </h3>
+                  </div>
                 </div>
 
                 <div className="flex flex-col justify-center mt-4 gap-2 ">
                   {order.orderDetails.status === "selesai" ? (
-                    <button
-                      className="bg-gray-500 text-white px-4 py-2 rounded-md w-full"
-                      disabled
-                    >
-                      <span className="mr-2">&#x1F4AC;</span>Chat
-                    </button>
+                    <>
+                      <div className="flex flex-col gap-2">
+                        <button
+                          className="bg-biru text-white px-4 py-2 rounded-md ease-in transition-all w-full hover:scale-105 duration-300`"
+                          onClick={() => {
+                            if (order.orderDetails.status === "selesai") {
+                              handleViewImages(order);
+                            } else {
+                              toast.error(
+                                "Status pesanan belum selesai. Tidak bisa melihat gambar."
+                              );
+                            }
+                          }}
+                          disabled={order.orderDetails.status !== "selesai"}
+                        >
+                          <div className="flex justify-center gap-2">
+                            <FontAwesomeIcon
+                              icon={faImage}
+                              className="xl"
+                            ></FontAwesomeIcon>
+                            <h1 className="text-xs">Dokumentasi</h1>
+                          </div>
+                        </button>
+                        <button
+                          className="bg-gray-500 text-white px-4 py-2 rounded-md w-full text-xs"
+                          disabled
+                        >
+                          <span className="mr-2">
+                            <FontAwesomeIcon
+                              icon={faWhatsapp}
+                              size="xl"
+                            ></FontAwesomeIcon>
+                          </span>
+                          WhatsApp
+                        </button>
+                      </div>
+                    </>
                   ) : (
                     <button
                       onClick={() =>
                         handleWhatsAppChat("6287762689648", order.orderDetails)
                       }
-                      className="bg-green-500 text-white px-4 py-2 rounded-md w-full"
+                      className="bg-biru text-white px-4 py-2 rounded-md w-full text-xs ease-in transition-all w-full hover:scale-105 duration-300`"
                     >
-                      <span className="mr-2">&#x1F4AC;</span>Chat
+                      <span className="mr-2">
+                        <FontAwesomeIcon
+                          icon={faWhatsapp}
+                          size="xl"
+                        ></FontAwesomeIcon>
+                      </span>
+                      WhatsApp
                     </button>
                   )}
                 </div>
