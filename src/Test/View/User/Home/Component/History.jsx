@@ -30,29 +30,36 @@ const History = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const fetchHistory = async () => {
-      setIsloading(true);
-      try {
-        const response = await getHistory(currentPage);
+  const fetchHistory = async () => {
+    setIsloading(true);
+    try {
+      const response = await getHistory(currentPage);
 
-        if (!response || !response.totalPages) {
-          console.error("Invalid response format");
-          return;
-        }
-
-        const { orders, totalPages } = response;
-
-        setHistoryData(orders);
-        setTotalItems(totalPages);
-
+      if (!response || !response.totalPages || !response.orders) {
         setIsloading(false);
-      } catch (error) {
-       
+
+        return;
+      }
+
+      const { orders, totalPages } = response;
+
+      if (!orders) {
         setIsloading(false);
       }
-    };
 
+      setHistoryData(orders);
+      setTotalItems(totalPages);
+
+      setIsloading(false);
+    } catch (error) {
+      console.error("Error fetching history:", error);
+     
+
+      setIsloading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchHistory();
   }, [currentPage]);
 
@@ -462,7 +469,7 @@ const History = () => {
       {isViewImageModalOpen && (
         <ViewImage images={viewImages} onClose={handleCloseViewImageModal} />
       )}
-      <div className="join flex justify-center ">
+      <div className="join flex justify-center mt-4">
         <button
           className="join-item btn"
           onClick={() => handlePageChange(currentPage - 1)}
