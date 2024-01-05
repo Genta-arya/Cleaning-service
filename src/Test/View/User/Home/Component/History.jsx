@@ -48,7 +48,7 @@ const History = () => {
 
         setIsloading(false);
       } catch (error) {
-        console.error("Error fetching history:", error);
+       
         setIsloading(false);
       }
     };
