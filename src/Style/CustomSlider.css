@@ -1,0 +1,11 @@
+/* CustomSlider.css */
+
+.custom-dot {
+    transition: background-color 0.3s ease;
+  }
+  
+  .active-dot {
+    background-color: white;
+    border: 1px solid gray;
+  }
+  

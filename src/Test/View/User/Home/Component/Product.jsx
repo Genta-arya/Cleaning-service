@@ -29,6 +29,7 @@ import Category from "./Category";
 import SkeletonProduct from "./SkeletonProduct";
 import animationData from "../../../../../Asset/datanotfound.json";
 import Lottie from "lottie-react";
+import "../../../../../Style/CustomSlider.css";
 
 const Product = () => {
   const maxDescriptionLength = 50;
@@ -45,7 +46,7 @@ const Product = () => {
   const categories = useSelector(selectCategories);
   const selectedCategory = useSelector(selectSelectedCategory);
   const isRole = useSelector(selectIsRole);
-
+  const [activeDot, setActiveDot] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -145,6 +146,37 @@ const Product = () => {
   useEffect(() => {
     controls.start({ opacity: 1, y: 0, scale: 1, rotate: 0 });
   }, []);
+  const settings = {
+    infinite: false,
+    arrows: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    dots: true,
+    appendDots: (dots) => (
+      <ul>
+        {dots.map((dot, i) => (
+          <li key={i} className={i === activeDot ? "active" : ""}>
+            {dot}
+          </li>
+        ))}
+      </ul>
+    ),
+    customPaging: function (i) {
+      return (
+        <div className="flex items-center">
+          <div
+            className={`w-3 h-3 rounded-full bg-gray-500 mr-2 ${
+              i === activeDot ? "bg-white border  border-gray-500" : ""
+            }`}
+          />
+        </div>
+      );
+    },
+    beforeChange: (current, next) => {
+      setActiveDot(next);
+    },
+  };
 
   return (
     <motion.div
@@ -270,14 +302,7 @@ const Product = () => {
                 </p>
               </>
             ) : (
-              <Slider
-                infinite={false}
-                arrows={false}
-                speed={500}
-                slidesToShow={1}
-                slidesToScroll={1}
-                className="p-4"
-              >
+              <Slider {...settings} className="p-4">
                 {filteredProducts.map((product, index) => (
                   <motion.div
                     key={product.id}
