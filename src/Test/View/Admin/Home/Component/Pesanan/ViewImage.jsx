@@ -54,7 +54,7 @@ const ViewImage = ({ images, onClose }) => {
                 }}
               />
             </div>
-            <AnimatePresence>
+            <AnimatePresence >
               <motion.div
                 key="modal"
                 initial="hidden"
@@ -62,7 +62,7 @@ const ViewImage = ({ images, onClose }) => {
                 exit="hidden"
                 variants={modalVariants}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                className="fixed inset-0 z-50 flex items-start justify-end overflow-x-auto bg-black bg-opacity-90"
+                className="fixed inset-0 z-50 flex items-start justify-end overflow-x-auto bg-black bg-opacity-90 lg:hidden md:hidden"
               >
                 <div className="bg-white w-full overflow-x-hidden rounded-lg shadow-lg mt-auto p-8 rounded-t-2xl">
                   <div className="border-t-4 border-gray-400 my-4 mx-auto w-16 rounded-full mt-2"></div>
