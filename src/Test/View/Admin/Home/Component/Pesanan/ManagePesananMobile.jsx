@@ -25,11 +25,11 @@ const ManagePesananMobile = ({
   return (
     <>
       <div className="lg:hidden md:hidden block ">
-        <div className="flex flex-col ">
+        <div className="flex flex-col  ">
           {orders.map((order) => (
-            <div key={order.id} className="border mb-4 p-4 rounded-lg">
+            <div key={order.id} className="border mb-4 p-4 rounded-lg w-[100%]">
               <div className="flex justify-between items-center mb-2">
-                <div className="font-bold text-sm">Id Pesanan: {order.id}</div>
+                <div className="font-bold text-xs">Id Pesanan: {order.id}</div>
                 <div className="flex items-center gap-2">
                   <div
                     className={`${
@@ -51,44 +51,44 @@ const ManagePesananMobile = ({
                     <FontAwesomeIcon icon={faEdit} size="lg" />
                   </button>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    className="text-blue-500 hover:underline"
-                    onClick={() => {
-                      if (order.orderDetails.status === "selesai") {
-                        handleViewImages(order);
-                      } else {
-                        toast.error(
-                          "Status pesanan belum selesai. Tidak bisa melihat gambar."
-                        );
-                      }
-                    }}
-                    disabled={order.orderDetails.status !== "selesai"}
-                  >
-                    <FontAwesomeIcon icon={faImage} size="lg" />
-                  </button>
-                  <button
-                    className="text-green-500 hover:underline"
-                    onClick={() => {
-                      if (order.orderDetails.status === "selesai") {
-                        openUploadModal(
-                          order.orderDetails.orderId,
-                          order.orderDetails.nm_product,
-                          order.id,
-                          order.orderDetails.status
-                        );
-                      }
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faUpload} size="lg" />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteOrder(order.id)}
-                    className="text-red-500"
-                  >
-                    <FontAwesomeIcon icon={faTrash} size="lg" />
-                  </button>
-                </div>
+              </div>
+              <div className="flex gap-2 justify-center p-1">
+                <button
+                  className="text-blue-500 hover:underline"
+                  onClick={() => {
+                    if (order.orderDetails.status === "selesai") {
+                      handleViewImages(order);
+                    } else {
+                      toast.error(
+                        "Status pesanan belum selesai. Tidak bisa melihat gambar."
+                      );
+                    }
+                  }}
+                  disabled={order.orderDetails.status !== "selesai"}
+                >
+                  <FontAwesomeIcon icon={faImage} size="lg" />
+                </button>
+                <button
+                  className="text-green-500 hover:underline"
+                  onClick={() => {
+                    if (order.orderDetails.status === "selesai") {
+                      openUploadModal(
+                        order.orderDetails.orderId,
+                        order.orderDetails.nm_product,
+                        order.id,
+                        order.orderDetails.status
+                      );
+                    }
+                  }}
+                >
+                  <FontAwesomeIcon icon={faUpload} size="lg" />
+                </button>
+                <button
+                  onClick={() => handleDeleteOrder(order.id)}
+                  className="text-red-500"
+                >
+                  <FontAwesomeIcon icon={faTrash} size="lg" />
+                </button>
               </div>
               <div className="flex  gap-2 items-center mb-2 border p-2 rounded-xl ">
                 <img

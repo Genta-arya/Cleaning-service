@@ -29,8 +29,8 @@ const Footer = () => {
   };
 
   return (
-    <div className="flex justify-center">
-      <footer className="footer p-10 bg-base-200 text-base-content lg:flex md:flex">
+    <div className="">
+      <footer className="footer p-10 bg-white text-base-content lg:flex md:flex lg:justify-center gap-0 lg:-space-x-32">
         <div className="text-center mb-4 w-full">
           <h2 className="text-xl font-bold text-biru">Lokasi :</h2>
 
@@ -50,16 +50,15 @@ const Footer = () => {
           <iframe
             title="Google Map"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3943.004306752197!2d115.16993230947804!3d-8.785663591229826!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd24500319844cd%3A0xfd263e7f2ddff0c3!2sTangkas%20Jaya%20Teknik!5e0!3m2!1sen!2sid!4v1704366933662!5m2!1sen!2sid"
-       
             style={{ border: 2 }}
-            className="border-2 border-black rounded-lg z-10 w-full h-80 lg:h-[500px]"
+            className="border-2 border-black rounded-lg z-10 lg:w-[80%] md:w-[80%] w-full h-80 lg:h-[400px]"
             allowFullScreen=""
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
           ></iframe>
         </div>
-        <aside>
-          <div className="flex flex-col items-center">
+        <aside className="">
+          <div className="flex flex-col items-center px-24">
             <div className="lg:block md:block hidden mt-12">
               <img
                 src={logo}

@@ -152,15 +152,15 @@ const Product = () => {
       animate={controls}
       initial={{ opacity: 0, y: 40, scale: 0.8, rotate: 0 }}
       transition={{ duration: 1, ease: "easeOut" }}
-      className="lg:p-12 md:p-12 p-3 "
+      className=" p-3  -mt-20 mb-24"
     >
-      <div className="hidden lg:block ">
+      <div className="hidden lg:block  ">
         {isLoading ? (
           <SkeletonProduct />
         ) : (
           <>
-            <div className="flex justify-center py-8 lg:mb-8 md:mb-8 ">
-              <h1 className="text-white font-bold lg:text-3xl md:text-3xl text-2xl border-b-4 border-white p-1">
+            <div className="flex justify-center py-8 lg:mb-8 md:mb-8  ">
+              <h1 className="text-white font-bold lg:text-3xl md:text-3xl text-2xl border-b-4  p-1 ">
                 Layanan Kami
               </h1>
             </div>
@@ -282,7 +282,7 @@ const Product = () => {
                     <img
                       src={product.url}
                       alt={product.nm_product}
-                      className="mb-4 w-[105%]  flex object-fill rounded-2xl hover:scale-105 transition-all transform duration-200 delay-200 ease-in cursor-pointer"
+                      className="mb-4 w-[95%] h-52 flex object-fill rounded-2xl hover:scale-105 transition-all transform duration-200 delay-200 ease-in cursor-pointer"
                       onClick={() => handleProductClick(product)}
                     />
                     <h2 className="text-xl font-bold mb-2">
