@@ -1,35 +1,7 @@
-// import React, { useState } from "react";
-// import Gallery from "react-image-gallery";
-// import "react-image-gallery/styles/css/image-gallery.css";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faTimes } from "@fortawesome/free-solid-svg-icons";
-
-// const ViewImage = ({ images, onClose }) => {
-//   const [currentIndex, setCurrentIndex] = useState(0);
-
-//   const galleryImages = images.map((image) => ({
-//     original: image.imageUrl,
-//     thumbnail: image.imageUrl,
-//     description: image.name,
-//   }));
-
-//   const customStyles = {
-//     gallery: {
-//       backgroundColor: "#1a1a1a",
-//     },
-//   };
-
-//   return (
-//
-//   );
-// };
-
-// export default ViewImage;
-
 import React, { useEffect, useState } from "react";
 import ImageViewer from "react-simple-image-viewer";
 import animationData from "../../../../../../Asset/notfound.png";
-import { motion, useAnimation } from "framer-motion";
+import { motion, useAnimation, AnimatePresence } from "framer-motion";
 import Gallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -45,10 +17,8 @@ const ViewImage = ({ images, onClose }) => {
   };
 
   useEffect(() => {
-    // Disable scrolling when the modal is open
     document.body.style.overflow = "hidden";
 
-    // Re-enable scrolling when the modal is closed
     return () => {
       document.body.style.overflow = "visible";
     };
@@ -63,6 +33,10 @@ const ViewImage = ({ images, onClose }) => {
     gallery: {
       backgroundColor: "#1a1a1a",
     },
+  };
+  const modalVariants = {
+    hidden: { y: "100%", opacity: 0 },
+    visible: { y: "0%", opacity: 1 },
   };
 
   return (
@@ -80,9 +54,18 @@ const ViewImage = ({ images, onClose }) => {
                 }}
               />
             </div>
-            <div className="flex justify-center mb-4 lg:hidden md:hidden block ">
-              <div className="fixed inset-0 z-50 flex items-start justify-end overflow-x-auto bg-black bg-opacity-80 ">
-                <div className="bg-white w-full overflow-x-hidden  rounded-lg shadow-lg  mt-auto p-8 rounded-t-xl">
+            <AnimatePresence>
+              <motion.div
+                key="modal"
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={modalVariants}
+                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                className="fixed inset-0 z-50 flex items-start justify-end overflow-x-auto bg-black bg-opacity-90"
+              >
+                <div className="bg-white w-full overflow-x-hidden rounded-lg shadow-lg mt-auto p-8 rounded-t-2xl">
+                  <div className="border-t-4 border-gray-400 my-4 mx-auto w-16 rounded-full mt-2"></div>
                   <div className="flex justify-end">
                     <button
                       className="px-4 py-2 text-black rounded-full focus:outline-none"
@@ -92,8 +75,7 @@ const ViewImage = ({ images, onClose }) => {
                     </button>
                   </div>
                   <div className="flex justify-center bg-white overflow-x-hidden h-96">
-                    {" "}
-                    <Gallery 
+                    <Gallery
                       items={galleryImages}
                       currentIndex={currentIndex}
                       onClose={onClose}
@@ -107,8 +89,8 @@ const ViewImage = ({ images, onClose }) => {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </AnimatePresence>
           </>
         ) : (
           <>
