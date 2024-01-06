@@ -146,6 +146,15 @@ const Product = () => {
   useEffect(() => {
     controls.start({ opacity: 1, y: 0, scale: 1, rotate: 0 });
   }, []);
+
+  const dotVariants = {
+    active: { scale: 1.1, backgroundColor: "white", border: "1px solid #ccc" },
+    inactive: {
+      scale: 1,
+      backgroundColor: "gray",
+      border: "1px solid transparent",
+    },
+  };
   const settings = {
     infinite: false,
     arrows: false,
@@ -165,10 +174,13 @@ const Product = () => {
     customPaging: function (i) {
       return (
         <div className="flex items-center">
-          <div
-            className={`w-3 h-3 rounded-full bg-gray-500 mr-2 ${
-              i === activeDot ? "bg-white border  border-gray-500" : ""
-            }`}
+          <motion.div
+            className="w-3 h-3 rounded-full bg-gray-500 mr-2"
+            variants={dotVariants}
+            initial="inactive"
+            animate={i === activeDot ? "active" : "inactive"}
+            whileHover={{ scale: 1.1 }}
+            onClick={() => setActiveDot(i)}
           />
         </div>
       );

@@ -7,18 +7,10 @@ import { faMailBulk, faRoad } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMailchimp, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
-const customIcon = new L.divIcon({
-  className: "custom-marker-icon",
-  html: `<img class="w-8 h-8" src="https://img.icons8.com/color/48/marker--v1.png" alt="marker--v1"/>`,
-});
+
 
 const Footer = () => {
-  const mapRef = useRef();
-  const center = [-8.785888, 115.172469];
 
-  const openInMaps = () => {
-    window.open(`https://www.google.com/maps/place/${center[0]},${center[1]}`);
-  };
 
   const openWhatsApp = () => {
     window.open("https://wa.me/6287762689648");
@@ -55,6 +47,7 @@ const Footer = () => {
             allowFullScreen=""
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
+
           ></iframe>
         </div>
         <aside className="">
