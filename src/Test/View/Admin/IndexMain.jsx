@@ -43,11 +43,11 @@ const IndexMain = () => {
 
   return (
     <>
-      <div className="hidden lg:block md:block">
+      <div className="hidden lg:block md:hidden">
         <Main />
       </div>
 
-      <div className="lg:hidden md:hidden block">
+      <div className="lg:hidden md:block block">
         <ManagePesanan />
       </div>
     </>
