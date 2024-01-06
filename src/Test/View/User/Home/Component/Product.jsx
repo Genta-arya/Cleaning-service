@@ -186,45 +186,49 @@ const Product = () => {
               </>
             ) : (
               <>
-                <div className="flex justify-center gap-1">
+                <div className="flex justify-center gap-4">
                   {filteredProducts.map((product, index) => (
                     <motion.div
                       key={product.id}
-                      className="border p-10 lg:p-4 md:p-12 rounded-xl bg-white shadow-xl border-gelap transform transition-all"
+                      className="border rounded-xl bg-white shadow-xl border-gelap transform transition-all"
                     >
-                      <img
-                        src={
-                          product.url ||
-                          "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
-                        }
-                        alt="paket service ac"
-                        className="mb-4 lg:w-full lg:h-48   object-cover  rounded-2xl hover:scale-105 transition-all transform duration-200 delay-200 ease-in cursor-pointer "
-                        onClick={() => handleProductClick(product)}
-                      />
-
-                      <h2 className="lg:text-xl md:text-xl text-sm font-bold mb-2">
-                        {product.nm_product}
-                      </h2>
-                      <p className="text-gray-600 mb-4 lg:block md:block hidden">
-                        {truncateDescription(
-                          product.desc,
-                          maxDescriptionLength
-                        )}
-                      </p>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-green-500 font-bold text-xs lg:text-base md:text-base">
-                          Harga: {formatCurrency(product.price)}
-                        </span>
+                      <div>
+                        <img
+                          src={
+                            product.url ||
+                            "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
+                          }
+                          alt="paket service ac"
+                          className="mb-4 lg:w-full lg:h-48 rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105 hover:shadow-lg hover:rounded-b-xl"
+                          onClick={() => handleProductClick(product)}
+                        />
                       </div>
 
-                      <div className="flex justify-center mt-4">
-                        <button
-                          className="bg-biru text-white px-4 py-2 rounded-md hover:bg-gelap w-full"
-                          onClick={() => handleOrder(product)}
-                        >
-                          Pesan
-                        </button>
+                      <div className="p-5">
+                        <h2 className="lg:text-xl md:text-xl text-sm font-bold mb-2">
+                          {product.nm_product}
+                        </h2>
+                        <p className="text-gray-600 mb-4 lg:block md:block hidden">
+                          {truncateDescription(
+                            product.desc,
+                            maxDescriptionLength
+                          )}
+                        </p>
+
+                        <div className="flex items-center justify-between">
+                          <span className="text-green-500 font-bold text-xs lg:text-base md:text-base">
+                            Harga: {formatCurrency(product.price)}
+                          </span>
+                        </div>
+
+                        <div className="flex justify-center mt-4">
+                          <button
+                            className="bg-biru text-white px-4 py-2 rounded-md hover:bg-blue-300 w-full  hover:scale-105 transition-all duration-500 ease-out "
+                            onClick={() => handleOrder(product)}
+                          >
+                            Pesan
+                          </button>
+                        </div>
                       </div>
                     </motion.div>
                   ))}
@@ -277,32 +281,38 @@ const Product = () => {
                 {filteredProducts.map((product, index) => (
                   <motion.div
                     key={product.id}
-                    className="border p-10 lg:p-4 md:p-12 rounded-xl   bg-white shadow-xl border-gelap  transform transition-all "
+                    className="border  lg:p-4 md:p-0 rounded-xl   bg-white shadow-xl border-gelap  transform transition-all "
                   >
                     <img
                       src={product.url}
                       alt={product.nm_product}
-                      className="mb-4 w-[95%] h-52 flex object-fill rounded-2xl hover:scale-105 transition-all transform duration-200 delay-200 ease-in cursor-pointer"
+                      className="mb-4 w-full h-80 flex  rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105 hover:shadow-lg hover:rounded-b-xl hover:roundedt-xl"
                       onClick={() => handleProductClick(product)}
                     />
-                    <h2 className="text-xl font-bold mb-2">
-                      {product.nm_product}
-                    </h2>
-                    <p className="text-gray-600 mb-4">
-                      {truncateDescription(product.desc, maxDescriptionLength)}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-green-500 font-bold text-base">
-                        Harga: {formatCurrency(product.price)}
-                      </span>
-                    </div>
-                    <div className="flex justify-center mt-4">
-                      <button
-                        className="bg-biru text-white px-4 py-2 rounded-md hover:bg-gelap w-full"
-                        onClick={() => handleOrder(product)}
-                      >
-                        Pesan
-                      </button>
+
+                    <div className="p-12">
+                      <h2 className="text-xl font-bold mb-2">
+                        {product.nm_product}
+                      </h2>
+                      <p className="text-gray-600 mb-4">
+                        {truncateDescription(
+                          product.desc,
+                          maxDescriptionLength
+                        )}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-green-500 font-bold text-base">
+                          Harga: {formatCurrency(product.price)}
+                        </span>
+                      </div>
+                      <div className="flex justify-center mt-4">
+                        <button
+                          className="bg-biru text-white px-4 py-2 rounded-md hover:bg-gelap w-full"
+                          onClick={() => handleOrder(product)}
+                        >
+                          Pesan
+                        </button>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
