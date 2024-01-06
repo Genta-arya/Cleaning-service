@@ -30,6 +30,7 @@ import SkeletonProduct from "./SkeletonProduct";
 import animationData from "../../../../../Asset/datanotfound.json";
 import Lottie from "lottie-react";
 import "../../../../../Style/CustomSlider.css";
+import { Helmet } from "react-helmet-async";
 
 const Product = () => {
   const maxDescriptionLength = 50;
@@ -198,6 +199,14 @@ const Product = () => {
       transition={{ duration: 1, ease: "easeOut" }}
       className=" p-3  -mt-20 mb-24"
     >
+      <Helmet>
+        <meta content="#0000FF" name="theme-color" />
+
+        <meta content="#0000FF" name="msapplication-navbutton-color" />
+
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="#0000FF" name="apple-mobile-web-app-status-bar-style" />
+      </Helmet>
       <div className="hidden lg:block  ">
         {isLoading ? (
           <SkeletonProduct />
