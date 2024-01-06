@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
+  faDatabase,
   faHamburger,
   faSignOut,
   faTimes,
@@ -14,15 +15,28 @@ import Test from "./Pesanan/ManagePesanan";
 import { logout } from "../../../../../Service/Api";
 import { PulseLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
+import ListCustomer from "./Pesanan/ListCustomer";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const username = localStorage.getItem("username");
   const [currentView, setCurrentView] = useState("status");
+  const [isManageUserOpen, setIsManageUserOpen] = useState(false);
+
+  const [isManageDataOpen, setIsManageDataOpen] = useState(true);
+
+  const toggleManageData = () => {
+    setIsManageDataOpen(!isManageDataOpen);
+    setIsManageUserOpen(false);
+  };
   const navigate = useNavigate();
   const openDrawer = () => {
     setIsOpen(true);
+  };
+  const toggleManageUser = () => {
+    setIsManageUserOpen(!isManageUserOpen);
+    setIsManageDataOpen(false);
   };
 
   const closeDrawer = () => {
@@ -106,37 +120,80 @@ const Sidebar = () => {
               </div>
             </div>
 
-            <div tabIndex={0} className="collapse collapse-arrow text-white">
-              <div className="collapse-title text-sm font-medium">Management Data</div>
-
-
-
-              <div className="collapse-content text-sm">
-                <p
-                  className={`border p-2 rounded-full items-center text-center cursor-pointer hover:bg-slate-500 ${
-                    currentView === "status" ? "border-green-500" : ""
+            <div>
+              <ul className="w-full">
+                <li
+                  className={`p-4 cursor-pointer ${
+                    isManageDataOpen ? "border border-green-500 rounded-full text-white mt-4" : ""
                   }`}
-                  onClick={() => handleMenuClick("status")}
+                  onClick={toggleManageData}
                 >
-                  Data Pesanan
-                </p>
-              </div>
+                  <FontAwesomeIcon icon={faDatabase} className="mr-2" />
+                  Manage Data
+                </li>
+                {isManageDataOpen && (
+                  <div className="ml-8">
+                    <ul>
+                      <li
+                        className={`p-4 cursor-pointer ${
+                          currentView === "status"
+                            ? "border border-green-500 rounded-full text-white mt-4"
+                            : ""
+                        }`}
+                        onClick={() => handleMenuClick("status")}
+                      >
+                        <FontAwesomeIcon icon={faDatabase} className="mr-2" />
+                        Manage Pesanan
+                      </li>
+                      <li
+                        className={`p-4 cursor-pointer ${
+                          currentView === "productService"
+                            ? "border-green-500 rounded-full text-white mt-4 border"
+                            : ""
+                        }`}
+                        onClick={() => handleMenuClick("productService")}
+                      >
+                        <FontAwesomeIcon icon={faDatabase} className="mr-2" />
+                        Manage Service
+                      </li>
+                    </ul>
+                  </div>
+                )}
 
-              <div className="collapse-content text-sm mt-12">
-                <p
-                  className={`border p-2 rounded-full items-center text-center cursor-pointer hover:bg-slate-500 ${
-                    currentView === "productService" ? "border-green-500" : ""
+                <li
+                  className={`p-4 cursor-pointer ${
+                    isManageUserOpen ? "border-green-500 rounded-full text-white mt-4 border" : ""
                   }`}
-                  onClick={() => handleMenuClick("productService")}
+                  onClick={toggleManageUser}
                 >
-                  Data Layanan
-                </p>
-              </div>
-
-           
+                  <FontAwesomeIcon icon={faDatabase} className="mr-2" />
+                  Data Pelanggan
+                </li>
+                {isManageUserOpen && (
+                  <div className="ml-8">
+                    <ul>
+                     
+                      <li
+                        className={`p-4 cursor-pointer ${
+                          currentView === "customerItem"
+                            ? "border-green-500 rounded-full text-white mt-4 border"
+                            : ""
+                        }`}
+                        onClick={() => handleMenuClick("customerItem")}
+                      >
+                        <FontAwesomeIcon icon={faDatabase} className="mr-2" />
+                        Daftar Pelanggan
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </ul>
             </div>
+
+          
+
             <div
-              className="flex justify-center bg-red-500 p-1 text-white rounded-lg cursor-pointer hover:bg-red-700 items-center gap-2"
+              className="flex justify-center bg-red-500 p-1 text-white rounded-lg cursor-pointer hover:bg-red-700 items-center gap-2 mt-4"
               onClick={handleLogoutClick}
             >
               <FontAwesomeIcon icon={faSignOut} size="xl"></FontAwesomeIcon>
@@ -145,14 +202,20 @@ const Sidebar = () => {
         </>
       )}
 
-      <div className={`flex transition-all ${isOpen ? "ml-60 justify-between" : "ml-auto justify-center"}`}>
+      <div
+        className={`flex transition-all ${
+          isOpen ? "ml-60 justify-between" : "ml-auto justify-center"
+        }`}
+      >
         {currentView === "content" ? (
           <Content />
         ) : currentView === "productService" ? (
           <ManageProduct />
         ) : currentView === "status" ? (
           <Test />
-        ) : null}
+        ) :  currentView === "customerItem" ? (
+          <ListCustomer />
+        ) :null}
       </div>
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

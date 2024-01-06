@@ -1,4 +1,4 @@
-import axiosInstance from "./Config";
+
 import { getDatabase, ref, onValue } from "firebase/database";
 import { initializeApp } from "firebase/app";
 import {
@@ -7,6 +7,9 @@ import {
   where,
   onSnapshot,
 } from "firebase/firestore";
+import axiosInstance from "./Config";
+import axiosInstanceWithPassword, { axiosWithMiddleware } from "./Midleware";
+
 const firebaseConfig = {
   apiKey: "AIzaSyByA2NbnXpFg4yM_h8pug8WgD9hnLyQv4g",
   authDomain: "ac-service-34683.firebaseapp.com",
@@ -20,7 +23,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
-const firestore = getFirestore(firebaseApp);
+
 const database = getDatabase(firebaseApp);
 
 export const getNotificationsRealtime = (username, setNotifications) => {
@@ -357,6 +360,17 @@ export const deleteImage = async (orderId) => {
     const response = await axiosInstance.delete(`/delete/dokument/${orderId}`);
     return response.data;
   } catch (error) {
+    throw error;
+  }
+};
+
+
+export const getAllUsers = async () => {
+  try {
+    const response = await axiosWithMiddleware.get('/users');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
     throw error;
   }
 };
