@@ -392,7 +392,7 @@ const History = () => {
                 key={order.id}
                 className={`bg-white shadow-md  p-8 mb-4 rounded-xl ease-in transition-all w-full hover:scale-105 delay-95 duration-300`}
               >
-                <div className="flex justify-around space-x-0">
+                <div className="flex justify-around space-x-4">
                   <div className="flex justify-center">
                     <img
                       src={order.orderDetails.url}
