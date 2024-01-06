@@ -148,44 +148,51 @@ const Product = () => {
     controls.start({ opacity: 1, y: 0, scale: 1, rotate: 0 });
   }, []);
 
-  const dotVariants = {
-    active: { scale: 1.1, backgroundColor: "white", border: "1px solid #ccc" },
-    inactive: {
-      scale: 1,
-      backgroundColor: "gray",
-      border: "1px solid transparent",
-    },
+  const InstagramDots = ({ totalSlides, activeIndex, setActiveIndex }) => {
+    const dots = Array.from(
+      { length: Math.min(totalSlides, 5) },
+      (_, index) => index
+    );
+
+    const visibleDots = dots.map((dot, i) => {
+      const newIndex = (activeIndex + dot) % totalSlides;
+
+      return (
+        <li
+          key={i}
+          className={`px-2 py-1 rounded-xl animated-dot ${
+            newIndex === activeIndex
+              ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white "
+              : "bg-gradient-to-r from-gray-300 to-gray-500 text-gray-700"
+          }`}
+        >
+          <span className="dot-label text-xs font-bold">{newIndex + 1}</span>
+        </li>
+      );
+    });
+
+    return (
+      <div className="flex items-center mt-4 justify-center cursor-default">
+        <ul className="flex items-center space-x-1">{visibleDots}</ul>
+      </div>
+    );
   };
+
   const settings = {
     infinite: false,
     arrows: false,
-    speed: 500,
+    speed: 1000,
     slidesToShow: 1,
     slidesToScroll: 1,
     dots: true,
     appendDots: (dots) => (
-      <ul>
-        {dots.map((dot, i) => (
-          <li key={i} className={i === activeDot ? "active" : ""}>
-            {dot}
-          </li>
-        ))}
-      </ul>
+      <InstagramDots
+        totalSlides={dots.length}
+        activeIndex={activeDot}
+        setActiveIndex={setActiveDot}
+      />
     ),
-    customPaging: function (i) {
-      return (
-        <div className="flex items-center">
-          <motion.div
-            className="w-3 h-3 rounded-full bg-gray-500 mr-2"
-            variants={dotVariants}
-            initial="inactive"
-            animate={i === activeDot ? "active" : "inactive"}
-            whileHover={{ scale: 1.1 }}
-            onClick={() => setActiveDot(i)}
-          />
-        </div>
-      );
-    },
+
     beforeChange: (current, next) => {
       setActiveDot(next);
     },
@@ -200,12 +207,12 @@ const Product = () => {
       className=" p-3  -mt-20 mb-24"
     >
       <Helmet>
-        <meta content="#0000FF" name="theme-color" />
+        <meta content="#5F93C0" name="theme-color" />
 
-        <meta content="#0000FF" name="msapplication-navbutton-color" />
+        <meta content="#5F93C0" name="msapplication-navbutton-color" />
 
         <meta content="yes" name="apple-mobile-web-app-capable" />
-        <meta content="#0000FF" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="#5F93C0" name="apple-mobile-web-app-status-bar-style" />
       </Helmet>
       <div className="hidden lg:block  ">
         {isLoading ? (
@@ -327,17 +334,17 @@ const Product = () => {
                 {filteredProducts.map((product, index) => (
                   <motion.div
                     key={product.id}
-                    className="border  lg:p-4 md:p-0 rounded-xl   bg-white shadow-xl border-gelap  transform transition-all "
+                    className="border  lg:p-4 md:p-0 rounded-xl   bg-white  border-gelap  transform transition-all "
                   >
                     <img
                       src={product.url}
                       alt={product.nm_product}
-                      className="mb-4 w-full h-80 flex  rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105 hover:shadow-lg hover:rounded-b-xl hover:roundedt-xl"
+                      className="mb-4 w-full h-80 flex  rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105 hover:shadow-lg hover:rounded-b-xl hover:rounded-t-xl"
                       onClick={() => handleProductClick(product)}
                     />
 
-                    <div className="p-12">
-                      <h2 className="text-xl font-bold mb-2">
+                    <div className="p-8">
+                      <h2 className="text-xl font-bold mb-2 -mt-8">
                         {product.nm_product}
                       </h2>
                       <p className="text-gray-600 mb-4">
