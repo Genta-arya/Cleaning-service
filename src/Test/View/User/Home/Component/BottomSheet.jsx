@@ -48,18 +48,18 @@ const BottomSheet = () => {
       try {
         const username = localStorage.getItem("username");
 
-        if (!username) {
-          console.error("Username not found in localStorage");
+        if (username) {
+        
+          const orders = await getNotifications(username);
+
+          const orderIds = orders.map((order) => order.orderId);
+  
+          setOrderIdFromHistory(orderIds);
           return;
         }
 
-        const orders = await getNotifications(username);
-
-        const orderIds = orders.map((order) => order.orderId);
-
-        setOrderIdFromHistory(orderIds);
       } catch (error) {
-        console.error("Error fetching history:", error);
+
       }
     };
 

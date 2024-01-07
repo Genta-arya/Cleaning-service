@@ -136,11 +136,11 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center ${
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 ${
         isOpen ? "" : "hidden"
       }`}
     >
-      <div className="bg-white w-[80%] p-6 rounded shadow-lg overflow-y-auto max-h-[550px]">
+      <div className="bg-white w-[80%] p-6 rounded shadow-lg overflow-y-auto max-h-[550px] mt-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">Edit Product</h2>
           <button
@@ -152,7 +152,7 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
         </div>
         <div>
           <label className="block mb-2">
-            <span className="text-gray-700">Product Name:</span>
+            <span className="text-gray-700">Nama Service:</span>
             <input
               type="text"
               value={editedProductData.nm_product}
@@ -174,7 +174,7 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
             )}
           </label>
           <label className="block mb-2">
-            <span className="text-gray-700">Description:</span>
+            <span className="text-gray-700">Deskripsi:</span>
             <textarea
               value={editedProductData.desc}
               onChange={(e) => {
@@ -195,7 +195,7 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
             )}
           </label>
           <label className="block mb-2">
-            <span className="text-gray-700">Price:</span>
+            <span className="text-gray-700">Harga:</span>
             <input
               type="text"
               value={editedProductData.price.toLocaleString("id-ID")}
@@ -205,7 +205,7 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
           </label>
 
           <label className="block mb-2">
-            <span className="text-gray-700">Category:</span>
+            <span className="text-gray-700">Kategori:</span>
             <select
               value={editedProductData.categoryId}
               onChange={(e) =>

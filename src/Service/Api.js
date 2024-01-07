@@ -1,4 +1,3 @@
-
 import { getDatabase, ref, onValue } from "firebase/database";
 import { initializeApp } from "firebase/app";
 import {
@@ -281,10 +280,28 @@ export const DeleteCategory = async (categoryId) => {
 
 export const getAllOrders = async (page) => {
   try {
-    const response = await axiosInstance.get(`/get-orders?page=${page}`);
+    const response = await axiosInstance.get(`/get-orders`, {
+      params: {
+        page,
+      },
+    });
     return response;
-  } catch (error) {}
+  } catch (error) {
+    throw error;
+  }
 };
+
+export const getAllOrdersByUsername = async (username, page = 1) => {
+  try {
+    const response = await axiosInstance.get(`/search/${username}?page=${page}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching orders by username:', error);
+    throw error;
+  }
+};
+
+
 
 export const updateOrderStatus = async (orderId, newStatus) => {
   try {
@@ -364,13 +381,12 @@ export const deleteImage = async (orderId) => {
   }
 };
 
-
 export const getAllUsers = async () => {
   try {
-    const response = await axiosWithMiddleware.get('/users');
+    const response = await axiosWithMiddleware.get("/users");
     return response.data;
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error("Error fetching data:", error);
     throw error;
   }
 };

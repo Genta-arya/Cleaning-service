@@ -183,8 +183,8 @@ const History = () => {
   };
 
   return (
-    <div className="container mx-auto mt-8 p-4">
-      <div className="hidden lg:block md:block">
+    <div className="container mx-auto mt-8 p-4 ">
+      <div className="hidden lg:block md:block ">
         <div className="flex justify-between mx-auto ">
           <FontAwesomeIcon
             icon={faArrowLeft}
@@ -192,114 +192,114 @@ const History = () => {
             onClick={handleBack}
             className="cursor-pointer"
           ></FontAwesomeIcon>
-          <h2 className="text-3xl font-semibold mb-4 ">Pesanan</h2>
         </div>
-        <div>
-          <div className="mb-4 p-8 flex justify-center  ">
-            <div className="flex justify-end items-center">
-              <label className="mr-2">Status:</label>
-              <select
-                value={filterStatus}
-                onChange={(e) => handleFilterChange(e.target.value)}
-                className="p-1 border rounded-md"
-              >
-                <option value="all">Semua</option>
-                <option value="pending">Diproses</option>
-                <option value="konfirmasi">Konfirmasi</option>
-                <option value="selesai">Selesai</option>
-              </select>
-              {sortedAndFilteredData.length > 0 && (
-                <button
-                  className="bg-biru text-white p-2  rounded-xl ml-4 hover:scale-105 delay-95 duration-300"
-                  onClick={handleDownloadPDF}
-                >
-                  <p className="text-sm">Download History</p>
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+    
       </div>
 
       <div className="hidden lg:block md:block">
-        <div className="overflow-x-auto">
-          <table className="table text-center">
-            <thead>
-              <tr className="border">
-                <th className="border p-2">Id pesanan</th>
-                <th className="border p-2">Image</th>
-                <th className="border p-2">Service</th>
-                <th className="border p-2">Total Price</th>
-                <th className="border p-2">Tanggal</th>
-                <th className="border p-2">Detail Service</th>
-                <th className="border p-2">Status</th>
-                <th className="border p-2">Layanan</th>
-              </tr>
-            </thead>
+        <div className="">
+          {isLoading ? (
+            Array.from({ length: 5 }).map((_, index) => (
+              <SkeletonMobile key={index} />
+            ))
+          ) : (
+            <div>
+              <div className="mb-4 p-2 ">
+                <div className="flex justify-between items-center mt-4">
+                  <h2 className="text-3xl font-semibold mb-4 ">Pesanan</h2>
 
-            {isLoading ? (
-              Array.from({ length: 5 }).map((_, index) => (
-                <SkeletonTable key={index} />
-              ))
-            ) : (
-              <tbody>
-                {sortedAndFilteredData.map((order) => (
-                  <tr key={order.id} className="hover:bg-gray-100">
-                    <td className="border p-2">{order.orderDetails.orderId}</td>
-                    <td className="border p-2">
-                      <div className="flex justify-center">
+                  <div className="flex justify-end items-center">
+                    <label className="mr-2">Status:</label>
+                    <select
+                      value={filterStatus}
+                      onChange={(e) => handleFilterChange(e.target.value)}
+                      className="p-1 border rounded-md"
+                    >
+                      <option value="all">Semua</option>
+                      <option value="pending">Diproses</option>
+                      <option value="konfirmasi">Konfirmasi</option>
+                      <option value="selesai">Selesai</option>
+                    </select>
+
+                    {sortedAndFilteredData.length > 0 && (
+                      <button
+                        className="bg-biru text-white p-2  rounded-xl ml-4 hover:scale-105 delay-95 duration-300"
+                        onClick={handleDownloadPDF}
+                      >
+                        <p className="text-sm">Download History</p>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {sortedAndFilteredData.map((order) => (
+                <div className="bg-gray-200 p-8 rounded-lg py-2 ">
+                  <div
+                    key={order.id}
+                    className={`bg-white shadow-md  mx-auto p-4   rounded-lg space-y-4 w-[75%] `}
+                  >
+                    <div className="flex items-center justify-between p-1 mx-auto border-b border-gray-300">
+                      <h1 className="text-gray-400 ">
+                        {order.orderDetails.createdAt &&
+                          new Date(order.orderDetails.createdAt)
+                            .toLocaleDateString("en-GB", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                            })
+                            .replace(/\//g, "-")}
+                      </h1>
+
+                      <h3 className="font-bold mb-2 flex justify-end text-xs">
+                        <p
+                          className={`${
+                            order.orderDetails.status === "pending"
+                              ? "text-orange-500 border-orange-500 rounded-full border p-1"
+                              : order.orderDetails.status === "selesai"
+                              ? "text-green-500 border-green-500 rounded-full border p-1"
+                              : order.orderDetails.status === "konfirmasi"
+                              ? "text-blue-500 border-blue-500 rounded-full border p-1"
+                              : "text-gray-500"
+                          }`}
+                        >
+                          {order.orderDetails.status === "pending"
+                            ? "diproses"
+                            : order.orderDetails.status}
+                        </p>
+                      </h3>
+                    </div>
+                    <div className="flex px-8  border-b border-gray-300 space-x-7">
+                      <div className="flex justify-center mb-4  ">
                         <img
-                          src={
-                            order.orderDetails.url ||
-                            "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
-                          }
+                          src={order.orderDetails.url}
                           alt="image"
-                          className="w-16 h-16 object-cover rounded"
+                          className="w-32 h-auto rounded-lg border-black border-2 shadow-2xl"
                         />
                       </div>
-                    </td>
 
-                    <td className="border p-2">
-                      <div className="text-gray-700">
-                        Quantity: {order.orderDetails.qty} x{" "}
-                        {order.orderDetails.nm_product}
+                      <div className="text-gray-700 text-base">
+                        {order.orderDetails.nm_product}{" "}
+                        <div>x {order.orderDetails.qty}</div>
                       </div>
-                    </td>
+                    </div>
 
-                    <td className="border p-2">
-                      Rp {order.orderDetails.price.toLocaleString()}
-                    </td>
-                    <td>
-                      {order.orderDetails.createdAt &&
-                        new Date(order.orderDetails.createdAt).toLocaleString()}
-                    </td>
-                    <td>-</td>
-                    <td
-                      className={`${
-                        order.orderDetails.status === "pending"
-                          ? "text-orange-500 border p-2"
-                          : order.orderDetails.status === "selesai"
-                          ? "text-green-500 border p-2"
-                          : "text-blue-500 border p-2"
-                      }`}
-                    >
-                      {order.orderDetails.status === "pending"
-                        ? "diproses"
-                        : order.orderDetails.status}
-                    </td>
-                    <td className="border p-2">
+                    <div className="text-gray-800 font-bold flex justify-end">
+                      <h1 className="font-serif ">
+                        <span className="text-xs">Total :</span>
+                        <span className="text-green-500">
+                          {" "}
+                          Rp {order.orderDetails.price.toLocaleString()}
+                        </span>
+                      </h1>
+                    </div>
+
+                    <div className="flex flex-col justify-center mt-4 gap-2 ">
                       {order.orderDetails.status === "selesai" ? (
                         <>
-                          <div className="flex justify-center gap-2">
+                          <div className="flex  gap-2">
                             <button
-                              className="bg-gray-500 text-white px-4 py-2 rounded-md w-full"
-                              disabled
-                            >
-                              <span className="mr-2">&#x1F4AC;</span>Chat
-                            </button>
-
-                            <button
-                              className="bg-green-500 text-white px-4 py-2 rounded-md w-32 ease-in transition-all "
+                              className="bg-biru text-white px-4 py-2 rounded-md ease-in transition-all w-full hover:scale-95 duration-500"
                               onClick={() => {
                                 if (order.orderDetails.status === "selesai") {
                                   handleViewImages(order);
@@ -311,7 +311,7 @@ const History = () => {
                               }}
                               disabled={order.orderDetails.status !== "selesai"}
                             >
-                              <div>
+                              <div className="flex justify-center gap-2">
                                 <FontAwesomeIcon
                                   icon={faImage}
                                   className="xl"
@@ -319,28 +319,56 @@ const History = () => {
                                 <h1 className="text-xs">Dokumentasi</h1>
                               </div>
                             </button>
+                            <button
+                              className="bg-gray-500 text-white px-4 py-2 rounded-md w-full text-xs"
+                              disabled
+                            >
+                              <span className="mr-2">
+                                <FontAwesomeIcon
+                                  icon={faWhatsapp}
+                                  size="xl"
+                                ></FontAwesomeIcon>
+                              </span>
+                              WhatsApp
+                            </button>
                           </div>
                         </>
                       ) : (
-                        <button
-                          onClick={() =>
-                            handleWhatsAppChat(
-                              "6287762689648",
-                              order.orderDetails
-                            )
-                          }
-                          className="bg-green-500 text-white px-4 py-2 rounded-md"
-                        >
-                          <span className="mr-2">&#x1F4AC;</span>Chat
-                        </button>
+                        <div className="flex  gap-2">
+                          <button className="bg-gray-500 text-white px-4 py-2 rounded-md  w-full cursor-default">
+                            <div className="flex justify-center gap-2">
+                              <FontAwesomeIcon
+                                icon={faImage}
+                                className="xl"
+                              ></FontAwesomeIcon>
+                              <h1 className="text-xs">Dokumentasi</h1>
+                            </div>
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleWhatsAppChat(
+                                "6287762689648",
+                                order.orderDetails
+                              )
+                            }
+                            className="bg-biru text-white px-4 py-2 rounded-md  text-xs ease-in transition-all w-full hover:scale-95 duration-500"
+                          >
+                            <span className="mr-2">
+                              <FontAwesomeIcon
+                                icon={faWhatsapp}
+                                size="xl"
+                              ></FontAwesomeIcon>
+                            </span>
+                            WhatsApp
+                          </button>
+                        </div>
                       )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            )}
-          </table>
-          <div className="flex justify-center mt-4"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -392,8 +420,37 @@ const History = () => {
                 key={order.id}
                 className={`bg-white shadow-md  p-8 mb-4 rounded-xl ease-in transition-all w-full hover:scale-105 delay-95 duration-300`}
               >
-                <div className="flex justify-around space-x-4">
-                  <div className="flex justify-center">
+                <div className="flex justify-between text-xs text-gray-400 border-b border-gray-400 ">
+                  <h1>
+                    {order.orderDetails.createdAt &&
+                      new Date(order.orderDetails.createdAt)
+                        .toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                        .replace(/\//g, "-")}
+                  </h1>
+                  <h3 className="font-bold mb-2 text-xs">
+                    <p
+                      className={`${
+                        order.orderDetails.status === "pending"
+                          ? "text-orange-500 border-orange-500 rounded-full border p-1"
+                          : order.orderDetails.status === "selesai"
+                          ? "text-green-500 border-green-500 rounded-full border p-1"
+                          : order.orderDetails.status === "konfirmasi"
+                          ? "text-blue-500 border-blue-500 rounded-full border p-1"
+                          : "text-gray-500"
+                      }`}
+                    >
+                      {order.orderDetails.status === "pending"
+                        ? "diproses"
+                        : order.orderDetails.status}
+                    </p>
+                  </h3>
+                </div>
+                <div className="flex justify-start  gap-2 border-b border-gray-400 mt-4 ">
+                  <div className="flex mb-4 ">
                     <img
                       src={order.orderDetails.url}
                       alt="image"
@@ -401,35 +458,22 @@ const History = () => {
                     />
                   </div>
 
-                  <div className="text-gray-700 text-sm">
-                    <div>
-                      {order.orderDetails.qty} x {order.orderDetails.nm_product}{" "}
+                  <div className="text-gray-700 text-sm ">
+                    <div className="text-gray-700 text-base">
+                      {order.orderDetails.nm_product}
                     </div>
-
-                    <div className="text-gray-800 font-bold">
-                      <h1 className="font-serif ">
-                        Rp {order.orderDetails.price.toLocaleString()}
-                      </h1>
-                    </div>
+                    <div>x {order.orderDetails.qty}</div>
                   </div>
+                </div>
 
-                  <div className="flex items-center mx-auto">
-                    <h3 className="font-bold mb-2 flex justify-end  text-xs">
-                      <p
-                        className={`${
-                          order.orderDetails.status === "pending"
-                            ? "text-orange-500 border-orange-500 rounded-full border p-1"
-                            : order.orderDetails.status === "selesai"
-                            ? "text-green-500 border-green-500 rounded-full border p-1"
-                            : "text-gray-500"
-                        }`}
-                      >
-                        {order.orderDetails.status === "pending"
-                          ? "diproses"
-                          : order.orderDetails.status}
-                      </p>
-                    </h3>
-                  </div>
+                <div className="text-gray-800 font-bold text-sm justify-end flex mt-1">
+                  <h1 className="font-serif ">
+                    <span className="text-xs">Total :</span>
+                    <span className="text-green-500">
+                      {" "}
+                      Rp {order.orderDetails.price.toLocaleString()}
+                    </span>
+                  </h1>
                 </div>
 
                 <div className="flex flex-col justify-center mt-4 gap-2 ">
@@ -514,7 +558,7 @@ const History = () => {
       {isViewImageModalOpen && (
         <ViewImage images={viewImages} onClose={handleCloseViewImageModal} />
       )}
-      <div className="join flex justify-center mt-4">
+      <div className="join flex justify-center mt-2 mb-4">
         <button
           className="join-item btn"
           onClick={() => handlePageChange(currentPage - 1)}

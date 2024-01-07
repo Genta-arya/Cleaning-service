@@ -9,6 +9,8 @@ import History from "../Test/View/User/Home/Component/History";
 import Register from "../Test/View/User/Auth/Register";
 import Login from "../Test/View/User/Auth/Login";
 import IndexMain from "../Test/View/Admin/IndexMain";
+import ManagePesanan from "../Test/View/Admin/Home/Component/Pesanan/ManagePesanan";
+import ManageProduct from "../Test/View/Admin/Home/Component/Product/ManageProduct";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -37,7 +39,10 @@ function App() {
                         name="description"
                         content="Tangkas Jaya Teknik, Profesional Layanan AC di Bali. Solusi Cepat & Handal, Kepuasan Pelanggan Prioritas Kami. Hubungi Sekarang!"
                       />
-                      <link rel="canonical" href="https://www.tangkasjayateknik.site/"></link>
+                      <link
+                        rel="canonical"
+                        href="https://www.tangkasjayateknik.site/"
+                      ></link>
 
                       <meta
                         property="og:image"
@@ -106,12 +111,15 @@ function App() {
                   <>
                     <Helmet>
                       <title>Tangkas Jaya Teknik - Admin</title>
-                      <link rel="canonical" href="https://www.tangkasjayateknik.site/admin/dashboard"></link>
+                      <link
+                        rel="canonical"
+                        href="https://www.tangkasjayateknik.site/admin/dashboard"
+                      ></link>
                       <meta
                         name="description"
                         content="Your description for the admin dashboard."
                       />
-                       <meta
+                      <meta
                         name="description"
                         content="Tangkas Jaya Teknik, Profesional Layanan AC di Bali. Solusi Cepat & Handal, Kepuasan Pelanggan Prioritas Kami. Hubungi Sekarang!"
                       />
@@ -187,7 +195,10 @@ function App() {
                         name="description"
                         content="Tangkas Jaya Teknik, Profesional Layanan AC di Bali. Solusi Cepat & Handal, Kepuasan Pelanggan Prioritas Kami. Hubungi Sekarang!"
                       />
-                      <link rel="canonical" href="https://www.tangkasjayateknik.site/register"></link>
+                      <link
+                        rel="canonical"
+                        href="https://www.tangkasjayateknik.site/register"
+                      ></link>
 
                       <meta
                         property="og:image"
@@ -260,7 +271,10 @@ function App() {
                         name="description"
                         content="Tangkas Jaya Teknik, Profesional Layanan AC di Bali. Solusi Cepat & Handal, Kepuasan Pelanggan Prioritas Kami. Hubungi Sekarang!"
                       />
-                      <link rel="canonical" href="https://www.tangkasjayateknik.site/login"></link>
+                      <link
+                        rel="canonical"
+                        href="https://www.tangkasjayateknik.site/login"
+                      ></link>
 
                       <meta
                         property="og:image"
@@ -405,7 +419,10 @@ function App() {
                         name="description"
                         content="Tangkas Jaya Teknik, Profesional Layanan AC di Bali. Solusi Cepat & Handal, Kepuasan Pelanggan Prioritas Kami. Hubungi Sekarang!"
                       />
-                      <link rel="canonical" href="https://www.tangkasjayateknik.site/history"></link>
+                      <link
+                        rel="canonical"
+                        href="https://www.tangkasjayateknik.site/history"
+                      ></link>
 
                       <meta
                         property="og:image"
@@ -542,6 +559,7 @@ function App() {
                   </>
                 }
               />
+              
             </>
           )}
         </Routes>

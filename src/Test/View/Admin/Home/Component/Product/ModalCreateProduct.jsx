@@ -91,10 +91,10 @@ const ModalCreateProduct = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="bg-white w-96 p-6 rounded shadow-lg">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+      <div className="bg-white w-96 p-6 rounded shadow-lg overflow-y-auto max-h-[550px]">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">Create Product</h2>
+          <h2 className="text-lg font-semibold">Tambah Service</h2>
           <button
             className="text-gray-500 hover:text-gray-700"
             onClick={onClose}
@@ -104,7 +104,7 @@ const ModalCreateProduct = ({ onClose }) => {
         </div>
         <div>
           <label className="block mb-2">
-            <span className="text-gray-700">Product Name:</span>
+            <span className="text-gray-700">Nama Service:</span>
             <input
               type="text"
               value={productData.nm_product}
@@ -117,7 +117,7 @@ const ModalCreateProduct = ({ onClose }) => {
         </div>
         <div>
           <label className="block mb-2">
-            <span className="text-gray-700">Description:</span>
+            <span className="text-gray-700">Deskripsi:</span>
             <textarea
               value={productData.desc}
               onChange={(e) =>
@@ -129,7 +129,7 @@ const ModalCreateProduct = ({ onClose }) => {
         </div>
         <div>
           <label className="block mb-2">
-            <span className="text-gray-700">Price:</span>
+            <span className="text-gray-700">Harga:</span>
             <div className="flex items-center">
               <span className="text-gray-500 mr-2">Rp</span>
               <input
@@ -145,7 +145,7 @@ const ModalCreateProduct = ({ onClose }) => {
 
         <div>
           <label className="block mb-2">
-            <span className="text-gray-700">Category:</span>
+            <span className="text-gray-700">Kategori:</span>
             <select
               value={productData.categoryId}
               onChange={(e) =>
@@ -154,7 +154,7 @@ const ModalCreateProduct = ({ onClose }) => {
               className="w-full mt-1 p-2 border rounded focus:outline-none focus:border-blue-500"
             >
               <option value={0} disabled>
-                Select Category
+                Pilih Kategori
               </option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
@@ -197,10 +197,10 @@ const ModalCreateProduct = ({ onClose }) => {
             </div>
           ) : (
             <button
-              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue"
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue w-full"
               onClick={handleCreateProduct}
             >
-              Create Product
+              Submit
             </button>
           )}
         </div>

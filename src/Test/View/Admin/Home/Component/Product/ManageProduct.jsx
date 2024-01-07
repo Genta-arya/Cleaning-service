@@ -6,13 +6,16 @@ import {
   faEdit,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import { deleteProduct, getProduct } from "../../../../../../Service/Api";
+import { checkJwt, deleteProduct, getProduct } from "../../../../../../Service/Api";
 import SkeletonRow from "./SkeletonRow";
 
 import ModalCreateProduct from "./ModalCreateProduct";
 import ModalEditProduct from "./ModalEditProduct";
 import { PulseLoader } from "react-spinners";
 import MenuCategory from "./MenuCategory";
+import { useNavigate } from "react-router-dom";
+import { setLoggedIn, setRole } from "../../../../../../Feature/Redux/Auth/AuthSlice";
+import { useDispatch } from "react-redux";
 
 const ManageProduct = () => {
   const [products, setProducts] = useState([]);
@@ -40,6 +43,40 @@ const ManageProduct = () => {
 
     fetchData();
   }, []);
+
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await checkJwt();
+
+        if (data.success) {
+          dispatch(setLoggedIn(true));
+          dispatch(setRole(data.role));
+
+          if (data.role !== "admin") {
+            navigate("/login");
+          }
+        } else {
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchData();
+  }, [dispatch, navigate]);
+
+
+
+
+
+
 
   const filteredProducts = products.filter(
     (product) =>
@@ -146,7 +183,7 @@ const ManageProduct = () => {
           Product tidak ditemukan.
         </p>
       ) : (
-        <table className="mt-8 w-full border-collapse">
+        <table className="mt-8 w-full border-collapse text-center">
           <thead>
             <tr>
               <th className="border border-gray-300 p-2">No</th>
@@ -163,7 +200,7 @@ const ManageProduct = () => {
               <tr key={product.id}>
                 <td className="border border-gray-300 p-2">{index + 1}</td>
                 <td className="border border-gray-300 p-2">
-                  <img src={product.url} alt="image" className="rounded-xl" />
+                  <img src={product.url} alt="image" className="rounded-xl w-32 h-auto" />
                 </td>
                 <td className="border border-gray-300 p-2">
                   {product.nm_product}
