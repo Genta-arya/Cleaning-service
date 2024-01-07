@@ -8,6 +8,7 @@ import {
 } from "firebase/firestore";
 import axiosInstance from "./Config";
 import axiosInstanceWithPassword, { axiosWithMiddleware } from "./Midleware";
+import axios from "axios";
 
 const firebaseConfig = {
   apiKey: "AIzaSyByA2NbnXpFg4yM_h8pug8WgD9hnLyQv4g",
@@ -278,30 +279,27 @@ export const DeleteCategory = async (categoryId) => {
   }
 };
 
-export const getAllOrders = async (page) => {
+export const getAllOrders = async (page, perPage, q) => {
   try {
-    const response = await axiosInstance.get(`/get-orders`, {
-      params: {
-        page,
-      },
-    });
-    return response;
+    const response = await axios.get(`http://localhost:5001/get-orders?page=${page}&perPage=${perPage}&q=${q}`);
+    return response.data;
   } catch (error) {
     throw error;
   }
 };
+
 
 export const getAllOrdersByUsername = async (username, page = 1) => {
   try {
-    const response = await axiosInstance.get(`/search/${username}?page=${page}`);
+    const response = await axiosInstance.get(
+      `/search/${username}?page=${page}`
+    );
     return response.data;
   } catch (error) {
-    console.error('Error fetching orders by username:', error);
+    console.error("Error fetching orders by username:", error);
     throw error;
   }
 };
-
-
 
 export const updateOrderStatus = async (orderId, newStatus) => {
   try {

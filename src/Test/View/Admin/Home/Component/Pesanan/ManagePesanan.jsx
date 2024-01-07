@@ -29,6 +29,7 @@ import Lottie from "lottie-react";
 import ManagePesananMobile from "./ManagePesananMobile";
 import ModalUploadGambar from "./ModalUploadGambar";
 import ViewImage from "./ViewImage";
+import { setQuarter } from "date-fns";
 
 const ManagePesanan = () => {
   const [orders, setOrders] = useState([]);
@@ -43,24 +44,27 @@ const ManagePesanan = () => {
     id: null,
     status: null,
   });
-  const [searchUsername, setSearchUsername] = useState("");
 
   const [viewImages, setViewImages] = useState([]);
   const [isViewImageModalOpen, setIsViewImageModalOpen] = useState(false);
-
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [selectStatus, setSelectedStatus] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
 
   const [isNewOrderModalVisible, setIsNewOrderModalVisible] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [item, setItem] = useState(0);
+
   const fetchData = async () => {
     try {
-      const result = await getAllOrders(currentPage);
-      setOrders(result.data.data);
-      setTotalPages(result.data.totalPages);
-      setCurrentPage(result.data.currentPage);
+      const result = await getAllOrders(currentPage, item, searchQuery);
+      setOrders(result.data);
+      setItem(result.item);
+      setTotalPages(result.totalPages);
+      setCurrentPage(result.currentPage);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -69,7 +73,15 @@ const ManagePesanan = () => {
 
   useEffect(() => {
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, searchQuery]);
+
+  const searchData = (e) => {
+    e.preventDefault();
+    setCurrentPage(0);
+
+    setSearchQuery(searchInput);
+    fetchData();
+  };
 
   useEffect(() => {
     const storedDataLength = localStorage.getItem("firebaseDataLength");
@@ -123,10 +135,8 @@ const ManagePesanan = () => {
 
   const handleDeleteOrder = async (orderId) => {
     try {
-      // Ensure orderId is an integer
       const parsedOrderId = parseInt(orderId);
 
-      // Panggil fungsi deleteImage dengan orderId yang dihapus
       const response = await deleteImage(parsedOrderId);
 
       if (response.success) {
@@ -140,8 +150,6 @@ const ManagePesanan = () => {
       console.error("Error deleting image:", error);
       toast.error(`Error deleting image: ${error.message}`);
     }
-
-    // Rest of your logic...
   };
 
   const handleWhatsAppChat = (order) => {
@@ -251,31 +259,34 @@ const ManagePesanan = () => {
     setIsViewImageModalOpen(false);
   };
 
-  const filteredOrders = orders.filter((order) =>
-    order.username.toLowerCase().includes(searchUsername.toLowerCase())
-  );
+  const handleInputChange = (e) => {
+    setSearchInput(e.target.value);
+  };
 
-  const handleSearch = () => {
-    setOrders(filteredOrders);
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      setSearchQuery(searchInput);
+    }
   };
 
   return (
     <div className="px-12 p-8">
-      <div className="flex items-center mt-4">
-        <input
-          type="text"
-          placeholder="Search by username..."
-          value={searchUsername}
-          onChange={(e) => setSearchUsername(e.target.value)}
-          className="border p-2 rounded focus:outline-none focus:border-blue-500 flex-grow mr-2"
-        />
-        <button
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue"
-          onClick={handleSearch}
-        >
-          Search
-        </button>
-      </div>
+      <form onSubmit={searchData}>
+        <div className="flex items-center mt-4">
+          <input
+            type="text"
+            placeholder="Search by username..."
+            value={searchInput}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyPress}
+            className="border p-2 rounded focus:outline-none focus:border-blue-500 flex-grow mr-2"
+          />
+          <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue">
+            Search
+          </button>
+        </div>
+      </form>
+
       <div className="flex justify-between items-center w-auto bg-white p-4 mb-4 rounded-full lg:hidden md:hidden block">
         <img src={image} alt="image" className="w-10 h-10" />
 
@@ -320,7 +331,7 @@ const ManagePesanan = () => {
         <p className="mt-4 text-center text-red-500">Belum Ada Pesanan</p>
       ) : (
         <>
-          {filteredOrders.length === 0 ? (
+          {orders.length === 0 ? (
             <p className="mt-4 text-center text-red-500">
               Data tidak ditemukan
             </p>
@@ -344,7 +355,7 @@ const ManagePesanan = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredOrders.map((order) => (
+                  {orders.map((order) => (
                     <tr
                       key={order.id}
                       className="hover:bg-gray-100 text-center"
