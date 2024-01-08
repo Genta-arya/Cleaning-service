@@ -11,6 +11,7 @@ import Login from "../Test/View/User/Auth/Login";
 import IndexMain from "../Test/View/Admin/IndexMain";
 import ManagePesanan from "../Test/View/Admin/Home/Component/Pesanan/ManagePesanan";
 import ManageProduct from "../Test/View/Admin/Home/Component/Product/ManageProduct";
+import ChartComponent from "../Test/View/Admin/Home/Component/Chart/Chart";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -559,7 +560,6 @@ function App() {
                   </>
                 }
               />
-              
             </>
           )}
         </Routes>

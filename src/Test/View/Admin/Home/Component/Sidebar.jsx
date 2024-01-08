@@ -16,6 +16,7 @@ import { logout } from "../../../../../Service/Api";
 import { PulseLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import ListCustomer from "./Customer/ListCustomer";
+import ChartComponent from "./Chart/Chart";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,9 +27,18 @@ const Sidebar = () => {
 
   const [isManageDataOpen, setIsManageDataOpen] = useState(true);
 
+  const [isManageGraphicOpen, setIsManageGraphicOpen] = useState(false);
+
   const toggleManageData = () => {
     setIsManageDataOpen(!isManageDataOpen);
     setIsManageUserOpen(false);
+    setIsManageGraphicOpen(false);
+  };
+
+  const toggleManageGraphic = () => {
+    setIsManageGraphicOpen(!isManageGraphicOpen);
+    setIsManageUserOpen(false);
+    setIsManageDataOpen(false);
   };
   const navigate = useNavigate();
   const openDrawer = () => {
@@ -37,6 +47,7 @@ const Sidebar = () => {
   const toggleManageUser = () => {
     setIsManageUserOpen(!isManageUserOpen);
     setIsManageDataOpen(false);
+    setIsManageGraphicOpen(false);
   };
 
   const closeDrawer = () => {
@@ -124,7 +135,9 @@ const Sidebar = () => {
               <ul className="w-full">
                 <li
                   className={`p-4 cursor-pointer ${
-                    isManageDataOpen ? "border border-green-500 rounded-full text-white mt-4" : ""
+                    isManageDataOpen
+                      ? "border border-green-500 rounded-full text-white mt-4"
+                      : ""
                   }`}
                   onClick={toggleManageData}
                 >
@@ -162,7 +175,9 @@ const Sidebar = () => {
 
                 <li
                   className={`p-4 cursor-pointer ${
-                    isManageUserOpen ? "border-green-500 rounded-full text-white mt-4 border" : ""
+                    isManageUserOpen
+                      ? "border-green-500 rounded-full text-white mt-4 border"
+                      : ""
                   }`}
                   onClick={toggleManageUser}
                 >
@@ -172,7 +187,6 @@ const Sidebar = () => {
                 {isManageUserOpen && (
                   <div className="ml-8">
                     <ul>
-                     
                       <li
                         className={`p-4 cursor-pointer ${
                           currentView === "customerItem"
@@ -187,10 +201,36 @@ const Sidebar = () => {
                     </ul>
                   </div>
                 )}
+                <li
+                  className={`p-4 cursor-pointer ${
+                    isManageGraphicOpen
+                      ? "border-green-500 rounded-full text-white mt-4 border"
+                      : ""
+                  }`}
+                  onClick={toggleManageGraphic}
+                >
+                  <FontAwesomeIcon icon={faDatabase} className="mr-2" />
+                  Data Penghasilan
+                </li>
+                {isManageGraphicOpen && (
+                  <div className="ml-8">
+                    <ul>
+                      <li
+                        className={`p-4 cursor-pointer ${
+                          currentView === "graphic"
+                            ? "border-green-500 rounded-full text-white mt-4 border"
+                            : ""
+                        }`}
+                        onClick={() => handleMenuClick("graphic")}
+                      >
+                        <FontAwesomeIcon icon={faDatabase} className="mr-2" />
+                        Graphic
+                      </li>
+                    </ul>
+                  </div>
+                )}
               </ul>
             </div>
-
-          
 
             <div
               className="flex justify-center bg-red-500 p-1 text-white rounded-lg cursor-pointer hover:bg-red-700 items-center gap-2 mt-4"
@@ -213,9 +253,11 @@ const Sidebar = () => {
           <ManageProduct />
         ) : currentView === "status" ? (
           <Test />
-        ) :  currentView === "customerItem" ? (
+        ) : currentView === "customerItem" ? (
           <ListCustomer />
-        ) :null}
+        ) : currentView === "graphic" ? (
+          <ChartComponent />
+        ) : null}
       </div>
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

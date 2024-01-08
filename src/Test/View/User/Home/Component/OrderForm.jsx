@@ -40,6 +40,12 @@ const OrderForm = () => {
 
   const db = getDatabase(firebaseApp);
 
+  useEffect(() => {
+    if (!productData) {
+      navigate("/");
+    }
+  }, [navigate, productData]);
+
   const checkLocationPermission = () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
