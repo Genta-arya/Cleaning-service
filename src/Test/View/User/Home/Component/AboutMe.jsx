@@ -5,7 +5,7 @@ import puzzle from "../../../../../Asset/puzzle.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { motion, useAnimation } from "framer-motion";
-
+import waves from "../../../../../Asset/wave.png";
 const AboutMe = () => {
   const gridItems = [
     {
@@ -36,11 +36,11 @@ const AboutMe = () => {
 
   const handleScroll = () => {
     const aboutMeSection = document.getElementById("aboutMeSection");
-  
+
     if (aboutMeSection) {
       const scrollPosition = window.scrollY + window.innerHeight;
       const elementPosition = aboutMeSection.offsetTop;
-  
+
       if (scrollPosition > elementPosition) {
         controls.start({ opacity: 1, y: 0 });
       }
@@ -53,12 +53,11 @@ const AboutMe = () => {
     if (aboutMeSection && controls) {
       const scrollPosition = window.scrollY + window.innerHeight;
       const elementPosition = aboutMeSection.offsetTop;
-  
+
       if (scrollPosition > elementPosition) {
         controls.start({ opacity: 1, y: 0 });
       }
     }
-
 
     window.addEventListener("scroll", handleScroll);
 
@@ -68,14 +67,17 @@ const AboutMe = () => {
   }, [controls]);
 
   return (
-    <div id="aboutMeSection" className="bg-white py-12 p-4 ">
+    <div id="aboutMeSection" className="bg-white py-12 p-4  ">
+     
+
       <motion.div
         animate={controls}
         initial={{ opacity: 0, y: 50 }}
         transition={{ duration: 0.8 }}
+        className="z-50"
       >
-        <div className="flex justify-center mb-8 ">
-          <h1 className="font-serif font-bold text-gelap text-3xl uppercase text-center">
+        <div className="flex justify-center mb-8  mt-12 lg:mt-52">
+          <h1 className="font-serif font-bold text-gelap text-3xl uppercase text-center  ">
             tangkas jaya teknik
           </h1>
         </div>

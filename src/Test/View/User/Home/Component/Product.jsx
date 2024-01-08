@@ -204,7 +204,7 @@ const Product = () => {
       animate={controls}
       initial={{ opacity: 0, y: 40, scale: 0.8, rotate: 0 }}
       transition={{ duration: 1, ease: "easeOut" }}
-      className=" p-3  -mt-20 mb-24"
+      className=" p-3  -mt-20 mb-24 z-50"
     >
       <Helmet>
         <meta content="#5F93C0" name="theme-color" />
@@ -247,13 +247,11 @@ const Product = () => {
             ) : (
               <div className="flex justify-center items-center">
                 <div className="grid grid-cols-4 gap-4 p-12 items-center ">
-                  <div>
-                    
-                  </div>
+                  <div></div>
                   {filteredProducts.map((product, index) => (
                     <motion.div
                       key={product.id}
-                      className="border rounded-xl bg-white shadow-xl border-gelap transform transition-all"
+                      className="border rounded-xl bg-white shadow-xl border-gelap transform transition-all overflow-hidden  "
                     >
                       <div>
                         <img
@@ -262,7 +260,7 @@ const Product = () => {
                             "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
                           }
                           alt="paket service ac"
-                          className="mb-4 lg:w-full lg:h-48 rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105 hover:shadow-lg hover:rounded-b-xl"
+                          className="mb-4  lg:w-full lg:h-48 rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105  hover:rounded-b-xl"
                           onClick={() => handleProductClick(product)}
                         />
                       </div>
@@ -296,6 +294,7 @@ const Product = () => {
                     </motion.div>
                   ))}
                 </div>
+               
               </div>
             )}
           </>

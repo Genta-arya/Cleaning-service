@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
   faImage,
+  faSearch,
   faSignOut,
   faTimes,
   faTrash,
@@ -24,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
 import { firebaseApp } from "../../../../../../Feature/Firebase/FirebaseConfig";
 import { getDatabase, off, onValue, ref, remove } from "firebase/database";
-
+import waves from "../../../../../../Asset/wave.png";
 import Lottie from "lottie-react";
 import ManagePesananMobile from "./ManagePesananMobile";
 import ModalUploadGambar from "./ModalUploadGambar";
@@ -59,27 +60,44 @@ const ManagePesanan = () => {
   const [item, setItem] = useState(0);
 
   const fetchData = async () => {
+    setIsLoading(true);
     try {
       const result = await getAllOrders(currentPage, item, searchQuery);
-      setOrders(result.data);
-      setItem(result.item);
-      setTotalPages(result.totalPages);
-      setCurrentPage(result.currentPage);
-      setIsLoading(false);
+      if (result.status === 200) {
+        setSearchQuery(searchInput);
+
+        setOrders(result.data);
+        setItem(result.item);
+
+        setTotalPages(result.totalPages);
+        setCurrentPage(result.currentPage);
+        setIsLoading(false);
+      }
     } catch (error) {
+      setIsLoading(false);
+      setSearchQuery(searchInput);
+
+      if (error.response && error.response.status === 404) {
+        setOrders([]);
+        setIsLoading(false);
+
+        setItem(0);
+        setTotalPages(1);
+        setCurrentPage(1);
+      } else {
+      }
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
     fetchData();
+    console.log(orders);
   }, [currentPage, searchQuery]);
 
   const searchData = (e) => {
     e.preventDefault();
-    setCurrentPage(0);
 
-    setSearchQuery(searchInput);
     fetchData();
   };
 
@@ -131,6 +149,7 @@ const ManagePesanan = () => {
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
+    setIsLoading(true);
   };
 
   const handleDeleteOrder = async (orderId) => {
@@ -147,7 +166,6 @@ const ManagePesanan = () => {
         toast.error(`Failed to delete image: ${response.message}`);
       }
     } catch (error) {
-      
       toast.error(`Error deleting image: ${error.message}`);
     }
   };
@@ -269,24 +287,13 @@ const ManagePesanan = () => {
     }
   };
 
+  const clearSearchInput = () => {
+    setSearchInput("");
+    fetchData();
+  };
+
   return (
     <div className="px-12 p-8">
-      <form onSubmit={searchData}>
-        <div className="flex items-center mt-4">
-          <input
-            type="text"
-            placeholder="Search by username..."
-            value={searchInput}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyPress}
-            className="border p-2 rounded focus:outline-none focus:border-blue-500 flex-grow mr-2"
-          />
-          <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue">
-            Search
-          </button>
-        </div>
-      </form>
-
       <div className="flex justify-between items-center w-auto bg-white p-4 mb-4 rounded-full lg:hidden md:hidden block">
         <img src={image} alt="image" className="w-10 h-10" />
 
@@ -297,6 +304,49 @@ const ManagePesanan = () => {
             className="text-red-500 hover:text-red-700"
           ></FontAwesomeIcon>
         </h1>
+      </div>
+
+      <div className="flex items-center mt-4 relative mb-4">
+        <input
+          type="text"
+          placeholder="Cari username..."
+          value={searchInput}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyPress}
+          className="border p-2 rounded focus:outline-none focus:border-blue-500 flex-grow mr-2"
+        />
+
+        <button
+          className="absolute right-20 mr-2 p-2 rounded-full bg-gray-300 hover:bg-gray-400"
+          onClick={clearSearchInput}
+        >
+          <svg
+            className="w-4 h-4 text-gray-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+
+        <button
+          className={`py-2 px-4 rounded focus:outline-none ${
+            !searchInput.trim()
+              ? "bg-gray-500"
+              : "bg-blue-500 hover:bg-blue-700"
+          }`}
+          onClick={fetchData}
+          disabled={!searchInput.trim()}
+        >
+          <FontAwesomeIcon icon={faSearch} className="mr-2 ml-2 text-white" />
+        </button>
       </div>
 
       <div className="lg:hidden md:hidden block">
@@ -332,7 +382,7 @@ const ManagePesanan = () => {
       </div>
       {isLoading ? (
         <>
-         {Array.from({ length: 5 }).map((_, index) => (
+          {Array.from({ length: 5 }).map((_, index) => (
             <SkeletonRow key={index} />
           ))}
           <div className="lg:hidden md:hidden block">
@@ -342,7 +392,9 @@ const ManagePesanan = () => {
           </div>
         </>
       ) : orders.length === 0 ? (
-        <p className="mt-4 text-center text-red-500">Belum Ada Pesanan</p>
+        <p className="mt-4 text-center text-red-500">
+          {searchQuery ? "Data tidak ditemukan" : "Belum Ada Pesanan"}
+        </p>
       ) : (
         <>
           {orders.length === 0 ? (
