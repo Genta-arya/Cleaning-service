@@ -147,7 +147,7 @@ const ManagePesanan = () => {
         toast.error(`Failed to delete image: ${response.message}`);
       }
     } catch (error) {
-      console.error("Error deleting image:", error);
+      
       toast.error(`Error deleting image: ${error.message}`);
     }
   };
@@ -332,9 +332,9 @@ const ManagePesanan = () => {
       </div>
       {isLoading ? (
         <>
-          <div className="lg:block md:block hidden">
-            <SkeletonRow />
-          </div>
+         {Array.from({ length: 5 }).map((_, index) => (
+            <SkeletonRow key={index} />
+          ))}
           <div className="lg:hidden md:hidden block">
             {[...Array(3)].map((_, index) => (
               <SkeletonItem key={index} />

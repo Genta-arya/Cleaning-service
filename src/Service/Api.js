@@ -33,11 +33,11 @@ export const getNotificationsRealtime = (username, setNotifications) => {
     const notifications = [];
     snapshot.forEach((childSnapshot) => {
       const orderDetails = childSnapshot.val();
-      // Assuming orderId is the key in your notifications
+
       const orderId = childSnapshot.key;
       notifications.push({
         orderId,
-        message: orderDetails.message || "", // Update with the correct field name
+        message: orderDetails.message || "",
       });
     });
     setNotifications(notifications);
@@ -279,30 +279,26 @@ export const DeleteCategory = async (categoryId) => {
   }
 };
 
-// export const getAllOrders = async (page, perPage, q) => {
-//   try {
-//     const response = await axiosInstance.get("/get-orders", {
-//       params: {
-//         page: page,
-//         perPage:perPage,
-//         q: q,
-//       },
-//     });
-//     return response.data;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-
-export const getAllOrders = async (page, perPage, q) => {
+export const resetPassword = async (uid, newPassword) => {
   try {
-    const response = await axios.get(`${apiUrl}get-orders?page=${page}&perPage=${perPage}&q=${q}`);
+    const response = await axiosInstance.post(`/reset-password/${uid}`, {
+      newPassword,
+    });
     return response.data;
   } catch (error) {
     throw error;
   }
 };
-
+export const getAllOrders = async (page, perPage, q) => {
+  try {
+    const response = await axios.get(
+      `${apiUrl}get-orders?page=${page}&perPage=${perPage}&q=${q}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const getAllOrdersByUsername = async (username, page = 1) => {
   try {
@@ -388,6 +384,15 @@ export const uploadImage = async (formData) => {
 export const deleteImage = async (orderId) => {
   try {
     const response = await axiosInstance.delete(`/delete/dokument/${orderId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteUser = async (uid) => {
+  try {
+    const response = await axiosInstance.delete(`/delete/${uid}`);
     return response.data;
   } catch (error) {
     throw error;

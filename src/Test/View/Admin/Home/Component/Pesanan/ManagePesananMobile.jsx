@@ -22,19 +22,20 @@ const ManagePesananMobile = ({
   isViewImageModalOpen,
   viewImages,
 }) => {
-
-  console.log("Orders in ManagePesananMobile:", orders);
   return (
     <>
       <div className=" ">
         <div className="flex flex-col  ">
-          {orders.map((order) => { 
-
-            console.log("Order:", order); // Log each order object 
+          {orders.map((order) => {
             return (
-              <div key={order.id} className="border mb-4 p-4 rounded-lg w-[100%]">
+              <div
+                key={order.id}
+                className="border mb-4 p-4 rounded-lg w-[100%]"
+              >
                 <div className="flex justify-between items-center mb-2">
-                  <div className="font-bold text-xs">Id Pesanan: {order.id}</div>
+                  <div className="font-bold text-xs">
+                    Id Pesanan: {order.id}
+                  </div>
                   <div className="flex items-center gap-2">
                     <div
                       className={`${

@@ -15,7 +15,7 @@ import Test from "./Pesanan/ManagePesanan";
 import { logout } from "../../../../../Service/Api";
 import { PulseLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
-import ListCustomer from "./Pesanan/ListCustomer";
+import ListCustomer from "./Customer/ListCustomer";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
