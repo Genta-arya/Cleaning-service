@@ -23,7 +23,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const database = getDatabase(firebaseApp);
 
 export const getNotificationsRealtime = (username, setNotifications) => {
@@ -279,9 +279,24 @@ export const DeleteCategory = async (categoryId) => {
   }
 };
 
+// export const getAllOrders = async (page, perPage, q) => {
+//   try {
+//     const response = await axiosInstance.get("/get-orders", {
+//       params: {
+//         page: page,
+//         perPage:perPage,
+//         q: q,
+//       },
+//     });
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
 export const getAllOrders = async (page, perPage, q) => {
   try {
-    const response = await axios.get(`http://localhost:5001/get-orders?page=${page}&perPage=${perPage}&q=${q}`);
+    const response = await axios.get(`${apiUrl}get-orders?page=${page}&perPage=${perPage}&q=${q}`);
     return response.data;
   } catch (error) {
     throw error;

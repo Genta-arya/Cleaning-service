@@ -299,6 +299,20 @@ const ManagePesanan = () => {
         </h1>
       </div>
 
+      <div className="lg:hidden md:hidden block">
+        <ManagePesananMobile
+          orders={orders}
+          handleDeleteOrder={handleDeleteOrder}
+          openEditModal={openEditModal}
+          handleWhatsAppChat={handleWhatsAppChat}
+          openUploadModal={openUploadModal}
+          handleViewImages={handleViewImages}
+          handleCloseViewImageModal={handleCloseViewImageModal}
+          isViewImageModalOpen={isViewImageModalOpen}
+          viewImages={viewImages}
+        />
+      </div>
+
       <div className="join flex justify-center py-4">
         <button
           className="join-item btn"
@@ -517,18 +531,6 @@ const ManagePesanan = () => {
                   ))}
                 </tbody>
               </table>
-
-              <ManagePesananMobile
-                orders={orders}
-                handleDeleteOrder={handleDeleteOrder}
-                openEditModal={openEditModal}
-                handleWhatsAppChat={handleWhatsAppChat}
-                openUploadModal={openUploadModal}
-                handleViewImages={handleViewImages}
-                handleCloseViewImageModal={handleCloseViewImageModal}
-                isViewImageModalOpen={isViewImageModalOpen}
-                viewImages={viewImages}
-              />
             </div>
           )}
         </>
