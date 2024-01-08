@@ -60,7 +60,9 @@ const ManagePesananMobile = ({
                 </div>
                 <div className="flex gap-2 justify-center p-1">
                   <button
-                    className="text-blue-500 hover:underline"
+                    className={`text-${
+                      order.orderDetails.status === "selesai" ? "blue" : "gray"
+                    }-500 hover:underline`}
                     onClick={() => {
                       if (order.orderDetails.status === "selesai") {
                         handleViewImages(order);
@@ -74,6 +76,7 @@ const ManagePesananMobile = ({
                   >
                     <FontAwesomeIcon icon={faImage} size="lg" />
                   </button>
+
                   <button
                     className="text-green-500 hover:underline"
                     onClick={() => {
@@ -83,6 +86,10 @@ const ManagePesananMobile = ({
                           order.orderDetails.nm_product,
                           order.id,
                           order.orderDetails.status
+                        );
+                      } else {
+                        toast.error(
+                          "Status pesanan belum selesai. Tidak bisa mengunggah gambar."
                         );
                       }
                     }}

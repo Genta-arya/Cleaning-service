@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
 import { firebaseApp } from "../../../../../../Feature/Firebase/FirebaseConfig";
 import { getDatabase, off, onValue, ref, remove } from "firebase/database";
-import waves from "../../../../../../Asset/wave.png";
+
 import Lottie from "lottie-react";
 import ManagePesananMobile from "./ManagePesananMobile";
 import ModalUploadGambar from "./ModalUploadGambar";
@@ -163,10 +163,12 @@ const ManagePesanan = () => {
 
         fetchData();
       } else {
-        toast.error(`Failed to delete image: ${response.message}`);
+        toast.error(`Failed to delete image: ${response}`);
       }
     } catch (error) {
-      toast.error(`Error deleting image: ${error.message}`);
+      if (error.response && error.response.status === 404) {
+        toast.error(`Gambar tidak ditemukan`);
+      }
     }
   };
 
@@ -349,20 +351,6 @@ const ManagePesanan = () => {
         </button>
       </div>
 
-      <div className="lg:hidden md:hidden block">
-        <ManagePesananMobile
-          orders={orders}
-          handleDeleteOrder={handleDeleteOrder}
-          openEditModal={openEditModal}
-          handleWhatsAppChat={handleWhatsAppChat}
-          openUploadModal={openUploadModal}
-          handleViewImages={handleViewImages}
-          handleCloseViewImageModal={handleCloseViewImageModal}
-          isViewImageModalOpen={isViewImageModalOpen}
-          viewImages={viewImages}
-        />
-      </div>
-
       <div className="join flex justify-center py-4">
         <button
           className="join-item btn"
@@ -382,9 +370,11 @@ const ManagePesanan = () => {
       </div>
       {isLoading ? (
         <>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <SkeletonRow key={index} />
-          ))}
+          <div className="hidden md:hidden lg:block">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <SkeletonRow key={index} />
+            ))}
+          </div>
           <div className="lg:hidden md:hidden block">
             {[...Array(3)].map((_, index) => (
               <SkeletonItem key={index} />
@@ -402,187 +392,208 @@ const ManagePesanan = () => {
               Data tidak ditemukan
             </p>
           ) : (
-            <div className="overflow-x-auto lg:block md:block hidden">
-              <table className="table table-xs">
-                <thead>
-                  <tr className="text-center">
-                    <th className="border border-gray-300 p-2">Id pesanan</th>
-                    <th className="border border-gray-300 p-2">Username</th>
-                    <th className="border border-gray-300 p-2">Image</th>
-                    <th className="border border-gray-300 p-2">Service</th>
-                    <th className="border border-gray-300 p-2">Total Price</th>
-                    <th className="border border-gray-300 p-2">Tanggal</th>
-                    <th className="border border-gray-300 p-2">Alamat</th>
-                    <th className="border border-gray-300 p-2">Koordinat</th>
-                    <th className="border border-gray-300 p-2">Status</th>
-                    <th className="border border-gray-300 p-2">Actions</th>
-                    <th className="border border-gray-300 p-2">Dokumentasi</th>
-                    <th className="border border-gray-300 p-2">Chat</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.map((order) => (
-                    <tr
-                      key={order.id}
-                      className="hover:bg-gray-100 text-center"
-                    >
-                      <td className="border border-gray-300 p-2">{order.id}</td>
-                      <td className="border border-gray-300 p-2">
-                        {order.username}
-                      </td>
+            <div>
+              <div className="lg:hidden md:hidden block">
+                <ManagePesananMobile
+                  orders={orders}
+                  handleDeleteOrder={handleDeleteOrder}
+                  openEditModal={openEditModal}
+                  handleWhatsAppChat={handleWhatsAppChat}
+                  openUploadModal={openUploadModal}
+                  handleViewImages={handleViewImages}
+                  handleCloseViewImageModal={handleCloseViewImageModal}
+                  isViewImageModalOpen={isViewImageModalOpen}
+                  viewImages={viewImages}
+                />
+              </div>
+              <div className="overflow-x-auto lg:block md:block hidden">
+                <table className="table table-xs">
+                  <thead>
+                    <tr className="text-center">
+                      <th className="border border-gray-300 p-2">Id pesanan</th>
+                      <th className="border border-gray-300 p-2">Username</th>
+                      <th className="border border-gray-300 p-2">Image</th>
+                      <th className="border border-gray-300 p-2">Service</th>
+                      <th className="border border-gray-300 p-2">
+                        Total Price
+                      </th>
+                      <th className="border border-gray-300 p-2">Tanggal</th>
+                      <th className="border border-gray-300 p-2">Alamat</th>
+                      <th className="border border-gray-300 p-2">Koordinat</th>
+                      <th className="border border-gray-300 p-2">Status</th>
+                      <th className="border border-gray-300 p-2">Actions</th>
+                      <th className="border border-gray-300 p-2">
+                        Dokumentasi
+                      </th>
+                      <th className="border border-gray-300 p-2">Chat</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders.map((order) => (
+                      <tr
+                        key={order.id}
+                        className="hover:bg-gray-100 text-center"
+                      >
+                        <td className="border border-gray-300 p-2">
+                          {order.id}
+                        </td>
+                        <td className="border border-gray-300 p-2">
+                          {order.username}
+                        </td>
 
-                      <td className="border border-gray-300 p-2">
-                        <img
-                          src={order.orderDetails.url || "default-image-url"}
-                          alt="image"
-                          className="w-16 h-16 object-cover rounded"
-                        />
-                      </td>
-                      <td className="border border-gray-300 p-2">
-                        Quantity: {order.orderDetails.qty} x{" "}
-                        {order.orderDetails.nm_product}
-                      </td>
-                      <td className="border border-gray-300 p-2">
-                        Rp {order.orderDetails.price.toLocaleString()}
-                      </td>
-                      <td className="border border-gray-300 p-2">
-                        {order.orderDetails.createdAt &&
-                          new Date(
-                            order.orderDetails.createdAt
-                          ).toLocaleString()}
-                      </td>
-                      <td className="border border-gray-300 p-2">
-                        {" "}
-                        {order.location.address},{" "}
-                      </td>
-                      <td className="border border-gray-300 p-2 text-blue-500 font-bold">
-                        <a
-                          href={`https://www.google.com/maps/place/${order.location.latitude},${order.location.longitude}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="underline"
-                        >
-                          Open Maps
-                        </a>
-                      </td>
-                      <td className="flex p-6 mt-1 gap-4 items-center text-center  ">
-                        <div
-                          className="border p-1 rounded-md border-gray-300  flex gap-2 cursor-pointer"
-                          onClick={() => openEditModal(order)}
-                        >
-                          <div
-                            className={`${
-                              order.orderDetails.status === "pending"
-                                ? "text-orange-500  font-bold"
-                                : order.orderDetails.status === "selesai"
-                                ? "text-green-500  font-bold"
-                                : "text-blue-500  font-bold"
-                            }`}
+                        <td className="border border-gray-300 p-2">
+                          <img
+                            src={order.orderDetails.url || "default-image-url"}
+                            alt="image"
+                            className="w-16 h-16 object-cover rounded"
+                          />
+                        </td>
+                        <td className="border border-gray-300 p-2">
+                          Quantity: {order.orderDetails.qty} x{" "}
+                          {order.orderDetails.nm_product}
+                        </td>
+                        <td className="border border-gray-300 p-2">
+                          Rp {order.orderDetails.price.toLocaleString()}
+                        </td>
+                        <td className="border border-gray-300 p-2">
+                          {order.orderDetails.createdAt &&
+                            new Date(
+                              order.orderDetails.createdAt
+                            ).toLocaleString()}
+                        </td>
+                        <td className="border border-gray-300 p-2">
+                          {" "}
+                          {order.location.address},{" "}
+                        </td>
+                        <td className="border border-gray-300 p-2 text-blue-500 font-bold">
+                          <a
+                            href={`https://www.google.com/maps/place/${order.location.latitude},${order.location.longitude}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline"
                           >
-                            {order.orderDetails.status === "pending"
-                              ? "diproses"
-                              : order.orderDetails.status}
+                            Open Maps
+                          </a>
+                        </td>
+                        <td className="flex p-6 mt-1 gap-4 items-center text-center  ">
+                          <div
+                            className="border p-1 rounded-md border-gray-300  flex gap-2 cursor-pointer"
+                            onClick={() => openEditModal(order)}
+                          >
+                            <div
+                              className={`${
+                                order.orderDetails.status === "pending"
+                                  ? "text-orange-500  font-bold"
+                                  : order.orderDetails.status === "selesai"
+                                  ? "text-green-500  font-bold"
+                                  : "text-blue-500  font-bold"
+                              }`}
+                            >
+                              {order.orderDetails.status === "pending"
+                                ? "diproses"
+                                : order.orderDetails.status}
+                            </div>
+                            <button>
+                              <FontAwesomeIcon
+                                icon={faEdit}
+                                size="xl"
+                                className="text-blue-500 "
+                              />
+                            </button>
                           </div>
-                          <button>
-                            <FontAwesomeIcon
-                              icon={faEdit}
-                              size="xl"
-                              className="text-blue-500 "
-                            />
-                          </button>
-                        </div>
-                      </td>
+                        </td>
 
-                      <td className="border border-gray-300 p-2">
-                        <div className="flex gap-4 p-4">
+                        <td className="border border-gray-300 p-2">
+                          <div className="flex gap-4 p-4">
+                            <button
+                              className="text-green-500 hover:underline"
+                              onClick={() => {
+                                if (order.orderDetails.status === "selesai") {
+                                  openUploadModal(
+                                    order.orderDetails.orderId,
+                                    order.orderDetails.nm_product,
+                                    order.id,
+                                    order.orderDetails.status
+                                  );
+                                } else {
+                                  toast.error(
+                                    "Status pesanan belum selesai. Tidak bisa melakukan aksi."
+                                  );
+                                }
+                              }}
+                            >
+                              <div>
+                                <FontAwesomeIcon
+                                  icon={faUpload}
+                                  size="xl"
+                                  className={`text-blue-500 
+                        }`}
+                                />
+                              </div>
+                            </button>
+                            <button
+                              onClick={() => {
+                                if (order.orderDetails.status === "selesai") {
+                                  // handleDeleteOrder(order, order.id);
+                                  handleDeleteOrder(order.id);
+                                } else {
+                                  toast.error(
+                                    "Status pesanan belum selesai. Tidak bisa melakukan aksi."
+                                  );
+                                }
+                              }}
+                            >
+                              <FontAwesomeIcon
+                                icon={faTrash}
+                                size="xl"
+                                color="red"
+                              />
+                            </button>
+                          </div>
+                        </td>
+                        <td className="border border-gray-300 p-2">
                           <button
                             className="text-green-500 hover:underline"
                             onClick={() => {
                               if (order.orderDetails.status === "selesai") {
-                                openUploadModal(
-                                  order.orderDetails.orderId,
-                                  order.orderDetails.nm_product,
-                                  order.id,
-                                  order.orderDetails.status
-                                );
+                                handleViewImages(order);
                               } else {
                                 toast.error(
-                                  "Status pesanan belum selesai. Tidak bisa melakukan aksi."
+                                  "Status pesanan belum selesai. Tidak bisa melihat gambar."
                                 );
                               }
                             }}
-                          >
-                            <div>
-                              <FontAwesomeIcon
-                                icon={faUpload}
-                                size="xl"
-                                className={`text-blue-500 
-                        }`}
-                              />
-                            </div>
-                          </button>
-                          <button
-                            onClick={() => {
-                              if (order.orderDetails.status === "selesai") {
-                                // handleDeleteOrder(order, order.id);
-                                handleDeleteOrder(order.id);
-                              } else {
-                                toast.error(
-                                  "Status pesanan belum selesai. Tidak bisa melakukan aksi."
-                                );
-                              }
-                            }}
+                            disabled={order.orderDetails.status !== "selesai"}
                           >
                             <FontAwesomeIcon
-                              icon={faTrash}
+                              icon={faImage}
                               size="xl"
-                              color="red"
+                              className={`text-blue-500 ${
+                                order.orderDetails.status !== "selesai"
+                                  ? "opacity-50 cursor-not-allowed"
+                                  : ""
+                              }`}
+                            />
+                            <p>lihat</p>
+                          </button>
+                        </td>
+                        <td className="border border-gray-300 p-2">
+                          <button
+                            onClick={() => handleWhatsAppChat(order)}
+                            className="text-green-500 hover:underline"
+                          >
+                            <FontAwesomeIcon
+                              icon={faWhatsapp}
+                              size="2xl"
+                              className="text-gre-500"
                             />
                           </button>
-                        </div>
-                      </td>
-                      <td className="border border-gray-300 p-2">
-                        <button
-                          className="text-green-500 hover:underline"
-                          onClick={() => {
-                            if (order.orderDetails.status === "selesai") {
-                              handleViewImages(order);
-                            } else {
-                              toast.error(
-                                "Status pesanan belum selesai. Tidak bisa melihat gambar."
-                              );
-                            }
-                          }}
-                          disabled={order.orderDetails.status !== "selesai"}
-                        >
-                          <FontAwesomeIcon
-                            icon={faImage}
-                            size="xl"
-                            className={`text-blue-500 ${
-                              order.orderDetails.status !== "selesai"
-                                ? "opacity-50 cursor-not-allowed"
-                                : ""
-                            }`}
-                          />
-                          <p>lihat</p>
-                        </button>
-                      </td>
-                      <td className="border border-gray-300 p-2">
-                        <button
-                          onClick={() => handleWhatsAppChat(order)}
-                          className="text-green-500 hover:underline"
-                        >
-                          <FontAwesomeIcon
-                            icon={faWhatsapp}
-                            size="2xl"
-                            className="text-gre-500"
-                          />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </>

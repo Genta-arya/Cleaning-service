@@ -332,16 +332,16 @@ const Product = () => {
                 </p>
               </>
             ) : (
-              <Slider {...settings} className="p-4">
+              <Slider {...settings} className="p-4 md:p-16">
                 {filteredProducts.map((product, index) => (
                   <motion.div
                     key={product.id}
-                    className="border  lg:p-4 md:p-0 rounded-xl   bg-white  border-gelap  transform transition-all "
+                    className="border  lg:p-4  rounded-xl    bg-white  border-gelap  transform transition-all overflow-hidden"
                   >
                     <img
                       src={product.url}
                       alt={product.nm_product}
-                      className="mb-4 w-full h-80 flex  rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105 hover:shadow-lg hover:rounded-b-xl hover:rounded-t-xl"
+                      className="mb-4 w-full h-80 flex  rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105 hover:rounded-b-xl hover:rounded-t-xl"
                       onClick={() => handleProductClick(product)}
                     />
 
