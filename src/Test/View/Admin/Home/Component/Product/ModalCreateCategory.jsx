@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PulseLoader } from "react-spinners";
 import { motion, AnimatePresence } from "framer-motion";
+import Loading from "../Customer/Loading";
 
 const ModalCreateCategory = ({ onClose }) => {
   const [categoryName, setCategoryName] = useState("");
@@ -80,17 +81,7 @@ const ModalCreateCategory = ({ onClose }) => {
                   whileTap={{ scale: 0.95 }}
                 >
                   {loading && (
-                    <PulseLoader
-                      size={8}
-                      color={"#ffffff"}
-                      loading={loading}
-                      css={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -50%)",
-                      }}
-                    />
+                   <Loading />
                   )}
                   {!loading && "Tambah Kategori"}
                 </motion.button>

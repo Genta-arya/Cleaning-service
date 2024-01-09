@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { createProduct, getAllCategories } from "../../../../../../Service/Api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loading from "../Customer/Loading";
 
 const ModalCreateProduct = ({ onClose }) => {
   const [productData, setProductData] = useState({
@@ -50,8 +51,6 @@ const ModalCreateProduct = ({ onClose }) => {
         return;
       }
 
-    
-
       const response = await createProduct(productData);
 
       if (response.status === 201) {
@@ -92,7 +91,7 @@ const ModalCreateProduct = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-      <div className="bg-white w-96 p-6 rounded shadow-lg overflow-y-auto max-h-[550px]">
+      <div className="bg-white w-[65%] p-6 rounded shadow-lg overflow-y-auto max-h-[550px]">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">Tambah Service</h2>
           <button
@@ -176,25 +175,19 @@ const ModalCreateProduct = ({ onClose }) => {
           </label>
         </div>
         {imagePreview && (
-          <img
-            src={imagePreview}
-            alt="Thumbnail Preview"
-            className="mt-2 w-full border rounded"
-          />
+          <div className="flex justify-center">
+            <img
+              src={imagePreview}
+              alt="Thumbnail Preview"
+              className="mt-2 w-40 h-full border rounded "
+            />
+          </div>
         )}
         <div className="mt-4 flex justify-center">
           {isCreating ? (
-            <div className="relative">
-              <button
-                className="bg-blue-500 text-white py-2 px-4 rounded opacity-50 cursor-not-allowed"
-                disabled
-              >
-                Creating...
-              </button>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-6 h-6 border-t-4 border-blue-800 border-solid rounded-full animate-spin"></div>
-              </div>
-            </div>
+            <>
+              <Loading />
+            </>
           ) : (
             <button
               className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue w-full"

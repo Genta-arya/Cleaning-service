@@ -33,6 +33,7 @@ import ModalUploadGambar from "./ModalUploadGambar";
 import ViewImage from "./ViewImage";
 import { setQuarter } from "date-fns";
 import ModalPostKeterangan from "./ModalPostKeterangan";
+import Loading from "../Customer/Loading";
 
 const ManagePesanan = () => {
   const [orders, setOrders] = useState([]);
@@ -56,7 +57,7 @@ const ManagePesanan = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
   const [isNewOrderModalVisible, setIsNewOrderModalVisible] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -156,6 +157,7 @@ const ManagePesanan = () => {
   };
 
   const handleDeleteOrder = async (orderId) => {
+    setLoading(true)
     try {
       const parsedOrderId = parseInt(orderId);
 
@@ -172,6 +174,8 @@ const ManagePesanan = () => {
       if (error.response && error.response.status === 404) {
         toast.error(`Gambar tidak ditemukan`);
       }
+    } finally{
+      setLoading(false)
     }
   };
 
@@ -382,7 +386,7 @@ const ManagePesanan = () => {
       </div>
       {isLoading ? (
         <>
-          <div className="hidden md:hidden lg:block">
+          <div className="hidden md:block lg:block">
             {Array.from({ length: 5 }).map((_, index) => (
               <SkeletonRow key={index} />
             ))}
@@ -718,6 +722,9 @@ const ManagePesanan = () => {
       )}
 
       <ToastContainer />
+      {loading && (
+        <Loading />
+      )}
     </div>
   );
 };

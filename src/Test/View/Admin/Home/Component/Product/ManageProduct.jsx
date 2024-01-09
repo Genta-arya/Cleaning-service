@@ -16,6 +16,7 @@ import MenuCategory from "./MenuCategory";
 import { useNavigate } from "react-router-dom";
 import { setLoggedIn, setRole } from "../../../../../../Feature/Redux/Auth/AuthSlice";
 import { useDispatch } from "react-redux";
+import Loading from "../Customer/Loading";
 
 const ManageProduct = () => {
   const [products, setProducts] = useState([]);
@@ -256,7 +257,7 @@ const ManageProduct = () => {
             <div className="flex justify-end">
               {loadingDelete ? (
                 <div className="flex items-center justify-center">
-                  <PulseLoader color="#3498db" size={8} margin={2} />
+                  <Loading />
                 </div>
               ) : (
                 <>

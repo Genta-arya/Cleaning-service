@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "./Home/Component/Sidebar";
 import Main from "./Home/Main";
 import { checkJwt } from "../../../Service/Api";
@@ -12,12 +12,14 @@ import {
 } from "../../../Feature/Redux/Auth/AuthSlice";
 import logo from "../../../Asset/notfound.png";
 import ManagePesanan from "./Home/Component/Pesanan/ManagePesanan";
+import Loading from "./Home/Component/Customer/Loading";
 const IndexMain = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       try {
         const data = await checkJwt();
@@ -25,15 +27,18 @@ const IndexMain = () => {
         if (data.success) {
           dispatch(setLoggedIn(true));
           dispatch(setRole(data.role));
+          setLoading(false);
 
           if (data.role !== "admin") {
+            setLoading(false);
             navigate("/login");
           }
         } else {
           navigate("/login");
+          setLoading(false);
         }
       } catch (error) {
-        console.error("Error:", error);
+        setLoading(false);
       }
     };
 
@@ -42,13 +47,19 @@ const IndexMain = () => {
 
   return (
     <>
-      <div className="hidden lg:block md:hidden">
-        <Main />
-      </div>
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <div className="hidden lg:block md:hidden">
+            <Main />
+          </div>
 
-      <div className="lg:hidden md:block block">
-        <ManagePesanan />
-      </div>
+          <div className="lg:hidden md:block block">
+            <ManagePesanan />
+          </div>
+        </>
+      )}
     </>
   );
 };

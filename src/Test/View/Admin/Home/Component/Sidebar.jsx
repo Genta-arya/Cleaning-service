@@ -24,6 +24,7 @@ import { PulseLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import ListCustomer from "./Customer/ListCustomer";
 import ChartComponent from "./Chart/Chart";
+import { motion } from "framer-motion";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -35,6 +36,35 @@ const Sidebar = () => {
   const [isManageDataOpen, setIsManageDataOpen] = useState(true);
 
   const [isManageGraphicOpen, setIsManageGraphicOpen] = useState(false);
+  const sidebarVariants = {
+    open: {
+      x: 0,
+      opacity: 1,
+   
+      translateY: 0,
+      transition: {
+        ease: "easeOut",
+        duration: 1,
+      },
+    },
+    closed: {
+      x: 0,
+      opacity: 0,
+      
+    
+ 
+      transition: {
+        ease: "easeIn",
+        duration: 0.2,
+      },
+    },
+  };
+  
+  // Other animation variants
+  const fadeInVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
 
   const toggleManageData = () => {
     setIsManageDataOpen(!isManageDataOpen);
@@ -95,19 +125,22 @@ const Sidebar = () => {
 
   return (
     <div className="relative h-full gap-12 w-screen">
-      <div className="flex justify-between p-4 px-12 bg-gray-800 text-white font-bold items-center w-[100%]">
+      <motion.div className="flex justify-between p-4 px-12 bg-gray-800 text-white font-bold items-center w-[100%]">
         <button
           className="text-black py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-blue z-30"
           onClick={openDrawer}
         >
-          <FontAwesomeIcon icon={faBars} className="text-white  hover:scale-150 overflow-hidden duration-300 ease-in" />
+          <FontAwesomeIcon
+            icon={faBars}
+            className="text-white  hover:scale-150 overflow-hidden duration-300 ease-in"
+          />
         </button>
 
         <div>Tangkas Jaya Teknik - Dashboard</div>
         <div>
           <img src={image} alt="icon" className="w-16 h-16 rounded-full" />
         </div>
-      </div>
+      </motion.div>
 
       {isOpen && (
         <>
@@ -116,7 +149,10 @@ const Sidebar = () => {
             onClick={closeDrawer}
           ></div>
 
-          <div
+          <motion.div
+            initial="closed"
+            animate={isOpen ? "open" : "closed"}
+            variants={sidebarVariants}
             className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white p-4 z-30 transition-transform transform  ${
               isOpen ? "translate-x-0 " : "-translate-x-full"
             }`}
@@ -269,8 +305,7 @@ const Sidebar = () => {
                           icon={faCircle}
                           className="mr-2"
                           style={{
-                            color:
-                              currentView === "graphic" ? "green" : "",
+                            color: currentView === "graphic" ? "green" : "",
                           }}
                         />
                         Graphic
@@ -287,7 +322,7 @@ const Sidebar = () => {
             >
               <FontAwesomeIcon icon={faSignOut} size="xl"></FontAwesomeIcon>
             </div>
-          </div>
+          </motion.div>
         </>
       )}
 

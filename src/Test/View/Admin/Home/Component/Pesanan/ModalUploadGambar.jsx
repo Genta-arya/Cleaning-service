@@ -3,12 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import axiosInstance from "../../../../../../Service/Config";
+import Loading from "../Customer/Loading";
 
 const ModalUploadGambar = ({ closeUploadModal, selectedOrderInfo, orders }) => {
   const [selectedImages, setSelectedImages] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const orderIds = orders.map((dataObject) => dataObject.id);
-
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
@@ -39,6 +39,7 @@ const ModalUploadGambar = ({ closeUploadModal, selectedOrderInfo, orders }) => {
   };
 
   const handleUpload = async () => {
+    setLoading(true)
     try {
       const formData = new FormData();
 
@@ -59,17 +60,24 @@ const ModalUploadGambar = ({ closeUploadModal, selectedOrderInfo, orders }) => {
       if (response.status === 200) {
         toast.success("Upload successful!");
         closeUploadModal();
+        setLoading(false)
       } else if (response.status === 400) {
         toast.error("Client-side error. Check your request.");
+        setLoading(false)
       }
     } catch (error) {
       if (error.response) {
         toast.error(`${error.response.data.error}`);
+        setLoading(false)
       } else if (error.request) {
         toast.error("No response received from the server.");
+        setLoading(false)
       } else {
         toast.error("Error setting up the request. Please try again.");
+        setLoading(false)
       }
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -159,6 +167,9 @@ const ModalUploadGambar = ({ closeUploadModal, selectedOrderInfo, orders }) => {
           </form>
         </div>
       </div>
+      {loading && (
+        <Loading />
+      )}
     </div>
   );
 };

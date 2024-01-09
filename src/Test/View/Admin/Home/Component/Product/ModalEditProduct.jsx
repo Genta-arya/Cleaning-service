@@ -4,11 +4,11 @@ import { faImage } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ToastContainer, toast } from "react-toastify";
 import { PulseLoader } from "react-spinners";
+import Loading from "../Customer/Loading";
 
 const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
   const MAX_PRODUCT_NAME_LENGTH = 150;
   const MAX_DESCRIPTION_LENGTH = 350;
- 
 
   const [categories, setCategories] = useState([]);
   const [editedProductData, setEditedProductData] = useState({
@@ -73,7 +73,6 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
     } catch (error) {
       setLoading(false);
       toast.error("Periksa Kembali Data yang diisi ya");
-    
     }
   };
 
@@ -239,7 +238,7 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
                   <img
                     src={thumbnailPreview}
                     alt="Thumbnail"
-                    className="rounded-md max-w-full"
+                    className="rounded-md max-w-full w-40 h-full"
                   />
                   {updatedThumbnailFileName && (
                     <p className="text-sm text-gray-500">
@@ -262,10 +261,11 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
             onClick={handleSave}
             disabled={loading}
           >
-            {loading ? <PulseLoader size={8} color="#fff" /> : "Save Changes"}
+           Simpan Perubahan
           </button>
         </div>
       </div>
+      {loading && <Loading />}
       <ToastContainer />
     </div>
   );

@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import logo from "../../../../Asset/wayan logo.png";
 import { motion } from "framer-motion";
 import PasswordStrengthBar from "./bar";
+import Loading from "../../Admin/Home/Component/Customer/Loading";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -125,7 +126,7 @@ const Register = () => {
     >
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <PulseLoader color="#ffffff" size={25} loading={true} />
+          <Loading />
         </div>
       )}
       <motion.div

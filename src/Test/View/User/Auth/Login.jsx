@@ -23,6 +23,7 @@ import logo from "../../../../Asset/wayan logo.png";
 import { motion } from "framer-motion";
 import ForgotPasswordModal from "./ForgotPasswordModa";
 import Copyright from "../Home/Component/Copyright";
+import Loading from "../../Admin/Home/Component/Customer/Loading";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 const Login = () => {
@@ -138,7 +139,7 @@ const Login = () => {
     >
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <PulseLoader color="#ffffff" size={25} loading={true} />
+         <Loading />
         </div>
       )}
       <motion.div
