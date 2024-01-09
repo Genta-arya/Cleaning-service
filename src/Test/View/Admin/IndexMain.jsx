@@ -15,8 +15,7 @@ import ManagePesanan from "./Home/Component/Pesanan/ManagePesanan";
 const IndexMain = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-  const userRole = useSelector(selectIsRole);
+
 
   useEffect(() => {
     const fetchData = async () => {

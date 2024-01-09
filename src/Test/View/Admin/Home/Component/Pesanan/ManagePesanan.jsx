@@ -95,7 +95,7 @@ const ManagePesanan = () => {
 
   useEffect(() => {
     fetchData();
-    console.log(orders);
+   
   }, [currentPage, searchQuery]);
 
   const searchData = (e) => {
@@ -207,7 +207,7 @@ const ManagePesanan = () => {
 
   const openKetModal = (orderId) => {
     setSelectedOrderUUID(orderId.orderDetails.uuid);
-    console.log("diklik");
+   
     setIsModalKetVisible(true);
   };
   const closeModalKet = () => {

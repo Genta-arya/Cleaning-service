@@ -27,7 +27,7 @@ const ChartComponent = () => {
 
         setChartData(response.data);
       } catch (error) {
-        console.error("Error fetching chart data:", error);
+      
       }
     };
 
