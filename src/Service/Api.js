@@ -408,3 +408,13 @@ export const getAllUsers = async () => {
     throw error;
   }
 };
+
+export const postDesct = async (uuid, desc) => {
+  try {
+    const response = await axiosInstance.post("/desc", {uuid, desc});
+    return response.data;
+  } catch (error) {
+    console.error("Error posting description:", error);
+    throw error;
+  }
+};

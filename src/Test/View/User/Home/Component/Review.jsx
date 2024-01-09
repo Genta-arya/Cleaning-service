@@ -189,7 +189,7 @@ function CustomerReviews() {
                 </div>
                 <p className="text-gray-600">{review.review}</p>
                 <div className="flex justify-end">
-                  <h1 className="text-xs text-gray-600">
+                  <h1 className="text-xs text-gray-600 mt-2">
                     {timeAgo(review.createdAt)}
                   </h1>
                 </div>

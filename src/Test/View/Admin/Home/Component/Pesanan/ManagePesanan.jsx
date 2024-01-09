@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
   faImage,
+  faPlus,
   faSearch,
   faSignOut,
   faTimes,
@@ -31,12 +32,14 @@ import ManagePesananMobile from "./ManagePesananMobile";
 import ModalUploadGambar from "./ModalUploadGambar";
 import ViewImage from "./ViewImage";
 import { setQuarter } from "date-fns";
+import ModalPostKeterangan from "./ModalPostKeterangan";
 
 const ManagePesanan = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingLogout, setIsLoadingLogout] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalKet, setIsModalKetVisible] = useState(false);
   const [isModalUpload, setIsModaUpload] = useState(false);
   const [editedStatus, setEditedStatus] = useState("");
   const [selectedOrderInfo, setSelectedOrderInfo] = useState({
@@ -45,7 +48,7 @@ const ManagePesanan = () => {
     id: null,
     status: null,
   });
-
+  const [selectedOrderUUID, setSelectedOrderUUID] = useState(null);
   const [viewImages, setViewImages] = useState([]);
   const [isViewImageModalOpen, setIsViewImageModalOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
@@ -200,6 +203,15 @@ const ManagePesanan = () => {
     setSelectedStatus(orderId.orderDetails.status);
 
     setIsModalVisible(true);
+  };
+
+  const openKetModal = (orderId) => {
+    setSelectedOrderUUID(orderId.orderDetails.uuid);
+    console.log("diklik");
+    setIsModalKetVisible(true);
+  };
+  const closeModalKet = () => {
+    setIsModalKetVisible(false);
   };
 
   const closeEditModal = () => {
@@ -396,6 +408,7 @@ const ManagePesanan = () => {
               <div className="lg:hidden md:hidden block">
                 <ManagePesananMobile
                   orders={orders}
+                  handleKet={openKetModal}
                   handleDeleteOrder={handleDeleteOrder}
                   openEditModal={openEditModal}
                   handleWhatsAppChat={handleWhatsAppChat}
@@ -421,9 +434,11 @@ const ManagePesanan = () => {
                       <th className="border border-gray-300 p-2">Alamat</th>
                       <th className="border border-gray-300 p-2">Koordinat</th>
                       <th className="border border-gray-300 p-2">Status</th>
-                      <th className="border border-gray-300 p-2">Actions</th>
                       <th className="border border-gray-300 p-2">
                         Dokumentasi
+                      </th>
+                      <th className="border border-gray-300 p-2">
+                        Keterangan Service
                       </th>
                       <th className="border border-gray-300 p-2">Chat</th>
                     </tr>
@@ -450,7 +465,11 @@ const ManagePesanan = () => {
                         </td>
                         <td className="border border-gray-300 p-2">
                           Quantity: {order.orderDetails.qty} x{" "}
-                          {order.orderDetails.nm_product}
+                          {order.orderDetails.nm_product}{" "}
+                          <span className="flex items-center justify-center text-green-500 font-bold text-sm">
+                            {" "}
+                            * {order.orderDetails.ket} *
+                          </span>
                         </td>
                         <td className="border border-gray-300 p-2">
                           Rp {order.orderDetails.price.toLocaleString()}
@@ -549,35 +568,53 @@ const ManagePesanan = () => {
                                 color="red"
                               />
                             </button>
+                            <button
+                              className="text-green-500 hover:underline"
+                              onClick={() => {
+                                if (order.orderDetails.status === "selesai") {
+                                  handleViewImages(order);
+                                } else {
+                                  toast.error(
+                                    "Status pesanan belum selesai. Tidak bisa melihat gambar."
+                                  );
+                                }
+                              }}
+                              disabled={order.orderDetails.status !== "selesai"}
+                            >
+                              <FontAwesomeIcon
+                                icon={faImage}
+                                size="xl"
+                                className={`text-blue-500 ${
+                                  order.orderDetails.status !== "selesai"
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : ""
+                                }`}
+                              />
+                            </button>
                           </div>
                         </td>
-                        <td className="border border-gray-300 p-2">
-                          <button
-                            className="text-green-500 hover:underline"
-                            onClick={() => {
-                              if (order.orderDetails.status === "selesai") {
-                                handleViewImages(order);
-                              } else {
-                                toast.error(
-                                  "Status pesanan belum selesai. Tidak bisa melihat gambar."
-                                );
-                              }
-                            }}
-                            disabled={order.orderDetails.status !== "selesai"}
-                          >
-                            <FontAwesomeIcon
-                              icon={faImage}
-                              size="xl"
-                              className={`text-blue-500 ${
-                                order.orderDetails.status !== "selesai"
-                                  ? "opacity-50 cursor-not-allowed"
-                                  : ""
-                              }`}
-                            />
-                            <p>lihat</p>
-                          </button>
+                        <td className="flex p-6 mt-1 gap-4 items-center text-center justify-center">
+                          <div className="border p-1 rounded-md border-gray-300 flex gap-2 cursor-pointer justify-center">
+                            <button
+                              onClick={() => {
+                                if (order.orderDetails.status === "selesai") {
+                                  openKetModal(order);
+                                } else {
+                                  toast.error(
+                                    "Status pesanan belum selesai. Tidak bisa melakukan aksi."
+                                  );
+                                }
+                              }}
+                            >
+                              <FontAwesomeIcon
+                                icon={faPlus}
+                                size="xl"
+                                className="text-blue-500 text-center"
+                              />
+                            </button>
+                          </div>
                         </td>
-                        <td className="border border-gray-300 p-2">
+                        <td className="border border-gray-300 ">
                           <button
                             onClick={() => handleWhatsAppChat(order)}
                             className="text-green-500 hover:underline"
@@ -673,6 +710,13 @@ const ManagePesanan = () => {
           currentStatus={selectStatus}
         />
       )}
+      {isModalKet && (
+        <ModalPostKeterangan
+          closeModalKet={closeModalKet}
+          uuid={selectedOrderUUID}
+        />
+      )}
+
       <ToastContainer />
     </div>
   );

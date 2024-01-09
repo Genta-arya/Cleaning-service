@@ -27,6 +27,7 @@ const OrderForm = () => {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
+  const [keterangan, setKeterangan] = useState("");
   const navigate = useNavigate();
   const [selectedLocation, setSelectedLocation] = useState({});
   const [isChatBotOpen, setChatBotOpen] = useState(false);
@@ -205,6 +206,11 @@ const OrderForm = () => {
     setAddress(e.target.value);
   };
 
+  const handleKetChange = (e) => {
+    setKeterangan(e.target.value);
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -235,6 +241,7 @@ const OrderForm = () => {
           qty: parseInt(quantity) || 1,
           price: (productData?.price || 0) * (quantity || 1),
           name: name,
+          ket : keterangan,
           telp: phoneNumber,
           url: productData.url,
         },
@@ -455,6 +462,24 @@ const OrderForm = () => {
               placeholder="Alamat Lengkap"
               value={address}
               onChange={handleAddressChange}
+              className="mt-1 p-2 w-full border  textarea textarea-info rounded-xl px-5"
+              rows="3"
+              required
+            />
+          </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="address"
+              className="block text-sm font-bold text-blue-300"
+            >
+              Keterangan
+            </label>
+            <textarea
+              id="deskripsi"
+              placeholder="Tuliskan kerusakan Ac nya disini ya"
+              value={keterangan}
+              onChange={handleKetChange}
               className="mt-1 p-2 w-full border  textarea textarea-info rounded-xl px-5"
               rows="3"
               required

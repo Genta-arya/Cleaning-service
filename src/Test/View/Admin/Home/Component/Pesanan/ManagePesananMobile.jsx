@@ -2,6 +2,7 @@ import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import {
   faEdit,
   faImage,
+  faPlus,
   faRoad,
   faTrash,
   faUpload,
@@ -18,9 +19,7 @@ const ManagePesananMobile = ({
   handleWhatsAppChat,
   openUploadModal,
   handleViewImages,
-  handleCloseViewImageModal,
-  isViewImageModalOpen,
-  viewImages,
+  handleKet,
 }) => {
   return (
     <>
@@ -50,6 +49,7 @@ const ManagePesananMobile = ({
                         ? "diproses"
                         : order.orderDetails.status}
                     </div>
+
                     <button
                       onClick={() => openEditModal(order)}
                       className="text-blue-500"
@@ -58,7 +58,7 @@ const ManagePesananMobile = ({
                     </button>
                   </div>
                 </div>
-                <div className="flex gap-2 justify-center p-1">
+                <div className="flex gap-4 justify-center p-1">
                   <button
                     className={`text-${
                       order.orderDetails.status === "selesai" ? "blue" : "gray"
@@ -96,6 +96,21 @@ const ManagePesananMobile = ({
                   >
                     <FontAwesomeIcon icon={faUpload} size="lg" />
                   </button>
+
+                  <button
+                    className="text-blue-500 hover:underline"
+                    onClick={() => {
+                      if (order.orderDetails.status === "selesai") {
+                        handleKet(order);
+                      } else {
+                        toast.error(
+                          "Status pesanan belum selesai. Tidak bisa mengunggah gambar."
+                        );
+                      }
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faPlus} size="lg" />
+                  </button>
                   <button
                     onClick={() => handleDeleteOrder(order.id)}
                     className="text-red-500"
@@ -129,6 +144,7 @@ const ManagePesananMobile = ({
                     </div>
                   </div>
                 </div>
+                <div className="flex justify-center p-2">*{order.orderDetails.desc}*</div>
                 <div className="mb-2 flex justify-center border p-1 rounded-md items-center gap-4">
                   <FontAwesomeIcon icon={faRoad}> </FontAwesomeIcon>
                   {order.location.address},

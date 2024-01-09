@@ -68,7 +68,7 @@ function ReviewForm({ onSubmitReview }) {
       return;
     }
 
-    if (newReview.trim().length > 100) {
+    if (newReview.trim().length > 250) {
       toast.error("Komentar terlalu panjang, maksimal hanya 100 karakter ya");
       setIsLoading(false);
       return;

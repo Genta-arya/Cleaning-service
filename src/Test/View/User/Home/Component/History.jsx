@@ -193,7 +193,6 @@ const History = () => {
             className="cursor-pointer"
           ></FontAwesomeIcon>
         </div>
-    
       </div>
 
       <div className="hidden lg:block md:block">
@@ -282,6 +281,12 @@ const History = () => {
                         {order.orderDetails.nm_product}{" "}
                         <div>x {order.orderDetails.qty}</div>
                       </div>
+                    </div>
+                    <div className="text-gray-700 text-sm px-4">
+                      Keterangan:
+                      <span className="flex flex-col text-orange-500">
+                        "{order.orderDetails.desc}"
+                      </span>
                     </div>
 
                     <div className="text-gray-800 font-bold flex justify-end">
