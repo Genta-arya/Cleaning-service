@@ -94,7 +94,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="relative h-full gap-12 w-full">
+    <div className="relative h-full gap-12 w-screen">
       <div className="flex justify-between p-4 px-12 bg-gray-800 text-white font-bold items-center w-[100%]">
         <button
           className="text-black py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-blue z-30"
