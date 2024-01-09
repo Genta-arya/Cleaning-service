@@ -320,14 +320,14 @@ const ManagePesanan = () => {
         </h1>
       </div>
 
-      <div className="flex items-center mt-4 relative mb-4">
+      <div className="flex items-center mt-4 relative mb-4 ">
         <input
           type="text"
           placeholder="Cari username..."
           value={searchInput}
           onChange={handleInputChange}
           onKeyDown={handleKeyPress}
-          className="border p-2 rounded focus:outline-none focus:border-blue-500 flex-grow mr-2"
+          className="border p-2 focus:outline-none focus:border-blue-500 flex-grow mr-2 rounded-lg "
         />
 
         <button
@@ -420,9 +420,9 @@ const ManagePesanan = () => {
                 />
               </div>
               <div className="overflow-x-auto lg:block md:block hidden">
-                <table className="table table-xs">
+                <table className="table table-xs ">
                   <thead>
-                    <tr className="text-center">
+                    <tr className="text-center bg-gray-800 text-white">
                       <th className="border border-gray-300 p-2">Id pesanan</th>
                       <th className="border border-gray-300 p-2">Username</th>
                       <th className="border border-gray-300 p-2">Image</th>

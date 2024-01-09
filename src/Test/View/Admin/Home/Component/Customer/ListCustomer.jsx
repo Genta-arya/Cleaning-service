@@ -79,7 +79,7 @@ const ListCustomer = () => {
           {userData && userData.length > 0 ? (
             <table className="min-w-full border border-gray-300">
               <thead>
-                <tr>
+                <tr className="bg-gray-800 text-white">
                   <th className="border px-4 py-2">User ID</th>
                   <th className="border px-4 py-2">Username</th>
                   <th className="border px-4 py-2">Email</th>

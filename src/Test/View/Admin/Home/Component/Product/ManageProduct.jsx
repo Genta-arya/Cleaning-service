@@ -183,9 +183,9 @@ const ManageProduct = () => {
           Product tidak ditemukan.
         </p>
       ) : (
-        <table className="mt-8 w-full border-collapse text-center">
-          <thead>
-            <tr>
+        <table className="mt-8 w-full border-collapse text-center ">
+          <thead className="">
+            <tr className="bg-gray-800 text-white">
               <th className="border border-gray-300 p-2">No</th>
               <th className="border border-gray-300 p-2">Image</th>
               <th className="border border-gray-300 p-2">Service</th>

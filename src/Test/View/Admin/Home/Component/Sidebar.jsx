@@ -2,11 +2,18 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
+  faChartBar,
+  faCircle,
+  faClipboardCheck,
   faDatabase,
   faHamburger,
+  faMoneyBill,
+  faMoneyCheckDollar,
+  faPerson,
   faSignOut,
   faTimes,
   faUser,
+  faUserCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import Content from "./Content";
 import image from "../../../../../Asset/wayan logo.png";
@@ -19,7 +26,7 @@ import ListCustomer from "./Customer/ListCustomer";
 import ChartComponent from "./Chart/Chart";
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [isLoading, setIsloading] = useState(false);
   const username = localStorage.getItem("username");
   const [currentView, setCurrentView] = useState("status");
@@ -88,12 +95,12 @@ const Sidebar = () => {
 
   return (
     <div className="relative h-full gap-12 w-full">
-      <div className="flex justify-between p-4 px-12 bg-white items-center w-[100%]">
+      <div className="flex justify-between p-4 px-12 bg-gray-800 text-white font-bold items-center w-[100%]">
         <button
           className="text-black py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-blue z-30"
           onClick={openDrawer}
         >
-          <FontAwesomeIcon icon={faBars} />
+          <FontAwesomeIcon icon={faBars} className="text-white  hover:scale-150 overflow-hidden duration-300 ease-in" />
         </button>
 
         <div>Tangkas Jaya Teknik - Dashboard</div>
@@ -110,8 +117,8 @@ const Sidebar = () => {
           ></div>
 
           <div
-            className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white p-4 z-30 transition-transform transform ${
-              isOpen ? "translate-x-0" : "-translate-x-full"
+            className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white p-4 z-30 transition-transform transform  ${
+              isOpen ? "translate-x-0 " : "-translate-x-full"
             }`}
           >
             <div
@@ -132,7 +139,7 @@ const Sidebar = () => {
             </div>
 
             <div>
-              <ul className="w-full">
+              <ul className={`w-full  flex flex-col `}>
                 <li
                   className={`p-4 cursor-pointer ${
                     isManageDataOpen
@@ -141,8 +148,13 @@ const Sidebar = () => {
                   }`}
                   onClick={toggleManageData}
                 >
-                  <FontAwesomeIcon icon={faDatabase} className="mr-2" />
-                  Manage Data
+                  <FontAwesomeIcon
+                    icon={faClipboardCheck}
+                    className={`mr-2 ${
+                      isManageDataOpen ? "text-green-500 " : ""
+                    } `}
+                  />
+                  Data Service
                 </li>
                 {isManageDataOpen && (
                   <div className="ml-8">
@@ -155,7 +167,13 @@ const Sidebar = () => {
                         }`}
                         onClick={() => handleMenuClick("status")}
                       >
-                        <FontAwesomeIcon icon={faDatabase} className="mr-2" />
+                        <FontAwesomeIcon
+                          icon={faCircle}
+                          className="mr-2"
+                          style={{
+                            color: currentView === "status" ? "green" : "",
+                          }}
+                        />
                         Manage Pesanan
                       </li>
                       <li
@@ -166,7 +184,14 @@ const Sidebar = () => {
                         }`}
                         onClick={() => handleMenuClick("productService")}
                       >
-                        <FontAwesomeIcon icon={faDatabase} className="mr-2" />
+                        <FontAwesomeIcon
+                          icon={faCircle}
+                          className="mr-2"
+                          style={{
+                            color:
+                              currentView === "productService" ? "green" : "",
+                          }}
+                        />
                         Manage Service
                       </li>
                     </ul>
@@ -181,7 +206,12 @@ const Sidebar = () => {
                   }`}
                   onClick={toggleManageUser}
                 >
-                  <FontAwesomeIcon icon={faDatabase} className="mr-2" />
+                  <FontAwesomeIcon
+                    icon={faUserCheck}
+                    className={`mr-1 ${
+                      isManageUserOpen ? "text-green-500 " : ""
+                    } `}
+                  />
                   Data Pelanggan
                 </li>
                 {isManageUserOpen && (
@@ -195,7 +225,14 @@ const Sidebar = () => {
                         }`}
                         onClick={() => handleMenuClick("customerItem")}
                       >
-                        <FontAwesomeIcon icon={faDatabase} className="mr-2" />
+                        <FontAwesomeIcon
+                          icon={faCircle}
+                          className="mr-2"
+                          style={{
+                            color:
+                              currentView === "customerItem" ? "green" : "",
+                          }}
+                        />
                         Daftar Pelanggan
                       </li>
                     </ul>
@@ -209,7 +246,12 @@ const Sidebar = () => {
                   }`}
                   onClick={toggleManageGraphic}
                 >
-                  <FontAwesomeIcon icon={faDatabase} className="mr-2" />
+                  <FontAwesomeIcon
+                    icon={faMoneyCheckDollar}
+                    className={`mr-2 ${
+                      isManageGraphicOpen ? "text-green-500 " : ""
+                    } `}
+                  />
                   Data Penghasilan
                 </li>
                 {isManageGraphicOpen && (
@@ -223,7 +265,14 @@ const Sidebar = () => {
                         }`}
                         onClick={() => handleMenuClick("graphic")}
                       >
-                        <FontAwesomeIcon icon={faDatabase} className="mr-2" />
+                        <FontAwesomeIcon
+                          icon={faCircle}
+                          className="mr-2"
+                          style={{
+                            color:
+                              currentView === "graphic" ? "green" : "",
+                          }}
+                        />
                         Graphic
                       </li>
                     </ul>
