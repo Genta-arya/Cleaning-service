@@ -26,6 +26,7 @@ import {
 
 import { toast } from "react-toastify";
 import { firebaseApp } from "../../../../../Feature/Firebase/FirebaseConfig";
+import Loading from "../../../Admin/Home/Component/Customer/Loading";
 
 const BottomSheet = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
@@ -225,12 +226,7 @@ const BottomSheet = () => {
 
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-4 rounded-lg">
-            <div className="flex justify-center">
-              <PulseLoader color="#5F93C0" size={25} />
-            </div>
-            <p>Tunggu sebentar</p>
-          </div>
+         <Loading />
         </div>
       )}
     </div>

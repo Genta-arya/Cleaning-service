@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import ListCustomer from "./Customer/ListCustomer";
 import ChartComponent from "./Chart/Chart";
 import { motion } from "framer-motion";
+import Loading from "./Customer/Loading";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -60,7 +61,6 @@ const Sidebar = () => {
     },
   };
   
-  // Other animation variants
   const fadeInVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
@@ -345,12 +345,7 @@ const Sidebar = () => {
       </div>
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-4 rounded-lg">
-            <div className="flex justify-center">
-              <PulseLoader color="#5F93C0" size={25} />
-            </div>
-            <p>Tunggu sebentar</p>
-          </div>
+         <Loading />
         </div>
       )}
     </div>
