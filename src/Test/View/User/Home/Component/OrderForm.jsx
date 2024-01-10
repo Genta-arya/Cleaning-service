@@ -11,20 +11,23 @@ import {
   faMinus,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
-import { submitOrder } from "../../../../../Service/Api";
+import { submitOrder, verifVoucher } from "../../../../../Service/Api";
 import ChatBotOrder from "./ChatBotOrder";
 import SuccessModal from "./SuccesModal";
 import { initializeApp } from "firebase/app";
 import { getDatabase, push, ref, serverTimestamp } from "firebase/database";
 import { firebaseApp } from "../../../../../Feature/Firebase/FirebaseConfig";
 import axios from "axios";
-
+import "../../../../../Style/Content.css";
+import Loading from "../../../Admin/Home/Component/Customer/Loading";
 const OrderForm = () => {
   const { state } = useLocation();
   const [isLoading, setIsLoading] = useState(false);
+  const [load, setIsload] = useState(false);
   const { productData } = state || {};
   const [quantity, setQuantity] = useState(1);
   const [name, setName] = useState("");
+  const [voucher, setVoucher] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [keterangan, setKeterangan] = useState("");
@@ -38,6 +41,7 @@ const OrderForm = () => {
   const [locationPermission, setLocationPermission] = useState(false);
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [route, setRoute] = useState(null);
+  const [discount, setDiscount] = useState(null);
 
   const db = getDatabase(firebaseApp);
 
@@ -113,12 +117,7 @@ const OrderForm = () => {
   const username = localStorage.getItem("username");
 
   const formatCurrency = (price) => {
-    if (price >= 1000) {
-      const truncatedPrice = Math.floor(price / 1000);
-      return `Rp ${truncatedPrice}k`;
-    } else {
-      return `Rp ${price}`;
-    }
+    return `Rp ${price.toLocaleString()}`;
   };
 
   const fetchRoute = async (location) => {
@@ -197,6 +196,9 @@ const OrderForm = () => {
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
+  const handleVoucherChange = (e) => {
+    setVoucher(e.target.value);
+  };
 
   const handlePhoneNumberChange = (e) => {
     setPhoneNumber(e.target.value);
@@ -209,7 +211,6 @@ const OrderForm = () => {
   const handleKetChange = (e) => {
     setKeterangan(e.target.value);
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -233,15 +234,20 @@ const OrderForm = () => {
       );
       setIsLoading(false);
     } else {
+      let price = (productData?.price || 0) * (quantity || 1);
+      if (discount) {
+        price -= discount;
+      }
+
       const orderData = {
         uid,
         username: username,
         orderDetails: {
           nm_product: productData?.nm_product || "",
           qty: parseInt(quantity) || 1,
-          price: (productData?.price || 0) * (quantity || 1),
+          price: price,
           name: name,
-          ket : keterangan,
+          ket: keterangan,
           telp: phoneNumber,
           url: productData.url,
         },
@@ -269,8 +275,8 @@ const OrderForm = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: "andiarta150898@gmail.com",
-            // email: "mgentaaryap@gmail.com",
+            // email: "andiarta150898@gmail.com",
+            email: "mgentaaryap@gmail.com",
             orderData: orderData,
           }),
         });
@@ -281,7 +287,6 @@ const OrderForm = () => {
           console.error("Failed to send email");
         }
       } catch (error) {
-        // Handle error
         setOrderSuccess(false);
         setIsLoading(false);
 
@@ -297,6 +302,35 @@ const OrderForm = () => {
           }
         );
       }
+    }
+  };
+
+  const applyVoucher = async () => {
+    setIsload(true);
+    const voucherCode = voucher;
+
+    try {
+      const response = await verifVoucher(username, voucherCode);
+      setIsload(true);
+      if (response.data && response.data.disc) {
+        const discountAmount = response.data.disc;
+
+        const totalCostBeforeDiscount = productData.price * quantity;
+        const discountedPrice =
+          totalCostBeforeDiscount - totalCostBeforeDiscount * discountAmount;
+
+        setDiscount(discountAmount);
+
+        toast.success(`Voucher ${voucherCode} berhasil digunakan`);
+      } else {
+        toast.warning(response.message);
+        setDiscount(null);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Terjadi kesalahan saat memproses voucher!");
+    } finally {
+      setIsload(false);
     }
   };
 
@@ -373,9 +407,14 @@ const OrderForm = () => {
                 <p className="text-sm mb-4 text-gray-500 ">
                   {productData.desc}
                 </p>
-                <p className="mr-4 text-lg font-semibold">Jumlah:</p>
-                <div className="flex items-center mb-4 p-2">
-                  <div className="flex items-center border rounded-lg overflow-hidden ">
+                <p className="mr-4 text-lg font-semibold lg:hidden m ">
+                  Jumlah:
+                </p>
+                <div className="flex items-center justify-start md:justify-start lg:justify-start mb-4 p-4">
+                  <p className="mr-4 text-lg font-semibold lg:block hidden ">
+                    Jumlah:
+                  </p>
+                  <div className="flex items-center border rounded-lg overflow-hidden md:block lg:block hidden ">
                     <button
                       onClick={handleDecrement}
                       className="p-2 cursor-pointer bg-gray-200 hover:bg-gray-300 transition duration-300"
@@ -390,25 +429,114 @@ const OrderForm = () => {
                     />
                     <button
                       onClick={handleIncrement}
+                      className="p-2 cursor-pointer bg-gray-200 hover:bg-gray-300 transition duration-300 "
+                    >
+                      <FontAwesomeIcon icon={faPlus} size="sm" />
+                    </button>
+                  </div>
+
+                  <div className="flex justify-start border rounded-lg overflow-hidden md:hidden lg:hidden block ">
+                    <button
+                      onClick={handleDecrement}
                       className="p-2 cursor-pointer bg-gray-200 hover:bg-gray-300 transition duration-300"
+                    >
+                      <FontAwesomeIcon icon={faMinus} size="sm" />
+                    </button>
+                    <input
+                      disabled
+                      value={quantity}
+                      onChange={handleQuantityChange}
+                      className="border-none text-center px-3 bg-white text-lg font-semibold w-32"
+                    />
+                    <button
+                      onClick={handleIncrement}
+                      className="p-2 cursor-pointer bg-gray-200 hover:bg-gray-300 transition duration-300 "
                     >
                       <FontAwesomeIcon icon={faPlus} size="sm" />
                     </button>
                   </div>
                 </div>
 
-                <div className="lg:block md:hidden hidden ">
+                <div className="flex  lg:hidden gap-4 ">
+                  <p className="text-sm font-semibold">Total Biaya :</p>
+                  <div style={{ display: "flex", alignItems: "baseline" }}>
+                    {discount ? (
+                      <>
+                        <div>
+                          <div className="flex  gap-4">
+                            <p className="text-sm text-gray-500 font-semibold line-through">
+                              {formatCurrency(productData.price * quantity)}
+                            </p>
+                            <p className="text-sm font-bold text-green-500 ">
+                              {formatCurrency(
+                                productData.price * quantity -
+                                  productData.price * discount
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <p className="text-sm font-semibold">
+                        {formatCurrency(productData.price * quantity)}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="lg:block md:hidden hidden mt-12 border-t-2 p-2 ">
                   <p className="text-lg font-semibold">Total Biaya :</p>
-                  <p className="text-lg font-semibold">
-                    {formatCurrency(productData.price * quantity)}
-                  </p>
+                  <div style={{ display: "flex", alignItems: "baseline" }}>
+                    {discount ? (
+                      <>
+                        <div>
+                          <div className="flex  gap-4">
+                            <p className="text-lg text-gray-500 font-semibold double-strikethrough">
+                              {formatCurrency(productData.price * quantity)}
+                            </p>
+                            <p className="text-lg font-bold text-green-500 ">
+                              {formatCurrency(
+                                productData.price * quantity -
+                                  productData.price * discount
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <p className="text-lg font-semibold">
+                        {formatCurrency(productData.price * quantity)}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
-                <div className="flex justify-end lg:hidden gap-4 ">
-                  <p className="text-lg font-semibold">Total Biaya :</p>
-                  <p className="text-lg font-semibold">
-                    {formatCurrency(productData.price * quantity)}
-                  </p>
+                <div className="mb-4">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-bold text-blue-300"
+                  ></label>
+                  <input
+                    type="text"
+                    id="name"
+                    value={voucher}
+                    placeholder="Voucher Discount"
+                    onChange={handleVoucherChange}
+                    className="mt-1 p-2 border rounded-md px-5 lg:w-52 w-44 md:w-72"
+                    required
+                  />
+                  <button
+                    onClick={applyVoucher}
+                    className="p-2 cursor-pointer  bg-blue-500 hover:bg-blue-600 text-white transition duration-300 ml-2 rounded-md"
+                  >
+                    Apply
+                  </button>
+                  {discount && (
+                    <>
+                      <p className="text-orange-500 text-xs lg:text-sm md:text-sm">
+                        Mendapatkan Discount {discount * 100} %
+                      </p>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -528,6 +656,7 @@ const OrderForm = () => {
       {isOrderSuccess && (
         <SuccessModal showModal={isOrderSuccess} onClose={handleCloseModal} />
       )}
+      {load && <Loading />}
     </div>
   );
 };

@@ -411,10 +411,42 @@ export const getAllUsers = async () => {
 
 export const postDesct = async (uuid, desc) => {
   try {
-    const response = await axiosInstance.post("/desc", {uuid, desc});
+    const response = await axiosInstance.post("/desc", { uuid, desc });
     return response.data;
   } catch (error) {
     console.error("Error posting description:", error);
     throw error;
+  }
+};
+
+export const createDiscount = async (discountData) => {
+  try {
+    const response = await axiosInstance.post("/discount", discountData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getVoucherByid = async (authId) => {
+  try {
+    const response = await axiosInstance.get(`/vouchers/${authId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const verifVoucher = async (username, voucherCode) => {
+  try {
+    const response = await axiosInstance.post("/verify-voucher", {
+      username: username,
+      voucherCode: voucherCode,
+    });
+
+  
+    return response.data;
+  } catch (error) {
+    console.error(error);
   }
 };

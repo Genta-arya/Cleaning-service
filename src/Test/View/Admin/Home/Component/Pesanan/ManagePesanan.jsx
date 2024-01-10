@@ -270,12 +270,13 @@ const ManagePesanan = () => {
       .catch((error) => {});
   };
 
-  const openUploadModal = (orderId, nm_product, id, status) => {
+  const openUploadModal = (orderId, nm_product, id, status ,qty) => {
     setSelectedOrderInfo({
       orderId,
       nm_product,
       id,
       status,
+      qty
     });
     setIsModaUpload(true);
   };
@@ -536,7 +537,8 @@ const ManagePesanan = () => {
                                     order.orderDetails.orderId,
                                     order.orderDetails.nm_product,
                                     order.id,
-                                    order.orderDetails.status
+                                    order.orderDetails.status,
+                                    order.orderDetails.qty
                                   );
                                 } else {
                                   toast.error(

@@ -93,12 +93,7 @@ const Product = () => {
   }, [dispatch]);
 
   const formatCurrency = (price) => {
-    if (price >= 1000) {
-      const truncatedPrice = Math.floor(price / 1000);
-      return `Rp ${truncatedPrice}k`;
-    } else {
-      return `Rp ${price}`;
-    }
+    return `Rp ${price.toLocaleString()}`;
   };
 
   const truncateDescription = (description, maxLength) => {
@@ -245,13 +240,12 @@ const Product = () => {
                 </p>
               </>
             ) : (
-              <div className="flex justify-center items-center">
-                <div className="grid grid-cols-4 gap-4 p-12 items-center ">
-                  <div></div>
+              <div className="flex justify-center items-center ">
+                <div className="grid grid-cols-3 gap-4 p-12 items-center mx-auto ">
                   {filteredProducts.map((product, index) => (
                     <motion.div
                       key={product.id}
-                      className="border rounded-xl bg-white shadow-xl border-gelap transform transition-all overflow-hidden  "
+                      className="border rounded-xl bg-white shadow-xl border-gelap transform transition-all overflow-hidden h-full  "
                     >
                       <div>
                         <img
@@ -294,7 +288,6 @@ const Product = () => {
                     </motion.div>
                   ))}
                 </div>
-               
               </div>
             )}
           </>

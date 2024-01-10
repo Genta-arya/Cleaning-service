@@ -75,7 +75,19 @@ const ModalCreateProduct = ({ onClose }) => {
   };
   const handlePriceChange = (e) => {
     const rawValue = e.target.value;
+
+    if (!rawValue || !rawValue.trim()) {
+      setProductData({ ...productData, price: 0 });
+      return;
+    }
+
     const numericValue = parseInt(rawValue.replace(/\D/g, ""), 10);
+
+    if (isNaN(numericValue)) {
+      console.error("Hanya boleh memasukkan angka");
+      return;
+    }
+
     const formattedValue = numericValue.toLocaleString("id-ID");
     setProductData({ ...productData, price: numericValue });
   };
@@ -133,7 +145,6 @@ const ModalCreateProduct = ({ onClose }) => {
               <span className="text-gray-500 mr-2">Rp</span>
               <input
                 type="text"
-                pattern="[0-9]*"
                 value={productData.price.toLocaleString("id-ID")}
                 onChange={handlePriceChange}
                 className="w-full mt-1 p-2 border rounded focus:outline-none focus:border-blue-500"

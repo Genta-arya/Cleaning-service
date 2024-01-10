@@ -6,6 +6,8 @@ import axiosInstance from "../../../../../../Service/Config";
 import Loading from "../Customer/Loading";
 
 const ModalUploadGambar = ({ closeUploadModal, selectedOrderInfo, orders }) => {
+  const limit_image = 3 * selectedOrderInfo.qty;
+
   const [selectedImages, setSelectedImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const orderIds = orders.map((dataObject) => dataObject.id);
@@ -39,7 +41,7 @@ const ModalUploadGambar = ({ closeUploadModal, selectedOrderInfo, orders }) => {
   };
 
   const handleUpload = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const formData = new FormData();
 
@@ -50,6 +52,7 @@ const ModalUploadGambar = ({ closeUploadModal, selectedOrderInfo, orders }) => {
       formData.append("orderDetailId", selectedOrderInfo.id);
       formData.append("orderId", selectedOrderInfo.orderId);
       formData.append("nm_product", selectedOrderInfo.nm_product);
+      formData.append("limit", limit_image);
 
       const response = await axiosInstance.post("/upload/dokument", formData, {
         headers: {
@@ -60,24 +63,24 @@ const ModalUploadGambar = ({ closeUploadModal, selectedOrderInfo, orders }) => {
       if (response.status === 200) {
         toast.success("Upload successful!");
         closeUploadModal();
-        setLoading(false)
+        setLoading(false);
       } else if (response.status === 400) {
         toast.error("Client-side error. Check your request.");
-        setLoading(false)
+        setLoading(false);
       }
     } catch (error) {
       if (error.response) {
         toast.error(`${error.response.data.error}`);
-        setLoading(false)
+        setLoading(false);
       } else if (error.request) {
         toast.error("No response received from the server.");
-        setLoading(false)
+        setLoading(false);
       } else {
         toast.error("Error setting up the request. Please try again.");
-        setLoading(false)
+        setLoading(false);
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -116,7 +119,7 @@ const ModalUploadGambar = ({ closeUploadModal, selectedOrderInfo, orders }) => {
                 htmlFor="image"
                 className="block text-sm font-medium text-gray-700"
               >
-                Gambar (Maksimal 3)
+                Gambar (Maksimal {limit_image})
               </label>
               <input
                 type="file"
@@ -126,9 +129,11 @@ const ModalUploadGambar = ({ closeUploadModal, selectedOrderInfo, orders }) => {
                 onChange={handleImageChange}
                 multiple
                 className={`mt-1 p-2 border rounded-md w-full ${
-                  selectedImages.length >= 3 ? "cursor-not-allowed" : ""
+                  selectedImages.length >= limit_image
+                    ? "cursor-not-allowed"
+                    : ""
                 }`}
-                disabled={selectedImages.length >= 3}
+                disabled={selectedImages.length >= limit_image}
               />
             </div>
 
@@ -167,9 +172,7 @@ const ModalUploadGambar = ({ closeUploadModal, selectedOrderInfo, orders }) => {
           </form>
         </div>
       </div>
-      {loading && (
-        <Loading />
-      )}
+      {loading && <Loading />}
     </div>
   );
 };

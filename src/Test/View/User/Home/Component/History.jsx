@@ -5,18 +5,21 @@ import { faArrowLeft, faImage, faL } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import animationData from "../../../../../Asset/Pesanan.json";
 import Lottie from "lottie-react";
-
+import TurndownService from "turndown";
 import SkeletonTable from "./SkeletonTable";
 import SkeletonMobile from "./SkeletonMobile";
 import { useDispatch } from "react-redux";
 import { setLoggedIn } from "../../../../../Feature/Redux/Auth/AuthSlice";
-
+import parse from "html-react-parser";
 import jsPDF from "jspdf";
 import Modal from "react-modal";
 import "jspdf-autotable";
+import DOMPurify from "dompurify";
 import { ToastContainer, toast } from "react-toastify";
 import ViewImage from "../../../Admin/Home/Component/Pesanan/ViewImage";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 Modal.setAppElement("#root");
 const History = () => {
   const [historyData, setHistoryData] = useState([]);
@@ -30,6 +33,7 @@ const History = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const turndownService = new TurndownService();
 
   const fetchHistory = async () => {
     setIsloading(true);
@@ -282,11 +286,27 @@ const History = () => {
                         <div>x {order.orderDetails.qty}</div>
                       </div>
                     </div>
-                    <div className="text-gray-700 text-sm px-4">
+                    {/* <div className="text-gray-700 text-sm px-4">
                       Keterangan:
                       <span className="flex flex-col text-orange-500">
-                        "{order.orderDetails.desc}"
+                        {typeof order.orderDetails.desc === "string"
+                          ? parse(order.orderDetails.desc)
+                          : typeof order.orderDetails.desc === "object"
+                          ? parse(JSON.stringify(order.orderDetails.desc))
+                          : "-"}
                       </span>
+
+                    </div> */}
+                    <div>
+                      <div className="text-gray-700 text-sm px-4">
+                        Keterangan:
+                      </div>
+                      <ReactQuill
+                        value={order.orderDetails.desc}
+                        readOnly={true}
+                        className="text-orange-500"
+                        theme={"bubble"}
+                      />
                     </div>
 
                     <div className="text-gray-800 font-bold flex justify-end">
@@ -454,7 +474,7 @@ const History = () => {
                     </p>
                   </h3>
                 </div>
-                <div className="flex justify-start  gap-2 border-b border-gray-400 mt-4 ">
+                <div className="flex justify-start  gap-2 border-b border-gray-400 mt-4  ">
                   <div className="flex mb-4 ">
                     <img
                       src={order.orderDetails.url}
@@ -469,6 +489,15 @@ const History = () => {
                     </div>
                     <div>x {order.orderDetails.qty}</div>
                   </div>
+                </div>
+                <div className="">
+                  <div className="text-gray-700 text-sm px-4">Keterangan:</div>
+                  <ReactQuill
+                    value={order.orderDetails.desc}
+                    readOnly={true}
+                    className="text-orange-500 border-b border-gray-400 "
+                    theme={"bubble"}
+                  />
                 </div>
 
                 <div className="text-gray-800 font-bold text-sm justify-end flex mt-1">

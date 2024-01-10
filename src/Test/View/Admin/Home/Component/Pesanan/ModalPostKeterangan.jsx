@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { postDesct } from "../../../../../../Service/Api";
 import { ToastContainer, toast } from "react-toastify";
 import Loading from "../Customer/Loading";
-
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { deltaToHtml } from "delta-to-html";
 const ModalPostKeterangan = ({ uuid, closeModalKet }) => {
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
@@ -53,11 +55,11 @@ const ModalPostKeterangan = ({ uuid, closeModalKet }) => {
           </button>
 
           <h2 className="text-2xl font-bold mb-4">Input Keterangan Service</h2>
-          <textarea
+          <ReactQuill
+            theme="snow"
             value={description}
-            onChange={handleDescriptionChange}
-            placeholder="Beritahu Pelanggan mu ya apa saja yang sudah diservice..."
-            className="w-full h-40 p-2 mb-4 border rounded-md resize-none"
+            onChange={setDescription}
+            className="h-72 mb-12"
           />
           <button
             onClick={handlePostDescription}

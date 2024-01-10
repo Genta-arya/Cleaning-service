@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaEye, FaPlus, FaTrash } from "react-icons/fa";
 import { deleteUser, getAllUsers } from "../../../../../../Service/Api";
 import SkeletonRow from "../Product/SkeletonRow";
 import ModalEditPassword from "./ModalEditPassword";
 import { motion, AnimatePresence } from "framer-motion";
 import { BeatLoader } from "react-spinners";
 import { ToastContainer, toast } from "react-toastify";
+import ModalCreatedDisc from "./ModalCreatedDisc";
+import ModalViewDiscount from "./ModalViewDiscount";
 
 const ListCustomer = () => {
   const [userData, setUserData] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUsername, setSelectedUseUsername] = useState(null);
+  const [selectedEmail, setSelectedEmail] = useState(null);
   const [visibleModal, setVisibleModal] = useState(false);
+  const [visibleCreatedDisc, setVisibleCreatedDisc] = useState(false);
+  const [visibleOpenDisc, setVisibleOpenDisc] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
@@ -32,7 +38,19 @@ const ListCustomer = () => {
   }, []);
 
   const handleEditPassword = (userId) => {
+    setSelectedUser(userId);
     setVisibleModal(true);
+  };
+
+  const handleCreateDisc = (userId, email, username) => {
+    setVisibleCreatedDisc(true);
+    setSelectedEmail(email);
+    setSelectedUseUsername(username);
+    setSelectedUser(userId);
+  };
+
+  const handleOpenDisc = (userId) => {
+    setVisibleOpenDisc(true);
     setSelectedUser(userId);
   };
 
@@ -63,17 +81,19 @@ const ListCustomer = () => {
 
   const onClose = () => {
     setVisibleModal(false);
+    setVisibleOpenDisc(false);
+    setVisibleCreatedDisc(false);
   };
 
   return (
     <div className="px-12 p-8">
       <h1 className="text-2xl font-bold mb-4">List Customer</h1>
       {loading ? (
-         <>
-         {Array.from({ length: 5 }).map((_, index) => (
+        <>
+          {Array.from({ length: 5 }).map((_, index) => (
             <SkeletonRow key={index} />
           ))}
-          </>
+        </>
       ) : (
         <>
           {userData && userData.length > 0 ? (
@@ -85,6 +105,7 @@ const ListCustomer = () => {
                   <th className="border px-4 py-2">Email</th>
                   <th className="border px-4 py-2">Role</th>
                   <th className="border px-4 py-2">Actions</th>
+                  <th className="border px-4 py-2">Voucher Discount</th>
                 </tr>
               </thead>
               <tbody>
@@ -108,6 +129,30 @@ const ListCustomer = () => {
                         <FaTrash />
                       </button>
                     </td>
+
+                    <td className="border px-4 py-2 ">
+                      <div className="flex justify-center gap-2">
+                        <button
+                          className="bg-blue-500 text-white px-2 py-1 rounded"
+                          onClick={() =>
+                            handleCreateDisc(
+                              user.uid,
+                              user.email,
+                              user.username
+                            )
+                          }
+                        >
+                          <FaPlus />
+                        </button>
+
+                        <button
+                          className="bg-blue-500 text-white px-2 py-1 rounded"
+                          onClick={() => handleOpenDisc(user.uid)}
+                        >
+                          <FaEye />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -120,6 +165,19 @@ const ListCustomer = () => {
 
       {visibleModal && (
         <ModalEditPassword select={selectedUser} onClose={onClose} />
+      )}
+      {visibleOpenDisc && (
+        <ModalViewDiscount select={selectedUser} onClose={onClose} />
+      )}
+      {visibleCreatedDisc && (
+        <>
+          <ModalCreatedDisc
+            select={selectedUser}
+            email={selectedEmail}
+            username={selectedUsername}
+            onClose={onClose}
+          />
+        </>
       )}
 
       <AnimatePresence>
@@ -142,11 +200,15 @@ const ListCustomer = () => {
                   className="bg-red-500 text-white px-4 py-2 rounded mr-2"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  onClick={loadingDelete ? null : confirmDelete} // Set onClick to null during loading state
+                  onClick={loadingDelete ? null : confirmDelete}
                   disabled={loadingDelete}
                   style={{ pointerEvents: loadingDelete ? "none" : "auto" }}
                 >
-                  {loadingDelete ? <BeatLoader color="#ffffff" size={8} /> : "Lanjut"}
+                  {loadingDelete ? (
+                    <BeatLoader color="#ffffff" size={8} />
+                  ) : (
+                    "Lanjut"
+                  )}
                 </motion.button>
                 <motion.button
                   className="bg-gray-300 text-gray-700 px-4 py-2 rounded"

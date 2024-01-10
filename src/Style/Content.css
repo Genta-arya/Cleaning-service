@@ -171,3 +171,22 @@
 .sidebar-open .sidebar-button {
   transform: rotate(180deg);
 }
+
+
+
+.double-strikethrough {
+  position: relative;
+ }
+ 
+ .double-strikethrough:before, .double-strikethrough:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  border-top: 2px solid red;
+ }
+ 
+ .double-strikethrough:after {
+  transform: rotate(-1deg);
+ }
