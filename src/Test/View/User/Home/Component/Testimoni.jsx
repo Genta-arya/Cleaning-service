@@ -4,31 +4,26 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ClipLoader } from "react-spinners";
 import { motion, useAnimation } from "framer-motion";
+import { getAllImage } from "../../../../../Service/Api";
 
 const Testimoni = () => {
   const [testimonialImages, setTestimonialImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const controls = useAnimation();
-
+  const [currentIndex, setCurrentIndex] = useState(0);
   useEffect(() => {
-    const fetchTestimonialImages = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(
-          "https://picsum.photos/v2/list?page=1&limit=5"
-        );
-        const data = await response.json();
-        const images = data.map(
-          (item) => `https://picsum.photos/id/${item.id}/800/400`
-        );
-        setTestimonialImages(images);
+        const images = await getAllImage();
+        setTestimonialImages(images.data);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching testimonial images:", error);
+        console.error("Failed to fetch images: ", error);
         setLoading(false);
       }
     };
 
-    fetchTestimonialImages();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -36,7 +31,7 @@ const Testimoni = () => {
       if (!loading) {
         await controls.start({
           opacity: 1,
-         
+
           transition: { duration: 1.5, ease: "backInOut" },
         });
       }
@@ -50,27 +45,54 @@ const Testimoni = () => {
   };
 
   const settings = {
-    dots: false,
+    dots: true,
     infinite: true,
-    speed: 500,
-    slidesToShow: 4,
+    speed: 2500,
+    slidesToShow: 2,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2500,
     centerMode: true,
     centerPadding: "0",
     arrows: false,
+    beforeChange: (current, next) => setCurrentIndex(next),
+    appendDots: (dots) => (
+      <div>
+        <ul style={{ display: "flex",  }} className="flex justify-center mt-24">
+          {dots.map((dot, index) => (
+            <li key={index}>{dot}</li>
+          ))}
+        </ul>
+      </div>
+    ),
+    customPaging: (i) => (
+      <div className="flex justify-center ">
+        <div
+          style={{
+            backgroundColor: i === currentIndex ? "white" : "gray",
+            borderRadius: "50%",
+            width: "10px",
+            height: "10px",
+            display: "inline-block",
+            margin: "0 5px",
+          }}
+          className="flex justify-center"
+        ></div>
+      </div>
+    ),
     responsive: [
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
+          arrows: false,
         },
       },
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: 1,
+          arrows: false,
         },
       },
     ],
@@ -78,7 +100,7 @@ const Testimoni = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale:0.8}}
+      initial={{ opacity: 0, scale: 0.8 }}
       animate={controls}
       className="bg-biru md:p-12 lg:p-8 p-8  rounded-t-xl"
     >
@@ -95,29 +117,12 @@ const Testimoni = () => {
       ) : (
         <Slider {...settings} className="mx-auto">
           {testimonialImages.map((image, index) => (
-            <div key={index} className="slick-slide px-1 lg:px-8 md:px-8">
+            <div key={index} className="slick-slide px-1 lg:px-8 md:px-8 mt-4">
               <img
                 src={image}
                 alt={`Testimonial ${index + 1}`}
-                className="testimoni-image w-32 h-32 rounded-3xl py-4 lg:w-full lg:h-full md:w-full md:h-full"
+                className=" w-full h-80 rounded-3xl py-4 lg:w-full lg:h-96 md:w-full md:h-80 mt-12"
               />
-              <div className="text-white">
-                <p className="text-sm lg:text-lg md:text-lg font-semibold mb-1">
-                  Client Name
-                </p>
-                <p className="text-sm lg:block md:block hidden">
-                  {truncateText(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis at velit maximus, molestie est a, tempor magna.",
-                    50
-                  )}
-                </p>
-                <p className="text-xs lg:hidden md:hidden block">
-                  {truncateText(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis at velit maximus, molestie est a, tempor magna.",
-                    20
-                  )}
-                </p>
-              </div>
             </div>
           ))}
         </Slider>

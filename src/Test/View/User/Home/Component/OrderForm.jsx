@@ -219,7 +219,7 @@ const OrderForm = () => {
     const uid = "123";
 
     const maxDistance = 25;
-
+    const id = productData.categoryId;
     if (distance > maxDistance) {
       toast.error(
         `Lokasi kamu terlalu jauh ${distance} km. maksimal 25 km untuk melakukan pesanan`,
@@ -235,13 +235,16 @@ const OrderForm = () => {
       setIsLoading(false);
     } else {
       let price = (productData?.price || 0) * (quantity || 1);
+      let discounts = price - price * discount;
       if (discount) {
-        price -= discount;
+        price = discounts;
       }
 
       const orderData = {
         uid,
         username: username,
+        voucherCode : voucher,
+        CategoryId: id,
         orderDetails: {
           nm_product: productData?.nm_product || "",
           qty: parseInt(quantity) || 1,
@@ -308,9 +311,10 @@ const OrderForm = () => {
   const applyVoucher = async () => {
     setIsload(true);
     const voucherCode = voucher;
+    const id = productData.categoryId;
 
     try {
-      const response = await verifVoucher(username, voucherCode);
+      const response = await verifVoucher(username, voucherCode, id);
       setIsload(true);
       if (response.data && response.data.disc) {
         const discountAmount = response.data.disc;
@@ -414,7 +418,7 @@ const OrderForm = () => {
                   <p className="mr-4 text-lg font-semibold lg:block hidden ">
                     Jumlah:
                   </p>
-                  <div className="flex items-center border rounded-lg overflow-hidden md:block lg:block hidden ">
+                  <div className="flex items-center  border rounded-lg overflow-hidden md:block lg:block hidden ">
                     <button
                       onClick={handleDecrement}
                       className="p-2 cursor-pointer bg-gray-200 hover:bg-gray-300 transition duration-300"
@@ -425,7 +429,7 @@ const OrderForm = () => {
                       disabled
                       value={quantity}
                       onChange={handleQuantityChange}
-                      className="border-none text-center px-3 bg-white text-lg font-semibold"
+                      className="border-none text-center px-3 bg-white text-lg font-semibold w-40"
                     />
                     <button
                       onClick={handleIncrement}
@@ -435,7 +439,7 @@ const OrderForm = () => {
                     </button>
                   </div>
 
-                  <div className="flex justify-start border rounded-lg overflow-hidden md:hidden lg:hidden block ">
+                  <div className="flex  border rounded-lg overflow-hidden md:hidden lg:hidden block ">
                     <button
                       onClick={handleDecrement}
                       className="p-2 cursor-pointer bg-gray-200 hover:bg-gray-300 transition duration-300"

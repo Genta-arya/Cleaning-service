@@ -19,7 +19,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Lottie from "lottie-react";
 import animationData from "../../../../../Asset/Verif.json";
 import { PulseLoader } from "react-spinners";
-
+import Filter from "bad-words";
 function ReviewForm({ onSubmitReview }) {
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState("");
@@ -41,6 +41,216 @@ function ReviewForm({ onSubmitReview }) {
   const closeModalOrder = () => {
     setShowModalOrder(false);
   };
+  const filter = new Filter();
+  filter.addWords(
+    "ancuk",
+    "ancok",
+    "ajig",
+    "anjay",
+    "anjing",
+    "anying",
+    "anjir",
+    "asu",
+    "asyu",
+    "babangus",
+    "babi",
+    "bacol",
+    "bacot",
+    "bagong",
+    "bajingan",
+    "balegug",
+    "banci",
+    "bangke",
+    "bangsat",
+    "bedebah",
+    "bedegong",
+    "bego",
+    "belegug",
+    "beloon",
+    "bencong",
+    "bloon",
+    "blo'on",
+    "bodoh",
+    "boloho",
+    "buduk",
+    "budug",
+    "celeng",
+    "cibai",
+    "cibay",
+    "cocot",
+    "cocote",
+    "cok",
+    "cokil",
+    "colai",
+    "colay",
+    "coli",
+    "colmek",
+    "conge",
+    "congean",
+    "congek",
+    "congor",
+    "cuk",
+    "cukima",
+    "cukimai",
+    "cukimay",
+    "dancok",
+    "entot",
+    "entotan",
+    "ewe",
+    "ewean",
+    "gelo",
+    "genjik",
+    "germo",
+    "gigolo",
+    "goblo",
+    "goblog",
+    "goblok",
+    "hencet",
+    "henceut",
+    "heunceut",
+    "homo",
+    "idiot",
+    "itil",
+    "jancuk",
+    "jancok",
+    "jablay",
+    "jalang",
+    "jembut",
+    "jiancok",
+    "jilmek",
+    "jurig",
+    "kacung",
+    "kampang",
+    "kampret",
+    "kampungan",
+    "kehed",
+    "kenthu",
+    "kentot",
+    "kentu",
+    "keparat",
+    "kimak",
+    "kintil",
+    "kirik",
+    "kunyuk",
+    "kurap",
+    "konti",
+    "kontol",
+    "kopet",
+    "koplok",
+    "lacur",
+    "lebok",
+    "lonte",
+    "maho",
+    "meki",
+    "memek",
+    "monyet",
+    "ndas",
+    "ndasmu",
+    "ngehe",
+    "ngentot",
+    "nggateli",
+    "nyepong",
+    "ngewe",
+    "ngocok",
+    "pante",
+    "pantek",
+    "patek",
+    "pathek",
+    "peju",
+    "pejuh",
+    "pecun",
+    "pecundang",
+    "pelacur",
+    "pelakor",
+    "peler",
+    "pepek",
+    "puki",
+    "pukima",
+    "pukimae",
+    "pukimak",
+    "pukimay",
+    "sampah",
+    "sepong",
+    "sial",
+    "sialan",
+    "silit",
+    "sinting",
+    "sontoloyo",
+    "tai",
+    "taik",
+    "tempek",
+    "tempik",
+    "tete",
+    "tetek",
+    "tiembokne",
+    "titit",
+    "toket",
+    "tolol",
+    "ublag",
+    "udik",
+    "wingkeng",
+    "mamak",
+    "setan",
+    "bapak kau",
+    "layanan jelek",
+    "tidak bermutu",
+    "bodoh",
+    "tidak memuaskan",
+    "pokek",
+    "pukimak",
+    "celaka",
+    "celake",
+    "puake",
+    "iblis",
+    "bangsat",
+    "kontol",
+    "kontil",
+    "kuntol",
+    "jubur",
+    "burit",
+    "pantat",
+    "peler",
+    "pele",
+    "titit",
+    "titid",
+    "memek",
+    "kondom",
+    "taik",
+    "tt",
+    "open bo",
+    "bo",
+    "pelacur",
+    "Kurang fitur",
+    "Kurang fungsi",
+    "Ndas bedag",
+    "Bungut gebuh",
+    "Ndas keleng",
+    "ibelis",
+    "jin",
+    "sethan",
+    "t4ik",
+    "taiks",
+    "tahi",
+    "syaitan",
+    "syeitan",
+    "penipu",
+    "tukang tipu",
+    "tipu",
+    "nipu",
+    "phising",
+    "gacor",
+    "judi bola",
+    "www",
+    ".com",
+    "situs",
+    "porno",
+    "porn",
+    "0",
+    "8",
+    "62",
+    "6",
+    "2"
+  );
 
   const determineActiveColor = (rating) => {
     if (rating >= 4) {
@@ -67,6 +277,14 @@ function ReviewForm({ onSubmitReview }) {
       setIsLoading(false);
       return;
     }
+    if (typeof newReview !== "string") {
+      console.error("Review must be a string.");
+      setIsLoading(false);
+      return;
+    }
+
+    // Filter kata-kata terlarang
+    const filteredReview = filter.clean(newReview);
 
     if (newReview.trim().length > 250) {
       toast.error("Komentar terlalu panjang, maksimal hanya 100 karakter ya");
@@ -80,14 +298,14 @@ function ReviewForm({ onSubmitReview }) {
     }
 
     try {
-      await postComment(name, newReview, rating);
+      await postComment(name, filteredReview, rating);
       setIsLoading(false);
 
-      setReviews([...reviews, { name, rating, comment: newReview }]);
+      setReviews([...reviews, { name, rating, comment: filteredReview }]);
       setNewReview("");
       setRating(0);
       setActiveColor("#FCD34D");
-      onSubmitReview({ name, rating, comment: newReview });
+      onSubmitReview({ name, rating, comment: filteredReview });
       setShowSuccessModal(true);
     } catch (error) {
       console.error("Error posting comment:", error);

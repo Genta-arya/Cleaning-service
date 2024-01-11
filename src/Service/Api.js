@@ -437,16 +437,39 @@ export const getVoucherByid = async (authId) => {
   }
 };
 
-export const verifVoucher = async (username, voucherCode) => {
+export const verifVoucher = async (username, voucherCode, categoryId) => {
   try {
     const response = await axiosInstance.post("/verify-voucher", {
       username: username,
       voucherCode: voucherCode,
+      categoryId: categoryId,
     });
 
-  
     return response.data;
   } catch (error) {
     console.error(error);
   }
 };
+
+export const useVoucher = async (username, voucherCode) => {
+  try {
+    const response = await axiosInstance.post("/useVoucher", {
+      username: username,
+      voucherCode: voucherCode,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+export const getAllImage = async () =>{
+  try {
+    const response = await axiosInstance.get("/image")
+    return response.data;
+  } catch (error) {
+    throw error
+  }
+}

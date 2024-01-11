@@ -48,6 +48,7 @@ const Product = () => {
   const selectedCategory = useSelector(selectSelectedCategory);
   const isRole = useSelector(selectIsRole);
   const [activeDot, setActiveDot] = useState(0);
+  const [ selectIdCategory , setSelectedCategory] = useState(null)
   useEffect(() => {
     const fetchData = async () => {
       try {

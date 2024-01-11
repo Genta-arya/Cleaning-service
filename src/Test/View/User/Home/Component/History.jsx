@@ -39,7 +39,7 @@ const History = () => {
     setIsloading(true);
     try {
       const response = await getHistory(currentPage);
-
+      setTotalItems(response.totalPages);
       if (!response || !response.totalPages || !response.orders) {
         setIsloading(false);
 
@@ -53,7 +53,6 @@ const History = () => {
       }
 
       setHistoryData(orders);
-      setTotalItems(totalPages);
 
       setIsloading(false);
     } catch (error) {
@@ -114,6 +113,7 @@ const History = () => {
 
   const handleFilterChange = (status) => {
     setFilterStatus(status);
+setCurrentPage(1)
   };
 
   const sortData = (data) => {

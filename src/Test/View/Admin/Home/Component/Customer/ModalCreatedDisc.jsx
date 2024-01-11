@@ -1,5 +1,8 @@
-import React, { useState } from "react";
-import { createDiscount } from "../../../../../../Service/Api";
+import React, { useEffect, useState } from "react";
+import {
+  createDiscount,
+  getAllCategories,
+} from "../../../../../../Service/Api";
 import { ToastContainer, toast } from "react-toastify";
 import Loading from "./Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,7 +15,21 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
   const [status, setStatus] = useState("");
   const [disc, setDisc] = useState("");
   const [loading, setLoading] = useState(false);
-  const [discountCode, setDiscountCode] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState(null);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getAllCategories();
+        setCategories(response.categories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, [selectedCategories]);
 
   const generateDiscountCode = () => {
     const discountCode =
@@ -20,11 +37,28 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
     setCode(discountCode);
   };
 
+  const handleCategoryChange = (event) => {
+    const selectedCategory = event.target.value;
+
+    setSelectedCategories(selectedCategory);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+  
+
     try {
-      const discountData = { code, exp, status, disc, select, email , username };
+      const discountData = {
+        code,
+        exp,
+        status,
+        disc,
+        select,
+        email,
+        username,
+        categoryIds: selectedCategories,
+      };
       setLoading(true);
       if (!code || !exp || !status || !disc || !username) {
         toast.error("Semua field harus diisi!");
@@ -34,7 +68,7 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
         await createDiscount(discountData);
 
         setLoading(true);
-        toast.success("Voucher Berhasil Dikirim")
+        toast.success("Voucher Berhasil Dikirim");
         onClose();
       }
     } catch (error) {
@@ -43,6 +77,7 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
       setLoading(false);
     }
   };
+  
 
   return (
     <AnimatePresence>
@@ -127,7 +162,21 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
               >
                 <option value="">Pilih Status</option>
                 <option value="active">Active</option>
-               
+              </select>
+            </div>
+
+            <div>
+              <h1 className="text-sm mb-1">Select Category</h1>
+              <select
+                value={selectedCategories}
+                onChange={handleCategoryChange}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-green-500"
+              >
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.nm_category}
+                  </option>
+                ))}
               </select>
             </div>
             <div>

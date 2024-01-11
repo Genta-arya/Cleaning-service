@@ -10,6 +10,7 @@ const ModalViewDiscount = ({ onClose, select }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [copiedIds, setCopiedIds] = useState({});
   const [loading, setLoading] = useState(false);
+  const [selectCategory, setSelectedCategory] = useState("");
   const fetchVoucher = async () => {
     setLoading(true);
     try {
@@ -17,6 +18,7 @@ const ModalViewDiscount = ({ onClose, select }) => {
       setVouchers(
         response.data.filter((voucher) => voucher.status === "active")
       );
+      setSelectedCategory(response.data.categories.name)
     } catch (error) {
       console.error(error);
     } finally {
@@ -26,6 +28,7 @@ const ModalViewDiscount = ({ onClose, select }) => {
 
   useEffect(() => {
     fetchVoucher();
+    console.log(selectCategory)
   }, [select]);
 
   const closeModal = () => {
@@ -93,7 +96,9 @@ const ModalViewDiscount = ({ onClose, select }) => {
                         </p>
                         <p className="">
                           <strong>Discount:</strong>{" "}
-                          <span className="text-xl text-red-500 font-bold">{voucher.disc * 100}%</span>
+                          <span className="text-xl text-red-500 font-bold">
+                            {voucher.disc * 100}%
+                          </span>
                         </p>
                       </div>
 
