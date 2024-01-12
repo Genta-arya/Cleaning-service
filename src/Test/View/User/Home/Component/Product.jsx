@@ -34,7 +34,7 @@ import { Helmet } from "react-helmet-async";
 import ReactQuill from "react-quill";
 
 const Product = () => {
-  const maxDescriptionLength = 50;
+  const maxDescriptionLength = 45;
   const [showModal, setShowModal] = useState(false);
   const [showModalOrder, setShowModalOrder] = useState(false);
   const navigate = useNavigate();
