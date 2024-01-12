@@ -47,7 +47,7 @@ const Testimoni = () => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 2500,
+    speed: 1000,
     slidesToShow: 2,
     slidesToScroll: 1,
     autoplay: true,
@@ -57,26 +57,34 @@ const Testimoni = () => {
     arrows: false,
     beforeChange: (current, next) => setCurrentIndex(next),
     appendDots: (dots) => (
-      <div>
-        <ul style={{ display: "flex" }} className="flex justify-center mt-24">
-          {dots.map((dot, index) => (
-            <li key={index}>{dot}</li>
-          ))}
-        </ul>
+      <div className="flex">
+        <div className="flex justify-center mt-24 items-center">
+          <ul
+            style={{ display: "flex" }}
+            className=" bg-white p-3 rounded-full  items-center,"
+          >
+            {dots.map((dot, index) => (
+              <li key={index}>{dot}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     ),
     customPaging: (i) => (
       <div className="flex justify-center ">
         <div
           style={{
-            backgroundColor: i === currentIndex ? "white" : "gray",
-            borderRadius: "50%",
-            width: "10px",
+            backgroundColor: i === currentIndex ? "red" : "gray",
+            borderRadius: "100%",
+            width:"60px",
             height: "10px",
-            display: "inline-block",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+
             margin: "0 5px",
           }}
-          className="flex justify-center"
+          className="flex justify-center rounded-md "
         ></div>
       </div>
     ),
@@ -134,7 +142,7 @@ const Testimoni = () => {
                       <img
                         src={image}
                         alt={`Testimonial ${index + 1}`}
-                        className=" w-full h-80 rounded-3xl py-4 lg:w-full lg:h-96 md:w-full md:h-80 mt-12"
+                        className=" w-full h-80 rounded-3xl py-4 lg:w-full lg:h-96 md:w-full md:h-80 mt-12 mb-12"
                       />
                     </div>
                   ))}

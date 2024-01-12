@@ -246,7 +246,7 @@ const Product = () => {
                   {filteredProducts.map((product, index) => (
                     <motion.div
                       key={product.id}
-                      className="border rounded-xl bg-white shadow-xl border-gelap transform transition-all overflow-hidden h-full  "
+                      className="border rounded-xl bg-white shadow-xl border-gelap transform transition-all overflow-hidden w-96 h-full items-center"
                     >
                       <div>
                         <img
