@@ -113,7 +113,7 @@ const History = () => {
 
   const handleFilterChange = (status) => {
     setFilterStatus(status);
-setCurrentPage(1)
+    setCurrentPage(1);
   };
 
   const sortData = (data) => {
@@ -280,10 +280,15 @@ setCurrentPage(1)
                           className="w-32 h-auto rounded-lg border-black border-2 shadow-2xl"
                         />
                       </div>
-
-                      <div className="text-gray-700 text-base">
-                        {order.orderDetails.nm_product}{" "}
-                        <div>x {order.orderDetails.qty}</div>
+                      <div>
+                        <div className="text-gray-700 text-base">
+                          {order.orderDetails.nm_product}{" "}
+                          <div>x {order.orderDetails.qty}</div>
+                        </div>
+                        <div className="text-gray-700 text-base">
+                          Keluhan :{" "}
+                          <div className="text-red-500 leading-10 -mt-2">{order.orderDetails.ket}</div>
+                        </div>
                       </div>
                     </div>
                     {/* <div className="text-gray-700 text-sm px-4">

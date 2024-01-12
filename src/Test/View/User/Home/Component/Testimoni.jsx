@@ -58,7 +58,7 @@ const Testimoni = () => {
     beforeChange: (current, next) => setCurrentIndex(next),
     appendDots: (dots) => (
       <div>
-        <ul style={{ display: "flex",  }} className="flex justify-center mt-24">
+        <ul style={{ display: "flex" }} className="flex justify-center mt-24">
           {dots.map((dot, index) => (
             <li key={index}>{dot}</li>
           ))}
@@ -115,17 +115,34 @@ const Testimoni = () => {
           <ClipLoader color="#ffffff" loading={loading} size={35} />
         </div>
       ) : (
-        <Slider {...settings} className="mx-auto">
-          {testimonialImages.map((image, index) => (
-            <div key={index} className="slick-slide px-1 lg:px-8 md:px-8 mt-4">
-              <img
-                src={image}
-                alt={`Testimonial ${index + 1}`}
-                className=" w-full h-80 rounded-3xl py-4 lg:w-full lg:h-96 md:w-full md:h-80 mt-12"
-              />
-            </div>
-          ))}
-        </Slider>
+        <>
+          {testimonialImages.length === 0 ? (
+            <>
+              <div className="flex justify-center py-2 mt-8 text-white font-bold text-base">
+                Kami Belum Memiliki Dokumentasi Service
+              </div>
+            </>
+          ) : (
+            <>
+              <motion.div>
+                <Slider {...settings} className="mx-auto">
+                  {testimonialImages.map((image, index) => (
+                    <div
+                      key={index}
+                      className="slick-slide px-1 lg:px-8 md:px-8 mt-4"
+                    >
+                      <img
+                        src={image}
+                        alt={`Testimonial ${index + 1}`}
+                        className=" w-full h-80 rounded-3xl py-4 lg:w-full lg:h-96 md:w-full md:h-80 mt-12"
+                      />
+                    </div>
+                  ))}
+                </Slider>
+              </motion.div>
+            </>
+          )}
+        </>
       )}
     </motion.div>
   );

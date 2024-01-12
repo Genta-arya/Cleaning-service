@@ -397,7 +397,7 @@ const OrderForm = () => {
                     "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
                   }
                   alt={productData.title}
-                  className="w-full h-full object-cover  border-black border rounded-xl p-2 mb-4"
+                  className="w-full h-52 object-cover  border-black border rounded-xl p-2 mb-4"
                 />
               </div>
               <div>

@@ -24,11 +24,33 @@ const ChartComponent = () => {
             "Content-Type": "application/json",
           },
         });
+        const monthNames = {
+          Jan: 1,
+          Feb: 2,
+          Mar: 3,
+          Apr: 4,
+          May: 5,
+          Jun: 6,
+          Jul: 7,
+          Aug: 8,
+          Sep: 9,
+          Oct: 10,
+          Nov: 11,
+          Dec: 12,
+        };
+
+        response.data.monthlyEarnings.sort((a, b) => {
+          const monthA = monthNames[a.month.split(" ")[0]];
+          const monthB = monthNames[b.month.split(" ")[0]];
+
+          if (monthA < monthB) return -1;
+          if (monthA > monthB) return 1;
+          return 0;
+        });
 
         setChartData(response.data);
-      } catch (error) {
       
-      }
+      } catch (error) {}
     };
 
     fetchData();
@@ -172,9 +194,7 @@ const ChartComponent = () => {
       <h2 className="text-2xl font-bold mb-4 flex justify-center  ">
         Diagram Pendapatan Bulanan
       </h2>
-      <div className="border-b border mb-4">
-
-      </div>
+      <div className="border-b border mb-4"></div>
 
       <div className="p-5 overflow-auto h-[750px] ">
         {chartData && selectedYear ? (

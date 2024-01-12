@@ -16,7 +16,7 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
   const [disc, setDisc] = useState("");
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState(null);
+  const [selectedCategories, setSelectedCategories] = useState("");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -37,16 +37,12 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
     setCode(discountCode);
   };
 
-  const handleCategoryChange = (event) => {
-    const selectedCategory = event.target.value;
-
-    setSelectedCategories(selectedCategory);
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategories(categoryId);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-  
 
     try {
       const discountData = {
@@ -77,8 +73,7 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
       setLoading(false);
     }
   };
-  
-
+  console.log(selectedCategories);
   return (
     <AnimatePresence>
       {select && (
@@ -167,11 +162,15 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
 
             <div>
               <h1 className="text-sm mb-1">Select Category</h1>
+
               <select
                 value={selectedCategories}
-                onChange={handleCategoryChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-green-500"
+                onChange={(e) => handleCategoryChange(e.target.value)}
+                className="w-full mb-4 p-2 border rounded focus:outline-none focus:border-blue-500"
               >
+                <option value="" disabled>
+                  Pilih Kategori
+                </option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.nm_category}

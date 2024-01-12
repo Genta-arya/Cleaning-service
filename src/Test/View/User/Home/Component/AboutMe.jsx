@@ -76,7 +76,7 @@ const AboutMe = () => {
         transition={{ duration: 0.8 }}
         className="z-50"
       >
-        <div className="flex justify-center mb-8  mt-12 lg:mt-52">
+        <div className="flex justify-center mb-8  mt-12 ">
           <h1 className="font-serif font-bold text-gelap text-3xl uppercase text-center  ">
             tangkas jaya teknik
           </h1>

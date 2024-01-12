@@ -277,21 +277,16 @@ function ReviewForm({ onSubmitReview }) {
       setIsLoading(false);
       return;
     }
-    if (typeof newReview !== "string") {
-      console.error("Review must be a string.");
-      setIsLoading(false);
-      return;
-    }
 
     // Filter kata-kata terlarang
     const filteredReview = filter.clean(newReview);
 
-    if (newReview.trim().length > 250) {
+    if (filteredReview.trim().length > 250) {
       toast.error("Komentar terlalu panjang, maksimal hanya 100 karakter ya");
       setIsLoading(false);
       return;
     }
-    if (newReview.trim() === "" || name.trim() === "" || rating === 0) {
+    if (!newReview.trim() || !name.trim() || !rating) {
       toast.error("Form komentar harus diisi semua ya");
       setIsLoading(false);
       return;
@@ -312,6 +307,8 @@ function ReviewForm({ onSubmitReview }) {
       setIsLoading(false);
 
       showAlertMessage("Failed to post comment. Please try again later.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -389,7 +386,7 @@ function ReviewForm({ onSubmitReview }) {
           <button
             type="submit"
             className="px-4 py-2 bg-white text-biru rounded-md hover:bg-gray-200"
-            onClick={handleSubmit}
+       
           >
             <h1 className="text-base font-bold">Kirim</h1>
           </button>

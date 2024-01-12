@@ -42,10 +42,10 @@ const ModalCreateProduct = ({ onClose }) => {
       setIsCreating(true);
 
       if (
-        !productData.nm_product.trim() ||
-        !productData.desc.trim() ||
+        (!productData.nm_product.trim() || productData.desc.trim().length < 50,
         productData.price <= 0 ||
-        productData.categoryId <= 0
+          productData.categoryId <= 0 ||
+          !productData.thumbnail)
       ) {
         toast.error("Periksa semua form lagi ya");
         return;
