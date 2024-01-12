@@ -121,8 +121,8 @@ const ModalEditCategory = ({ onClose }) => {
           Simpan Perubahan
         </button>
       </motion.div>
-      {loading && <Loading />}
       <ToastContainer />
+      {loading && <Loading />}
     </motion.div>
   );
 };
