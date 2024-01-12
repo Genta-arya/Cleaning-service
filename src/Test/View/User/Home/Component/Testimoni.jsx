@@ -48,7 +48,7 @@ const Testimoni = () => {
     dots: true,
     infinite: true,
     speed: 1000,
-    slidesToShow: 2,
+    slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2500,
@@ -142,7 +142,7 @@ const Testimoni = () => {
                       <img
                         src={image}
                         alt={`Testimonial ${index + 1}`}
-                        className=" w-full h-80 rounded-3xl py-4 lg:w-full lg:h-96 md:w-full md:h-80 mt-12 mb-12"
+                        className=" w-full h-80 rounded-3xl py-4  lg:h-96 md:w-full md:h-80  mb-12"
                       />
                     </div>
                   ))}
