@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { motion, AnimatePresence } from "framer-motion";
+import ReactQuill from "react-quill";
 
 const ProductModal = ({ product, closeModal, showModal }) => {
   const formatCurrency = (price) => {
@@ -41,7 +42,7 @@ const ProductModal = ({ product, closeModal, showModal }) => {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="bg-white p-8 rounded-md relative w-96"
+              className="bg-white p-8 rounded-md relative md:w-[70%] w-[95%] overflow-y-auto h-[550px]"
               initial={{ scale: 0.5 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.5 }}
@@ -79,12 +80,18 @@ const ProductModal = ({ product, closeModal, showModal }) => {
                 {product.nm_product}{" "}
                 <FontAwesomeIcon className="text-green-500" />
               </h2>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-600 mb-4  flex border p-2 rounded-xl">
                 <FontAwesomeIcon
                   icon={faCheckCircle}
-                  className="text-green-500 mr-2"
+                  className="text-green-500 mr-2 py-4 ml-3"
                 />
-                {product.desc}
+
+                <ReactQuill
+                  value={product.desc}
+                  readOnly={true}
+                  className="text-gray-600 "
+                  theme={"bubble"}
+                />
               </p>
 
               <div className="flex items-center justify-between">

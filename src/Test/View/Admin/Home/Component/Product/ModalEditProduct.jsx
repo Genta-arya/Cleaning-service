@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ToastContainer, toast } from "react-toastify";
 import { PulseLoader } from "react-spinners";
 import Loading from "../Customer/Loading";
+import ReactQuill from "react-quill";
 
 const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
   const MAX_PRODUCT_NAME_LENGTH = 150;
@@ -29,12 +30,16 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
 
     try {
       if (
-        editedProductData &&
-        editedProductData.nm_product &&
-        editedProductData.desc &&
-        editedProductData.price &&
-        editedProductData.categoryId
+        !editedProductData ||
+        !editedProductData.nm_product ||
+        editedProductData.desc.trim().length < 50 ||
+        !editedProductData.price ||
+        !editedProductData.categoryId
       ) {
+        toast.error("Periksa Kembali Data yang diisi ya");
+        return;
+      }
+      {
         const updatedData = {
           ...editedProductData,
           thumbnail: editedProductData.thumbnail || productData.thumbnail,
@@ -73,6 +78,8 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
     } catch (error) {
       setLoading(false);
       toast.error("Periksa Kembali Data yang diisi ya");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -174,11 +181,15 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
           </label>
           <label className="block mb-2">
             <span className="text-gray-700">Deskripsi:</span>
-            <textarea
+
+            {/* <textarea
               value={editedProductData.desc}
               onChange={(e) => {
                 const inputValue = e.target.value;
-                if (inputValue.length <= MAX_DESCRIPTION_LENGTH) {
+                if (
+                  inputValue.length >= 50 &&
+                  inputValue.length <= MAX_DESCRIPTION_LENGTH
+                ) {
                   setEditedProductData({
                     ...editedProductData,
                     desc: inputValue,
@@ -186,12 +197,23 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
                 }
               }}
               className="w-full mt-1 p-2 border rounded focus:outline-none focus:border-blue-500"
+            /> */}
+            <ReactQuill
+              className="w-full mt-1 p-2 border rounded focus:outline-none focus:border-blue-500 h-72 mb-12"
+              theme="snow"
+              value={editedProductData.desc}
+              onChange={(content) => {
+                setEditedProductData({
+                  ...editedProductData,
+                  desc: content,
+                });
+              }}
             />
-            {editedProductData.desc.length > MAX_DESCRIPTION_LENGTH && (
-              <p className="text-red-500 mt-1">
-                Maximum length: {MAX_DESCRIPTION_LENGTH} characters
-              </p>
+
+            {editedProductData.desc.length < 50 && (
+              <p className="text-red-500 mt-1">Minimum length: 50 characters</p>
             )}
+           
           </label>
           <label className="block mb-2">
             <span className="text-gray-700">Harga:</span>
@@ -261,7 +283,7 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
             onClick={handleSave}
             disabled={loading}
           >
-           Simpan Perubahan
+            Simpan Perubahan
           </button>
         </div>
       </div>

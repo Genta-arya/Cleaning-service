@@ -6,7 +6,11 @@ import {
   faEdit,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import { checkJwt, deleteProduct, getProduct } from "../../../../../../Service/Api";
+import {
+  checkJwt,
+  deleteProduct,
+  getProduct,
+} from "../../../../../../Service/Api";
 import SkeletonRow from "./SkeletonRow";
 
 import ModalCreateProduct from "./ModalCreateProduct";
@@ -14,9 +18,13 @@ import ModalEditProduct from "./ModalEditProduct";
 import { PulseLoader } from "react-spinners";
 import MenuCategory from "./MenuCategory";
 import { useNavigate } from "react-router-dom";
-import { setLoggedIn, setRole } from "../../../../../../Feature/Redux/Auth/AuthSlice";
+import {
+  setLoggedIn,
+  setRole,
+} from "../../../../../../Feature/Redux/Auth/AuthSlice";
 import { useDispatch } from "react-redux";
 import Loading from "../Customer/Loading";
+import ReactQuill from "react-quill";
 
 const ManageProduct = () => {
   const [products, setProducts] = useState([]);
@@ -45,10 +53,8 @@ const ManageProduct = () => {
     fetchData();
   }, []);
 
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,12 +78,6 @@ const ManageProduct = () => {
 
     fetchData();
   }, [dispatch, navigate]);
-
-
-
-
-
-
 
   const filteredProducts = products.filter(
     (product) =>
@@ -201,12 +201,24 @@ const ManageProduct = () => {
               <tr key={product.id}>
                 <td className="border border-gray-300 p-2">{index + 1}</td>
                 <td className="border border-gray-300 p-2">
-                  <img src={product.url} alt="image" className="rounded-xl w-32 h-auto" />
+                  <img
+                    src={product.url}
+                    alt="image"
+                    className="rounded-xl w-32 h-auto"
+                  />
                 </td>
                 <td className="border border-gray-300 p-2">
                   {product.nm_product}
                 </td>
-                <td className="border border-gray-300 p-2">{product.desc}</td>
+                <td className="border border-gray-300 p-2">
+                  {" "}
+                  <ReactQuill
+                    value={product.desc}
+                    readOnly={true}
+                    className="leading-relaxed"
+                    theme={"bubble"}
+                  />
+                </td>
                 <td className="border border-gray-300 p-2">
                   {new Intl.NumberFormat("id-ID", {
                     style: "currency",

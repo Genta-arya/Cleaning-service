@@ -31,6 +31,7 @@ import animationData from "../../../../../Asset/datanotfound.json";
 import Lottie from "lottie-react";
 import "../../../../../Style/CustomSlider.css";
 import { Helmet } from "react-helmet-async";
+import ReactQuill from "react-quill";
 
 const Product = () => {
   const maxDescriptionLength = 50;
@@ -48,7 +49,7 @@ const Product = () => {
   const selectedCategory = useSelector(selectSelectedCategory);
   const isRole = useSelector(selectIsRole);
   const [activeDot, setActiveDot] = useState(0);
-  const [ selectIdCategory , setSelectedCategory] = useState(null)
+  const [selectIdCategory, setSelectedCategory] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -265,13 +266,18 @@ const Product = () => {
                           {product.nm_product}
                         </h2>
                         <p className="text-gray-600 mb-4 lg:block md:block hidden">
-                          {truncateDescription(
-                            product.desc,
-                            maxDescriptionLength
-                          )}
+                          <ReactQuill
+                            value={truncateDescription(
+                              product.desc,
+                              maxDescriptionLength
+                            )}
+                            readOnly={true}
+                            className="text-gray-600"
+                            theme={"bubble"}
+                          />
                         </p>
 
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between -mt-12">
                           <span className="text-green-500 font-bold text-xs lg:text-base md:text-base">
                             Harga: {formatCurrency(product.price)}
                           </span>
@@ -344,12 +350,17 @@ const Product = () => {
                         {product.nm_product}
                       </h2>
                       <p className="text-gray-600 mb-4">
-                        {truncateDescription(
-                          product.desc,
-                          maxDescriptionLength
-                        )}
+                        <ReactQuill
+                          value={truncateDescription(
+                            product.desc,
+                            maxDescriptionLength
+                          )}
+                          readOnly={true}
+                          className="text-gray-600"
+                          theme={"bubble"}
+                        />
                       </p>
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between -mt-12">
                         <span className="text-green-500 font-bold text-base">
                           Harga: {formatCurrency(product.price)}
                         </span>

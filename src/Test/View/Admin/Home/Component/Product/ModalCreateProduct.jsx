@@ -3,6 +3,7 @@ import { createProduct, getAllCategories } from "../../../../../../Service/Api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loading from "../Customer/Loading";
+import ReactQuill from "react-quill";
 
 const ModalCreateProduct = ({ onClose }) => {
   const [productData, setProductData] = useState({
@@ -17,6 +18,8 @@ const ModalCreateProduct = ({ onClose }) => {
   const [loading, setLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
+  const [charactersLeft, setCharactersLeft] = useState(50);
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -42,10 +45,11 @@ const ModalCreateProduct = ({ onClose }) => {
       setIsCreating(true);
 
       if (
-        (!productData.nm_product.trim() || productData.desc.trim().length < 50,
+        !productData.nm_product.trim() ||
+        productData.desc.trim().length < 50 ||
         productData.price <= 0 ||
-          productData.categoryId <= 0 ||
-          !productData.thumbnail)
+        productData.categoryId <= 0 ||
+        !productData.thumbnail
       ) {
         toast.error("Periksa semua form lagi ya");
         return;
@@ -129,13 +133,23 @@ const ModalCreateProduct = ({ onClose }) => {
         <div>
           <label className="block mb-2">
             <span className="text-gray-700">Deskripsi:</span>
-            <textarea
+
+            <ReactQuill
+              theme="snow"
               value={productData.desc}
-              onChange={(e) =>
-                setProductData({ ...productData, desc: e.target.value })
-              }
-              className="w-full mt-1 p-2 border rounded focus:outline-none focus:border-blue-500"
+              onChange={(content) => {
+                if (content.length >= 50) {
+                  setProductData({ ...productData, desc: content });
+                }
+              }}
+              className="h-72 mb-12"
             />
+
+            {productData.desc.length < 50 && (
+              <p className="text-red-500 mt-1">
+                Minimum length: 50 characters.
+              </p>
+            )}
           </label>
         </div>
         <div>
