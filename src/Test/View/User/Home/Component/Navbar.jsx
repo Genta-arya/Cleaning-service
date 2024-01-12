@@ -5,6 +5,7 @@ import {
   faUser,
   faClipboardList,
   faSignOutAlt,
+  faTicketSimple,
 } from "@fortawesome/free-solid-svg-icons";
 import BottomSheet from "./BottomSheet";
 import { getNotifications, logout } from "../../../../../Service/Api";
@@ -19,6 +20,7 @@ import { toast } from "react-toastify";
 import { firebaseApp } from "../../../../../Feature/Firebase/FirebaseConfig";
 import { or } from "firebase/firestore";
 import Loading from "../../../Admin/Home/Component/Customer/Loading";
+import ModalViewDiscount from "../../../Admin/Home/Component/Customer/ModalViewDiscount";
 
 const Navbar = ({ toggleTheme, isDarkTheme }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -29,7 +31,9 @@ const Navbar = ({ toggleTheme, isDarkTheme }) => {
   const [notifications, setNotifications] = useState([]);
   const dropdownRef = useRef(null);
   const isAuthenticated = useSelector(selectIsAuthenticated);
-
+  const username = localStorage.getItem("username");
+  const [openModal, selectOpenModal] = useState(false);
+  const [voucher, setNotifVoucher] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchHistory = async () => {
@@ -40,15 +44,11 @@ const Navbar = ({ toggleTheme, isDarkTheme }) => {
           const orders = await getNotifications(username);
 
           const orderIds = orders.map((order) => order.orderId);
-  
+
           setOrderIdFromHistory(orderIds);
           return;
         }
-
-       
-      } catch (error) {
-       
-      }
+      } catch (error) {}
     };
 
     fetchHistory();
@@ -81,19 +81,58 @@ const Navbar = ({ toggleTheme, isDarkTheme }) => {
       return () => {
         unsubscribe();
       };
-    } catch (error) {
-      console.error("Error fetching notifications:", error.message);
-    }
+    } catch (error) {}
   }, [orderIdFromHistory, setNotifications]);
 
-  const notificationCount = notifications.length;
+  useEffect(() => {
+    try {
+      const database = getDatabase(firebaseApp);
+      const usernameRef = ref(database, `voucher`);
 
+      const unsubscribe = onValue(usernameRef, (snapshot) => {
+        const notificationData = snapshot.val();
+
+        if (notificationData) {
+          const processedNotifications = Object.entries(notificationData)
+            .map(([username, voucherDetails]) => {
+              const parts = username.split("-");
+              const filteredCode = parts[0];
+              return {
+                username: filteredCode,
+                message: voucherDetails.message || "",
+              };
+            })
+            .filter((voucher) => voucher.username.includes(username));
+
+          setNotifVoucher(processedNotifications);
+        } else {
+        }
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    } catch (error) {
+      console.error("Error fetching vouchers:", error.message);
+    }
+  }, [username]);
+
+  const VoucherCount = voucher.length;
+
+  const notificationCount = notifications.length;
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
 
   const toggleDropdownNotif = () => {
     setDropdownOpenNotifikasi(!isDropdownNotifikasi);
+  };
+
+  const handleOpenVoucher = () => {
+    selectOpenModal(true);
+  };
+  const handlleCloseModal = () => {
+    selectOpenModal(false);
   };
 
   const handleLogoutClick = async () => {
@@ -229,26 +268,41 @@ const Navbar = ({ toggleTheme, isDarkTheme }) => {
                       onClick={toggleDropdown}
                     />
                     {isDropdownOpen && (
-                      <div className="absolute right-4 mt-2 w-48 bg-white text-black rounded-lg shadow-2xl drop-shadow-2xl border-2 border-gelap p-4">
+                      <div className="absolute right-4 mt-2 w-48 bg-white text-black rounded-lg shadow-2xl drop-shadow-2xl border-2 border-gelap p-4 ">
                         <div
-                          className="cursor-pointer border-b-2 border-biru p-1"
+                          className="cursor-pointer border-b-2 border-biru p-1 hover:bg-slate-200 hover:rounded-lg"
                           onClick={handleToPesanan}
                         >
                           <FontAwesomeIcon
                             icon={faClipboardList}
-                            className="mr-2"
+                            className="mr-2 text-biru"
                           />
                           Pesanan
                         </div>
+                        <div className="cursor-pointer border-b-2 border-biru p-1 hover:bg-slate-200 hover:rounded-lg">
+                          <div
+                            className="flex items-center "
+                            onClick={handleOpenVoucher}
+                          >
+                            <FontAwesomeIcon
+                              icon={faTicketSimple}
+                              className="mr-2 text-biru text-sm"
+                            />
+                            <p className="mr-12">Voucher</p>
+                            <p className="bg-red-500 text-white font-bold rounded-full  px-2 py-1 text-xs">
+                              {VoucherCount}
+                            </p>
+                          </div>
+                        </div>
                         <div
                           onClick={handleLogoutClick}
-                          className="cursor-pointer border-b-2 border-biru p-1"
+                          className="cursor-pointer border-b-2 border-biru p-1 hover:bg-slate-200 hover:rounded-lg"
                         >
                           <FontAwesomeIcon
                             icon={faSignOutAlt}
-                            className="mr-2"
+                            className="mr-2 text-red-500 "
                           />
-                          Keluar
+                          Exit
                         </div>
                       </div>
                     )}
@@ -276,8 +330,11 @@ const Navbar = ({ toggleTheme, isDarkTheme }) => {
       </div>
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-         <Loading />
+          <Loading />
         </div>
+      )}
+      {openModal && (
+        <ModalViewDiscount select={username} onClose={handlleCloseModal} />
       )}
     </div>
   );

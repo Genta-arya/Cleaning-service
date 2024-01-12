@@ -8,8 +8,10 @@ import {
   faToggleOff,
   faPowerOff,
   faClipboard,
+  faTicketAlt,
+  faTicketSimple,
 } from "@fortawesome/free-solid-svg-icons";
-import {  getNotifications, logout } from "../../../../../Service/Api";
+import { getNotifications, logout } from "../../../../../Service/Api";
 import { useSelector } from "react-redux";
 import { selectIsAuthenticated } from "../../../../../Feature/Redux/Auth/AuthSlice";
 import { useNavigate } from "react-router-dom";
@@ -27,6 +29,7 @@ import {
 import { toast } from "react-toastify";
 import { firebaseApp } from "../../../../../Feature/Firebase/FirebaseConfig";
 import Loading from "../../../Admin/Home/Component/Customer/Loading";
+import ModalViewDiscount from "../../../Admin/Home/Component/Customer/ModalViewDiscount";
 
 const BottomSheet = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
@@ -36,7 +39,9 @@ const BottomSheet = () => {
   const [orderIdFromHistory, setOrderIdFromHistory] = useState([]);
   const [url, setUrl] = useState([]);
   const navigate = useNavigate();
-
+  const username = localStorage.getItem("username");
+  const [voucher, setNotifVoucher] = useState([]);
+  const [openModal, selectOpenModal] = useState(false);
   const handleNotificationClick = () => {
     setNotificationModalOpen(true);
   };
@@ -50,18 +55,14 @@ const BottomSheet = () => {
         const username = localStorage.getItem("username");
 
         if (username) {
-        
           const orders = await getNotifications(username);
 
           const orderIds = orders.map((order) => order.orderId);
-  
+
           setOrderIdFromHistory(orderIds);
           return;
         }
-
-      } catch (error) {
-
-      }
+      } catch (error) {}
     };
 
     fetchHistory();
@@ -98,6 +99,42 @@ const BottomSheet = () => {
       console.error("Error fetching notifications:", error.message);
     }
   }, [orderIdFromHistory, setNotifications]);
+
+  useEffect(() => {
+    try {
+      const database = getDatabase(firebaseApp);
+      const usernameRef = ref(database, `voucher`);
+
+      const unsubscribe = onValue(usernameRef, (snapshot) => {
+        const notificationData = snapshot.val();
+
+        if (notificationData) {
+          const processedNotifications = Object.entries(notificationData)
+            .map(([username, voucherDetails]) => {
+              const parts = username.split("-");
+              const filteredCode = parts[0];
+              return {
+                username: filteredCode,
+                message: voucherDetails.message || "",
+              };
+            })
+            .filter((voucher) => voucher.username.includes(username));
+
+          setNotifVoucher(processedNotifications);
+        } else {
+          console.log("No vouchers for this user");
+        }
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    } catch (error) {
+      console.error("Error fetching vouchers:", error.message);
+    }
+  }, [username]);
+
+  const VoucherCount = voucher.length;
 
   const notificationCount = notifications.length;
 
@@ -136,6 +173,13 @@ const BottomSheet = () => {
     navigate("/history");
   };
 
+  const handleOpenVoucher = () => {
+    selectOpenModal(true);
+  };
+  const handlleCloseModal = () => {
+    selectOpenModal(false);
+  };
+
   return (
     <div className="fixed inset-x-0 bottom-0 bg-white p-4 shadow-md flex flex-row justify-around z-50 ">
       <div className="flex flex-col items-center text-black">
@@ -171,6 +215,41 @@ const BottomSheet = () => {
           </>
         )}
       </div>
+
+      <div className="flex flex-col items-center text-black">
+        {isAuthenticated ? (
+          <>
+            <div className="relative " onClick={handleOpenVoucher}>
+              <FontAwesomeIcon
+                icon={faTicketSimple}
+                className="text-2xl cursor-pointer hover:text-gelap text-biru"
+              />
+              {VoucherCount >= 0 && (
+                <span className="bg-red-500 text-white rounded-full absolute  -top-4 -right-4 px-2 py-1 text-xs z-auto">
+                  {VoucherCount}
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-biru mt-1">Voucher</p>
+          </>
+        ) : (
+          <>
+            <div className="relative">
+              <FontAwesomeIcon
+                icon={faTicketSimple}
+                className="text-2xl   text-gray-500"
+              />
+              {VoucherCount >= 0 && (
+                <span className="bg-red-500 text-white rounded-full absolute  -top-4 -right-4 px-2 py-1 text-xs z-auto">
+                  {VoucherCount}
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Voucher</p>
+          </>
+        )}
+      </div>
+
       {isAuthenticated ? (
         <div
           className="flex flex-col items-center text-black"
@@ -178,7 +257,7 @@ const BottomSheet = () => {
         >
           <FontAwesomeIcon
             icon={faClipboard}
-            className="text-2xl cursor-pointer text-biru"
+            className="text-2xl cursor-pointer text-biru hover:text-gelap text-biru"
           />
           <p className="text-xs mt-1 text-biru">Pesanan</p>
         </div>
@@ -191,6 +270,7 @@ const BottomSheet = () => {
           <p className="text-xs text-gray-500  mt-1">Pesanan</p>
         </div>
       )}
+
       {isAuthenticated ? (
         <div
           className="flex flex-col items-center text-black"
@@ -214,6 +294,7 @@ const BottomSheet = () => {
           <p className="text-xs text-biru mt-1">Login</p>
         </div>
       )}
+
       {isNotificationModalOpen && (
         <ModalNotifikasi
           onClose={closeNotificationModal}
@@ -226,8 +307,11 @@ const BottomSheet = () => {
 
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-         <Loading />
+          <Loading />
         </div>
+      )}
+      {openModal && (
+        <ModalViewDiscount select={username} onClose={handlleCloseModal} />
       )}
     </div>
   );

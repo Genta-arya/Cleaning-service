@@ -6,14 +6,8 @@ import ReactQuill from "react-quill";
 
 const ProductModal = ({ product, closeModal, showModal }) => {
   const formatCurrency = (price) => {
-    if (price >= 1000) {
-      const truncatedPrice = Math.floor(price / 1000);
-      return `Rp ${truncatedPrice}k`;
-    } else {
-      return `Rp ${price}`;
-    }
+    return `Rp ${price.toLocaleString()}`;
   };
-
   useEffect(() => {
     if (showModal) {
       document.body.classList.add("overflow-hidden");

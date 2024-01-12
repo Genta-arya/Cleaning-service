@@ -20,6 +20,7 @@ import { firebaseApp } from "../../../../../Feature/Firebase/FirebaseConfig";
 import axios from "axios";
 import "../../../../../Style/Content.css";
 import Loading from "../../../Admin/Home/Component/Customer/Loading";
+import ReactQuill from "react-quill";
 const OrderForm = () => {
   const { state } = useLocation();
   const [isLoading, setIsLoading] = useState(false);
@@ -243,7 +244,7 @@ const OrderForm = () => {
       const orderData = {
         uid,
         username: username,
-        voucherCode : voucher,
+        voucherCode: voucher,
         CategoryId: id,
         orderDetails: {
           nm_product: productData?.nm_product || "",
@@ -389,7 +390,7 @@ const OrderForm = () => {
 
         {productData && (
           <div className="mb-6">
-            <div className="lg:flex grid grid-cols-1 items-center mb-4   border-b-4   border-gelap p-2 lg:space-x-4">
+            <div className="xl:flex grid grid-cols-1  md:grid items-center mb-4   border-b-4   border-gelap p-2 lg:space-x-4">
               <div className=" overflow-hidden mr-4">
                 <img
                   src={
@@ -397,7 +398,7 @@ const OrderForm = () => {
                     "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
                   }
                   alt={productData.title}
-                  className="w-full h-52 object-cover  border-black border rounded-xl p-2 mb-4"
+                  className="w-full  object-cover  border-black border rounded-xl p-2 mb-4"
                 />
               </div>
               <div>
@@ -409,7 +410,12 @@ const OrderForm = () => {
                 </p>
 
                 <p className="text-sm mb-4 text-gray-500 ">
-                  {productData.desc}
+                  <ReactQuill
+                    value={productData.desc}
+                    readOnly={true}
+                    className="text-gray-600 "
+                    theme={"bubble"}
+                  />
                 </p>
                 <p className="mr-4 text-lg font-semibold lg:hidden m ">
                   Jumlah:

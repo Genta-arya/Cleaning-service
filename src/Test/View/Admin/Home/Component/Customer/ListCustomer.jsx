@@ -147,7 +147,7 @@ const ListCustomer = () => {
 
                         <button
                           className="bg-blue-500 text-white px-2 py-1 rounded"
-                          onClick={() => handleOpenDisc(user.uid)}
+                          onClick={() => handleOpenDisc(user.username)}
                         >
                           <FaEye />
                         </button>

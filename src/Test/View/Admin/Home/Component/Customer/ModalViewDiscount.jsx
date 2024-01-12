@@ -11,6 +11,7 @@ const ModalViewDiscount = ({ onClose, select }) => {
   const [copiedIds, setCopiedIds] = useState({});
   const [loading, setLoading] = useState(false);
   const [selectCategory, setSelectedCategory] = useState("");
+  console.log(vouchers);
   const fetchVoucher = async () => {
     setLoading(true);
     try {
@@ -18,7 +19,10 @@ const ModalViewDiscount = ({ onClose, select }) => {
       setVouchers(
         response.data.filter((voucher) => voucher.status === "active")
       );
-      setSelectedCategory(response.data.categories.name)
+      const categoriesNames = vouchers
+        .map((voucher) => voucher.categories.map((category) => category.name))
+        .flat();
+      setSelectedCategory(categoriesNames);
     } catch (error) {
       console.error(error);
     } finally {
@@ -27,9 +31,21 @@ const ModalViewDiscount = ({ onClose, select }) => {
   };
 
   useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     fetchVoucher();
-    console.log(selectCategory)
   }, [select]);
+  console.log("name:", selectCategory);
 
   const closeModal = () => {
     onClose();
@@ -52,7 +68,7 @@ const ModalViewDiscount = ({ onClose, select }) => {
         isOpen ? "" : "hidden"
       }`}
     >
-      <div className="bg-white w-[40%] mx-auto rounded-lg shadow-lg overflow-y-auto  h-[400px]">
+      <div className="bg-white xl:w-[80%] lg:w-[80%] md:w-[75%] w-[90%] mx-auto rounded-lg shadow-lg overflow-y-auto  h-[400px]">
         <div className="py-4 text-left px-6">
           <div className="flex justify-between items-center pb-3">
             <p className="text-2xl font-bold">Voucher</p>
@@ -93,6 +109,11 @@ const ModalViewDiscount = ({ onClose, select }) => {
                       <div className="flex justify-between">
                         <p className="text-green-500 font-bold">
                           <strong>Status:</strong> {voucher.status}
+                        </p>
+                        <p className="text-green-500 font-bold">
+                          {voucher.categories
+                            .map((category) => category.name)
+                            .join(", ")}
                         </p>
                         <p className="">
                           <strong>Discount:</strong>{" "}

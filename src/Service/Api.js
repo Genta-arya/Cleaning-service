@@ -428,9 +428,9 @@ export const createDiscount = async (discountData) => {
   }
 };
 
-export const getVoucherByid = async (authId) => {
+export const getVoucherByid = async (username) => {
   try {
-    const response = await axiosInstance.get(`/vouchers/${authId}`);
+    const response = await axiosInstance.get(`/vouchers/${username}`);
     return response.data;
   } catch (error) {
     throw error;

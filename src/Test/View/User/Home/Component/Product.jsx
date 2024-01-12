@@ -243,7 +243,7 @@ const Product = () => {
               </>
             ) : (
               <div className="flex justify-center items-center ">
-                <div className="grid grid-cols-3 gap-4 p-12 items-center mx-auto ">
+                <div className="grid grid-cols-3 xl:gap-4  xl:space-x-1 lg:space-x-24 p-12 items-center mx-auto ">
                   {filteredProducts.map((product, index) => (
                     <motion.div
                       key={product.id}

@@ -17,6 +17,7 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState("");
+  const [nameCategory, setSelecetedNameCategory] = useState("");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -31,15 +32,21 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
     fetchCategories();
   }, [selectedCategories]);
 
+  console.log(categories);
+
   const generateDiscountCode = () => {
     const discountCode =
       "tangkas_" + Math.random().toString(36).substring(2, 7);
     setCode(discountCode);
   };
 
-  const handleCategoryChange = (categoryId) => {
+  const handleCategoryChange = (categoryId, name) => {
     setSelectedCategories(categoryId);
+    setSelecetedNameCategory(name);
   };
+
+  console.log(nameCategory);
+  console.log(selectedCategories);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -54,6 +61,7 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
         email,
         username,
         categoryIds: selectedCategories,
+        name: nameCategory,
       };
       setLoading(true);
       if (!code || !exp || !status || !disc || !username) {
@@ -73,7 +81,7 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
       setLoading(false);
     }
   };
-  console.log(selectedCategories);
+
   return (
     <AnimatePresence>
       {select && (
@@ -165,7 +173,12 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
 
               <select
                 value={selectedCategories}
-                onChange={(e) => handleCategoryChange(e.target.value)}
+                onChange={(e) =>
+                  handleCategoryChange(
+                    e.target.value,
+                    e.target.options[e.target.selectedIndex].innerText
+                  )
+                }
                 className="w-full mb-4 p-2 border rounded focus:outline-none focus:border-blue-500"
               >
                 <option value="" disabled>
