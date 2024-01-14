@@ -389,7 +389,7 @@ const OrderForm = () => {
 
         {productData && (
           <div className="mb-6">
-            <div className="xl:flex grid grid-cols-1  md:grid items-center mb-4   border-b-4   border-gelap p-2 lg:space-x-4">
+            <div className="xl:flex grid grid-cols-1 lg:flex  md:flex items-center mb-4   border-b-4   border-gelap p-2 lg:space-x-4">
               <div className=" overflow-hidden mr-4">
                 <img
                   src={
@@ -397,7 +397,7 @@ const OrderForm = () => {
                     "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
                   }
                   alt={productData.title}
-                  className="w-full  object-cover h-auto border-black border rounded-xl p-2 mb-4"
+                  className="xl:w-96 w-full sm:w-full  lg:w-64 md:w-64 object-cover xl:h-96 border-black border rounded-xl p-2 mb-4"
                 />
               </div>
               <div>
