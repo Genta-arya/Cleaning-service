@@ -7,6 +7,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import {
+  DeleteDiscount,
   checkJwt,
   deleteProduct,
   getProduct,
@@ -15,7 +16,7 @@ import SkeletonRow from "./SkeletonRow";
 
 import ModalCreateProduct from "./ModalCreateProduct";
 import ModalEditProduct from "./ModalEditProduct";
-import { PulseLoader } from "react-spinners";
+
 import MenuCategory from "./MenuCategory";
 import { useNavigate } from "react-router-dom";
 import {
@@ -25,6 +26,10 @@ import {
 import { useDispatch } from "react-redux";
 import Loading from "../Customer/Loading";
 import ReactQuill from "react-quill";
+import { faEye } from "@fortawesome/free-regular-svg-icons";
+import ModalDiscountProduct from "./Discount/ModalDiscountProduct";
+import ModalShowDiscount from "./Discount/ModalShowDiscount";
+import { ToastContainer, toast } from "react-toastify";
 
 const ManageProduct = () => {
   const [products, setProducts] = useState([]);
@@ -33,23 +38,25 @@ const ManageProduct = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDiscModalOpen, setIsDiscModalOpen] = useState(false);
+  const [isDiscModalEyeOpen, setIsDiscModalEyeOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedProductDelete, setSelectedProductDelete] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getProduct();
-        const { products } = response;
-        setProducts(products);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      }
-    };
 
+  const fetchData = async () => {
+    try {
+      const response = await getProduct();
+      const { products } = response;
+      setProducts(products);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -96,9 +103,31 @@ const ManageProduct = () => {
   const handleEditModalClose = () => {
     setIsEditModalOpen(false);
   };
+
+  const handleCreatedDiscount = (product) => {
+    setSelectedProduct(product);
+
+    setIsDiscModalOpen(true);
+  };
+
+  const handleCreatedDiscountClose = () => {
+    setIsDiscModalOpen(false);
+  };
+
+  const handleEyeDiscount = (product) => {
+    setSelectedProduct(product);
+
+    setIsDiscModalEyeOpen(true);
+  };
+
+  const handleEyeDiscountClose = () => {
+    setIsDiscModalEyeOpen(false);
+  };
+
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
+
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
   };
@@ -138,6 +167,26 @@ const ManageProduct = () => {
 
   const handleCloseProductModal = () => {
     setIsProductModalOpen(false);
+  };
+
+  const handleDeleteDiscount = async (id) => {
+    try {
+      const res = await DeleteDiscount(id);
+
+      const response = await getProduct();
+      const { products } = response;
+      setProducts(products);
+      setLoading(true);
+      toast.success("Berhasil menghapus Diskon");
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else{
+        toast.error("terjadi kesalahan pada server")
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleEditSave = (editedProductData) => {};
@@ -193,7 +242,8 @@ const ManageProduct = () => {
               <th className="border border-gray-300 p-2">Description</th>
               <th className="border border-gray-300 p-2">Harga</th>
               <th className="border border-gray-300 p-2">Kategori</th>
-              <th className="border border-gray-300 p-2">Action</th>
+              <th className="border border-gray-300 p-2">Produk</th>
+              <th className="border border-gray-300 p-2">Diskon</th>
             </tr>
           </thead>
           <tbody>
@@ -242,6 +292,67 @@ const ManageProduct = () => {
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
                 </td>
+
+                <td className="border border-gray-300 p-2">
+                  <div className="dropdown dropdown-hover dropdown-end">
+                    <button
+                      className="text-blue-500 hover:underline mr-2"
+                      tabIndex={0}
+                      role="button"
+                      onClick={() => handleCreatedDiscount(product)}
+                    >
+                      <FontAwesomeIcon icon={faPlus} />
+                    </button>
+
+                    <ul
+                      tabIndex={0}
+                      className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 text-xs items-center "
+                    >
+                      <li>
+                        <a>Tambah Discount</a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="dropdown dropdown-hover">
+                    <button
+                      className="text-biru hover:underline mr-2"
+                      tabIndex={0}
+                      role="button"
+                      onClick={() => handleEyeDiscount(product)}
+                    >
+                      <FontAwesomeIcon icon={faEye} />
+                    </button>
+                    <ul
+                      tabIndex={0}
+                      className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 text-xs items-center"
+                    >
+                      <li>
+                        <a>Lihat Discount</a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="dropdown dropdown-hover ">
+                    <button
+                      tabIndex={0}
+                      role="button"
+                      className="text-red-500 hover:underline"
+                      onClick={() => handleDeleteDiscount(product.id)}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+
+                    <ul
+                      tabIndex={0}
+                      className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 text-xs items-center "
+                    >
+                      <li>
+                        <a>Hapus Discount</a>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -251,12 +362,27 @@ const ManageProduct = () => {
       {isProductModalOpen && (
         <ModalCreateProduct onClose={handleCloseProductModal} />
       )}
+      {isDiscModalEyeOpen && (
+        <ModalShowDiscount
+          productId={selectedProduct}
+          refresh={fetchData}
+          onClose={handleEyeDiscountClose}
+        />
+      )}
       {isEditModalOpen && selectedProduct && (
         <ModalEditProduct
           isOpen={isEditModalOpen}
           onClose={handleEditModalClose}
           productData={selectedProduct}
+          refresh={fetchData}
           onEdit={handleEditSave}
+        />
+      )}
+
+      {isDiscModalOpen && (
+        <ModalDiscountProduct
+          onClose={handleCreatedDiscountClose}
+          productId={selectedProduct}
         />
       )}
       {isDeleteModalOpen && selectedProductDelete && (
@@ -292,6 +418,8 @@ const ManageProduct = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
+      {loading && <Loading />}
     </div>
   );
 };

@@ -13,13 +13,15 @@ import {
 import logo from "../../../Asset/notfound.png";
 import ManagePesanan from "./Home/Component/Pesanan/ManagePesanan";
 import Loading from "./Home/Component/Customer/Loading";
+import ErrorLayout from "../User/404/ErrorLayout";
+
 const IndexMain = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
     const fetchData = async () => {
       try {
         const data = await checkJwt();
@@ -27,17 +29,15 @@ const IndexMain = () => {
         if (data.success) {
           dispatch(setLoggedIn(true));
           dispatch(setRole(data.role));
-          setLoading(false);
-
           if (data.role !== "admin") {
-            setLoading(false);
             navigate("/login");
           }
         } else {
           navigate("/login");
-          setLoading(false);
         }
       } catch (error) {
+        setError(true);
+      } finally {
         setLoading(false);
       }
     };
@@ -51,13 +51,21 @@ const IndexMain = () => {
         <Loading />
       ) : (
         <>
-          <div className="hidden lg:block md:hidden">
-            <Main />
-          </div>
+          {error ? (
+            <div className="flex justify-center mx-auto h-screen mt-24">
+              <ErrorLayout />
+            </div>
+          ) : (
+            <>
+              <div className="hidden lg:block md:hidden">
+                <Main />
+              </div>
 
-          <div className="lg:hidden md:block block">
-            <ManagePesanan />
-          </div>
+              <div className="lg:hidden md:block block">
+                <ManagePesanan />
+              </div>
+            </>
+          )}
         </>
       )}
     </>

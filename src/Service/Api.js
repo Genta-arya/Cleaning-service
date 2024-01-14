@@ -464,12 +464,59 @@ export const useVoucher = async (username, voucherCode) => {
   }
 };
 
-
-export const getAllImage = async () =>{
+export const getAllImage = async () => {
   try {
-    const response = await axiosInstance.get("/image")
+    const response = await axiosInstance.get("/image");
     return response.data;
   } catch (error) {
-    throw error
+    throw error;
   }
-}
+};
+
+export const CreatedDiscountProduct = async (
+  productId,
+  discountPercentage,
+  expirationDate
+) => {
+  try {
+    const response = await axiosInstance.post("/created-discount", {
+      productId,
+      discountPercentage,
+      expirationDate,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getDiscountProductByid = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/product-discount/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const editDiscountProductByid = async (productId, newDiscount, exp) => {
+  try {
+    const response = await axiosInstance.put("/product-discount", {
+      productId,
+      newDiscount,
+      exp,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const DeleteDiscount = async (productId) => {
+  try {
+    const response = await axiosInstance.delete(`/product-discount/${productId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
