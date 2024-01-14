@@ -34,7 +34,7 @@ import { Helmet } from "react-helmet-async";
 import ReactQuill from "react-quill";
 
 const Product = () => {
-  const maxDescriptionLength = 45;
+  const maxDescriptionLength = 55;
   const [showModal, setShowModal] = useState(false);
   const [showModalOrder, setShowModalOrder] = useState(false);
   const navigate = useNavigate();
@@ -73,7 +73,6 @@ const Product = () => {
         const response = await getProduct();
         const { products } = response;
         setIsloading(false);
-       
 
         dispatch(setProducts(products));
 
@@ -261,34 +260,41 @@ const Product = () => {
                             Diskon {product.discount.discountPercentage} %
                           </span>
                         )}
-                        <img
-                          src={
-                            product.url ||
-                            "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
-                          }
-                          alt="paket service ac"
-                          className="mb-4 lg:w-full lg:h-48 rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105 hover:rounded-b-xl"
-                          onClick={() => handleProductClick(product)}
-                        />
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          initial={{ opacity: 0, scale: 1 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.5 }}
+                          className="mb-4 lg:w-full lg:h-48 rounded-t-xl relative overflow-hidden"
+                        >
+                          <img
+                            src={
+                              product.url ||
+                              "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
+                            }
+                            alt="paket service ac"
+                            className="w-full h-full object-cover cursor-pointer"
+                            onClick={() => handleProductClick(product)}
+                          />
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            whileHover={{ opacity: 1 }}
+                            className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white rounded-xl cursor-pointer"
+                            onClick={() => handleProductClick(product)}
+                          >
+                            <span className="text-lg font-bold">
+                              Detail Produk
+                            </span>
+                          </motion.div>
+                        </motion.div>
                       </div>
 
                       <div className="p-5">
                         <h2 className="lg:text-xl md:text-xl text-sm font-bold mb-2">
                           {product.nm_product}
                         </h2>
-                        <p className="text-gray-600 mb-4 lg:block md:block hidden">
-                          <ReactQuill
-                            value={truncateDescription(
-                              product.desc,
-                              maxDescriptionLength
-                            )}
-                            readOnly={true}
-                            className="text-gray-600"
-                            theme={"bubble"}
-                          />
-                        </p>
 
-                        <div className="flex items-center justify-between -mt-12">
+                        <div className="flex items-center justify-between ">
                           {product.discount ? (
                             <>
                               <div className="flex items-center ">
@@ -375,12 +381,31 @@ const Product = () => {
                           Diskon {product.discount.discountPercentage} %
                         </span>
                       )}
-                      <img
-                        src={product.url}
-                        alt={product.nm_product}
-                        className="mb-4 w-full h-80 flex  rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105 hover:rounded-b-xl hover:rounded-t-xl"
-                        onClick={() => handleProductClick(product)}
-                      />
+
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        initial={{ opacity: 0, scale: 1 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                        className="mb-4 lg:w-full lg:h-48 rounded-t-xl relative overflow-hidden"
+                      >
+                        <img
+                          src={product.url}
+                          alt={product.nm_product}
+                          className="mb-4 w-full h-80 flex  rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105 hover:rounded-b-xl hover:rounded-t-xl"
+                         
+                        />
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          whileHover={{ opacity: 1 }}
+                          className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white rounded-xl cursor-pointer"
+                          onClick={() => handleProductClick(product)}
+                        >
+                          <span className="text-lg font-bold">
+                            Detail Produk
+                          </span>
+                        </motion.div>
+                      </motion.div>
                     </div>
 
                     <div className="p-8">
