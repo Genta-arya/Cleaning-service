@@ -63,43 +63,40 @@ const ModalViewDiscount = ({ onClose, select }) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.5 }}
       transition={{ duration: 0.5 }}
-      className={`fixed inset-0 flex items-center  justify-center z-50 overflow-auto bg-black bg-opacity-50 ${
-        isOpen ? "" : "hidden"
-      }`}
+      className={`fixed inset-0 flex items-center  justify-center z-50 overflow-auto bg-black bg-opacity-50`}
     >
-      <div className="bg-white xl:w-[80%] lg:w-[80%] md:w-[75%] w-[90%] mx-auto rounded-lg shadow-lg overflow-y-auto  h-[400px]">
+      <div className="bg-white xl:w-[80%] lg:w-[80%] md:w-[75%] w-[90%] mx-auto rounded-lg shadow-lg overflow-y-auto  h-[400px] relative">
+        <div
+          className="fixed xl:top-56 xl:right-44 lg:top-56 lg:right-40  sm:top-56 sm:right-20  top-56 right-20 md:top-56 md:right-40 cursor-pointer z-50"
+          onClick={closeModal}
+        >
+          <svg
+            className="fill-current text-black"
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+          >
+            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z" />
+          </svg>
+        </div>
         <div className="py-4 text-left px-6">
           <div className="flex justify-between items-center pb-3">
             <p className="text-2xl font-bold">Voucher</p>
-            <div className="cursor-pointer z-50" onClick={closeModal}>
-              <svg
-                className="fill-current text-black"
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
-              >
-                <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z" />
-              </svg>
-            </div>
           </div>
 
           {loading ? (
-            <>
-              <Loading />
-            </>
+            <Loading />
           ) : (
-            <>
+            <div className="mt-5">
               {vouchers.length === 0 ? (
-                <>
-                  <div className="mx-auto flex justify-center ">
-                    <h1 className="translate-y-32 text-red-500 font-bold">
-                      Belum punya voucher
-                    </h1>
-                  </div>
-                </>
+                <div className="mx-auto flex justify-center ">
+                  <h1 className="translate-y-32 text-red-500 font-bold">
+                    Belum punya voucher
+                  </h1>
+                </div>
               ) : (
-                <div className="mt-5">
+                <div>
                   {vouchers.map((voucher) => (
                     <div
                       key={voucher.id}
@@ -153,12 +150,11 @@ const ModalViewDiscount = ({ onClose, select }) => {
                   ))}
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
       </div>
     </motion.div>
   );
 };
-
 export default ModalViewDiscount;
