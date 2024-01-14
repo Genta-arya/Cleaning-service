@@ -103,13 +103,13 @@ const ModalViewDiscount = ({ onClose, select }) => {
                   {vouchers.map((voucher) => (
                     <div
                       key={voucher.id}
-                      className="border-b border-gray-200 py-4 hover:bg-gray-200 hover:p-2 hover:rounded-lg"
+                      className="border-b  border-gray-200 py-4 hover:bg-gray-200 hover:p-2 hover:rounded-lg"
                     >
                       <div className="flex justify-between">
                         <p className="text-green-500 font-bold">
                           <strong>Status:</strong> {voucher.status}
                         </p>
-                        <p className="text-green-500 font-bold">
+                        <p className="text-green-500 font-bold hidden lg:block md:block">
                           {voucher.categories
                             .map((category) => category.name)
                             .join(", ")}
@@ -121,6 +121,11 @@ const ModalViewDiscount = ({ onClose, select }) => {
                           </span>
                         </p>
                       </div>
+                      <p className="text-green-500 font-bold block lg:hidden md:hidden">
+                          {voucher.categories
+                            .map((category) => category.name)
+                            .join(", ")}
+                        </p>
 
                       <div className="flex justify-center ">
                         <div className="border border-orange-500 w-52 p-4 rounded-xl ">
