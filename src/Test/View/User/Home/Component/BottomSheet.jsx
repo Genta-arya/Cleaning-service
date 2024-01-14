@@ -122,7 +122,6 @@ const BottomSheet = () => {
 
           setNotifVoucher(processedNotifications);
         } else {
-          console.log("No vouchers for this user");
         }
       });
 
@@ -181,7 +180,7 @@ const BottomSheet = () => {
   };
 
   return (
-    <div className="fixed inset-x-0 bottom-0 bg-white p-4 shadow-md flex flex-row justify-around z-50 ">
+    <div className="fixed inset-x-0 bottom-0 bg-white p-4 shadow-md flex flex-row justify-around z-50 items-center ">
       <div className="flex flex-col items-center text-black">
         {isAuthenticated ? (
           <>
@@ -224,11 +223,6 @@ const BottomSheet = () => {
                 icon={faTicketSimple}
                 className="text-2xl cursor-pointer hover:text-gelap text-biru"
               />
-              {VoucherCount >= 0 && (
-                <span className="bg-red-500 text-white rounded-full absolute  -top-4 -right-4 px-2 py-1 text-xs z-auto">
-                  {VoucherCount}
-                </span>
-              )}
             </div>
             <p className="text-xs text-biru mt-1">Voucher</p>
           </>
@@ -239,11 +233,6 @@ const BottomSheet = () => {
                 icon={faTicketSimple}
                 className="text-2xl   text-gray-500"
               />
-              {VoucherCount >= 0 && (
-                <span className="bg-red-500 text-white rounded-full absolute  -top-4 -right-4 px-2 py-1 text-xs z-auto">
-                  {VoucherCount}
-                </span>
-              )}
             </div>
             <p className="text-xs text-gray-500 mt-1">Voucher</p>
           </>

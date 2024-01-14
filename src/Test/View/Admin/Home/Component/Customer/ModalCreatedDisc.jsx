@@ -32,7 +32,7 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
     fetchCategories();
   }, [selectedCategories]);
 
-  console.log(categories);
+ 
 
   const generateDiscountCode = () => {
     const discountCode =
@@ -45,8 +45,7 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
     setSelecetedNameCategory(name);
   };
 
-  console.log(nameCategory);
-  console.log(selectedCategories);
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -66,7 +65,7 @@ const ModalCreatedDisc = ({ onClose, select, username, email }) => {
       setLoading(true);
       if (!code || !exp || !status || !disc || !username) {
         toast.error("Semua field harus diisi!");
-        console.log(discountData);
+      
         return;
       } else {
         await createDiscount(discountData);

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { editDiscountProductByid } from "../../../../../../../Service/Api";
 import { ToastContainer, toast } from "react-toastify";
 
-const ModalEdit = ({ onCloses, nm_product, refresh, disc, productId }) => {
+const ModalEdit = ({ onCloses, nm_product, disc, productId }) => {
   // State variables for form inputs
   const [newDiscount, setNewDiscount] = useState(disc);
   const [expirationDate, setExpirationDate] = useState(null);
@@ -26,7 +26,6 @@ const ModalEdit = ({ onCloses, nm_product, refresh, disc, productId }) => {
       });
 
       toast.success("Diskon Berhasil diedit");
-      refresh();
 
       onCloses();
     } catch (error) {

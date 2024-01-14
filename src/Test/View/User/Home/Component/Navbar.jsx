@@ -13,12 +13,12 @@ import { selectIsAuthenticated } from "../../../../../Feature/Redux/Auth/AuthSli
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import logo from "../../../../../Asset/wayan logo.png";
-import { ClipLoader, PulseLoader } from "react-spinners";
+
 import { child, getDatabase, onValue, ref, remove } from "firebase/database";
 
 import { toast } from "react-toastify";
 import { firebaseApp } from "../../../../../Feature/Firebase/FirebaseConfig";
-import { or } from "firebase/firestore";
+
 import Loading from "../../../Admin/Home/Component/Customer/Loading";
 import ModalViewDiscount from "../../../Admin/Home/Component/Customer/ModalViewDiscount";
 
@@ -289,9 +289,6 @@ const Navbar = ({ toggleTheme, isDarkTheme }) => {
                               className="mr-2 text-biru text-sm"
                             />
                             <p className="mr-12">Voucher</p>
-                            <p className="bg-red-500 text-white font-bold rounded-full  px-2 py-1 text-xs">
-                              {VoucherCount}
-                            </p>
                           </div>
                         </div>
                         <div

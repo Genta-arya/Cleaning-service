@@ -43,13 +43,10 @@ const Product = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isLoading, setIsloading] = useState(false);
   const productsData = useSelector(selectProducts);
-  const productsError = useSelector(selectProductsError);
-  const productsStatus = useSelector(selectProductsStatus);
-  const categories = useSelector(selectCategories);
   const selectedCategory = useSelector(selectSelectedCategory);
-  const isRole = useSelector(selectIsRole);
+
   const [activeDot, setActiveDot] = useState(0);
-  const [selectIdCategory, setSelectedCategory] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -76,6 +73,7 @@ const Product = () => {
         const response = await getProduct();
         const { products } = response;
         setIsloading(false);
+       
 
         dispatch(setProducts(products));
 
@@ -111,7 +109,13 @@ const Product = () => {
       navigate(
         `/order/${product.id}/${encodeURIComponent(product.nm_product)}`,
         {
-          state: { productData: product },
+          state: {
+            productData: product,
+            productPrice: product.discount
+              ? product.price -
+                (product.discount.discountPercentage / 100) * product.price
+              : product.price,
+          },
         }
       );
     } else {
@@ -243,20 +247,27 @@ const Product = () => {
               </>
             ) : (
               <div className="flex justify-center items-center ">
-                <div className="grid grid-cols-3 xl:gap-4  xl:space-x-1 lg:space-x-24 p-12 items-center mx-auto ">
+                <div className="grid grid-cols-3 xl:gap-4 xl:space-x-1 lg:space-x-24 p-12 items-center mx-auto">
                   {filteredProducts.map((product, index) => (
                     <motion.div
                       key={product.id}
-                      className="border rounded-xl bg-white shadow-xl border-gelap transform transition-all overflow-hidden w-96 h-full items-center"
+                      className={`border rounded-xl  shadow-xl border-gelap transform transition-all overflow-hidden w-96 h-full items-center ${
+                        product.discount ? "bg-white" : "bg-white"
+                      }`}
                     >
-                      <div>
+                      <div className="relative">
+                        {product.discount && (
+                          <span className="bg-red-500 text-white text-xs font-bold rounded-full px-4 absolute top-7 -left-2 z-10 transform -rotate-45 p-1 ">
+                            Diskon {product.discount.discountPercentage} %
+                          </span>
+                        )}
                         <img
                           src={
                             product.url ||
                             "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
                           }
                           alt="paket service ac"
-                          className="mb-4  lg:w-full lg:h-48 rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105  hover:rounded-b-xl"
+                          className="mb-4 lg:w-full lg:h-48 rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105 hover:rounded-b-xl"
                           onClick={() => handleProductClick(product)}
                         />
                       </div>
@@ -278,14 +289,34 @@ const Product = () => {
                         </p>
 
                         <div className="flex items-center justify-between -mt-12">
-                          <span className="text-green-500 font-bold text-xs lg:text-base md:text-base">
-                            Harga: {formatCurrency(product.price)}
-                          </span>
+                          {product.discount ? (
+                            <>
+                              <div className="flex items-center ">
+                                <span className=" font-bold text-xs lg:text-base md:text-base  ">
+                                  <span className="line-through text-gray-500">
+                                    {formatCurrency(product.price)}
+                                  </span>{" "}
+                                  <span className="text-green-500">
+                                    {formatCurrency(
+                                      product.price -
+                                        (product.discount.discountPercentage /
+                                          100) *
+                                          product.price
+                                    )}
+                                  </span>
+                                </span>
+                              </div>
+                            </>
+                          ) : (
+                            <span className="text-green-500 font-bold text-xs lg:text-base md:text-base">
+                              {formatCurrency(product.price)}
+                            </span>
+                          )}
                         </div>
 
-                        <div className="flex justify-center mt-4">
+                        <div className="flex justify-center mt-4 items-center">
                           <button
-                            className="bg-biru text-white px-4 py-2 rounded-md hover:bg-blue-300 w-full  hover:scale-105 transition-all duration-500 ease-out "
+                            className="bg-biru text-white px-4 py-2 rounded-md hover:bg-blue-300 w-full hover:scale-105 transition-all duration-500 ease-out"
                             onClick={() => handleOrder(product)}
                           >
                             Pesan
@@ -338,12 +369,19 @@ const Product = () => {
                     key={product.id}
                     className="border  lg:p-4  rounded-xl    bg-white  border-gelap  transform transition-all overflow-hidden"
                   >
-                    <img
-                      src={product.url}
-                      alt={product.nm_product}
-                      className="mb-4 w-full h-80 flex  rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105 hover:rounded-b-xl hover:rounded-t-xl"
-                      onClick={() => handleProductClick(product)}
-                    />
+                    <div className="relative">
+                      {product.discount && (
+                        <span className="bg-red-500 text-white text-xs font-bold rounded-full px-4 absolute top-10 left-0 z-10 transform -rotate-45 p-1">
+                          Diskon {product.discount.discountPercentage} %
+                        </span>
+                      )}
+                      <img
+                        src={product.url}
+                        alt={product.nm_product}
+                        className="mb-4 w-full h-80 flex  rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105 hover:rounded-b-xl hover:rounded-t-xl"
+                        onClick={() => handleProductClick(product)}
+                      />
+                    </div>
 
                     <div className="p-8">
                       <h2 className="text-xl font-bold mb-2 -mt-8">
@@ -360,11 +398,33 @@ const Product = () => {
                           theme={"bubble"}
                         />
                       </p>
+
                       <div className="flex items-center justify-between -mt-12">
-                        <span className="text-green-500 font-bold text-base">
-                          Harga: {formatCurrency(product.price)}
-                        </span>
+                        {product.discount ? (
+                          <>
+                            <div className="flex items-center ">
+                              <span className=" font-bold  lg:text-base md:text-base  ">
+                                <span className="line-through text-gray-500">
+                                  {formatCurrency(product.price)}
+                                </span>{" "}
+                                <span className="text-green-500">
+                                  {formatCurrency(
+                                    product.price -
+                                      (product.discount.discountPercentage /
+                                        100) *
+                                        product.price
+                                  )}
+                                </span>
+                              </span>
+                            </div>
+                          </>
+                        ) : (
+                          <span className="text-green-500 font-bold text-base">
+                            Harga: {formatCurrency(product.price)}
+                          </span>
+                        )}
                       </div>
+
                       <div className="flex justify-center mt-4">
                         <button
                           className="bg-biru text-white px-4 py-2 rounded-md hover:bg-gelap w-full"

@@ -11,7 +11,7 @@ const ModalViewDiscount = ({ onClose, select }) => {
   const [copiedIds, setCopiedIds] = useState({});
   const [loading, setLoading] = useState(false);
   const [selectCategory, setSelectedCategory] = useState("");
-  console.log(vouchers);
+
   const fetchVoucher = async () => {
     setLoading(true);
     try {
@@ -45,7 +45,6 @@ const ModalViewDiscount = ({ onClose, select }) => {
   useEffect(() => {
     fetchVoucher();
   }, [select]);
-  console.log("name:", selectCategory);
 
   const closeModal = () => {
     onClose();

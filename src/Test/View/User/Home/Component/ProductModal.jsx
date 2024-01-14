@@ -88,10 +88,29 @@ const ProductModal = ({ product, closeModal, showModal }) => {
                 />
               </p>
 
-              <div className="flex items-center justify-between">
-                <span className="text-green-500 font-bold">
-                  Harga: {formatCurrency(product.price)}
-                </span>
+              <div className="flex items-center justify-between -mt-12 ml-4">
+                {product.discount ? (
+                  <>
+                    <div className="flex items-center ">
+                      <span className=" font-bold  lg:text-base md:text-base  ">
+                        <span className="line-through text-gray-500">
+                          {formatCurrency(product.price)}
+                        </span>{" "}
+                        <span className="text-green-500">
+                          {formatCurrency(
+                            product.price -
+                              (product.discount.discountPercentage / 100) *
+                                product.price
+                          )}
+                        </span>
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <span className="text-green-500 font-bold text-base">
+                    Harga: {formatCurrency(product.price)}
+                  </span>
+                )}
               </div>
             </motion.div>
           </motion.div>

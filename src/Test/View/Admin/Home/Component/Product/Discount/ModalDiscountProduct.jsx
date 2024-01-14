@@ -5,7 +5,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer, toast } from "react-toastify";
 import Loading from "../../Customer/Loading";
 
-const ModalDiscountProduct = ({ productId, onClose, refresh }) => {
+const ModalDiscountProduct = ({ productId, onClose }) => {
   const [discountPercentage, setDiscountPercentage] = useState(1);
   const [expirationDate, setExpirationDate] = useState("");
   const [loading, setLoadingg] = useState(false);

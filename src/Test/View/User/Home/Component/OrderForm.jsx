@@ -25,7 +25,7 @@ const OrderForm = () => {
   const { state } = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const [load, setIsload] = useState(false);
-  const { productData } = state || {};
+  const { productData, productPrice } = state || {};
   const [quantity, setQuantity] = useState(1);
   const [name, setName] = useState("");
   const [voucher, setVoucher] = useState("");
@@ -235,7 +235,7 @@ const OrderForm = () => {
       );
       setIsLoading(false);
     } else {
-      let price = (productData?.price || 0) * (quantity || 1);
+      let price = (productPrice || 0) * (quantity || 1);
       let discounts = price - price * discount;
       if (discount) {
         price = discounts;
@@ -286,7 +286,6 @@ const OrderForm = () => {
         });
 
         if (sendEmailResponse.ok) {
-          console.log("Email sent successfully");
         } else {
           console.error("Failed to send email");
         }
@@ -320,7 +319,7 @@ const OrderForm = () => {
       if (response.data && response.data.disc) {
         const discountAmount = response.data.disc;
 
-        const totalCostBeforeDiscount = productData.price * quantity;
+        const totalCostBeforeDiscount = productPrice * quantity;
         const discountedPrice =
           totalCostBeforeDiscount - totalCostBeforeDiscount * discountAmount;
 
@@ -475,12 +474,12 @@ const OrderForm = () => {
                         <div>
                           <div className="flex  gap-4">
                             <p className="text-sm text-gray-500 font-semibold line-through">
-                              {formatCurrency(productData.price * quantity)}
+                              {formatCurrency(productPrice * quantity)}
                             </p>
                             <p className="text-sm font-bold text-green-500 ">
                               {formatCurrency(
-                                productData.price * quantity -
-                                  productData.price * discount
+                                productPrice * quantity -
+                                  productPrice * discount
                               )}
                             </p>
                           </div>
@@ -488,7 +487,7 @@ const OrderForm = () => {
                       </>
                     ) : (
                       <p className="text-sm font-semibold">
-                        {formatCurrency(productData.price * quantity)}
+                        {formatCurrency(productPrice * quantity)}
                       </p>
                     )}
                   </div>
@@ -501,12 +500,12 @@ const OrderForm = () => {
                         <div>
                           <div className="flex  gap-4">
                             <p className="text-lg text-gray-500 font-semibold double-strikethrough">
-                              {formatCurrency(productData.price * quantity)}
+                              {formatCurrency(productPrice * quantity)}
                             </p>
                             <p className="text-lg font-bold text-green-500 ">
                               {formatCurrency(
-                                productData.price * quantity -
-                                  productData.price * discount
+                                productPrice * quantity -
+                                  productPrice * discount
                               )}
                             </p>
                           </div>
@@ -514,7 +513,7 @@ const OrderForm = () => {
                       </>
                     ) : (
                       <p className="text-lg font-semibold">
-                        {formatCurrency(productData.price * quantity)}
+                        {formatCurrency(productPrice * quantity)}
                       </p>
                     )}
                   </div>

@@ -181,8 +181,8 @@ const ManageProduct = () => {
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.message);
-      } else{
-        toast.error("terjadi kesalahan pada server")
+      } else {
+        toast.error("terjadi kesalahan pada server");
       }
     } finally {
       setLoading(false);
@@ -365,7 +365,6 @@ const ManageProduct = () => {
       {isDiscModalEyeOpen && (
         <ModalShowDiscount
           productId={selectedProduct}
-          refresh={fetchData}
           onClose={handleEyeDiscountClose}
         />
       )}

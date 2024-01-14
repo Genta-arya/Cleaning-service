@@ -7,8 +7,8 @@ import Loading from "../../Customer/Loading";
 import ModalEdit from "./ModalEdit";
 import ErrorLayout from "../../../../../User/404/ErrorLayout";
 
-const ModalEditDiscount = ({ productId, onClose, refresh }) => {
-  const [discountProduct, setDiscountProduct] = useState({});
+const ModalEditDiscount = ({ productId, onClose }) => {
+  const [discountProduct, setDiscountProduct] = useState(null);
   const [discountPercentage, setDiscountPercentage] = useState(1);
   const [expirationDate, setExpirationDate] = useState("");
   const [openModal, setIsModalOpen] = useState(false);
@@ -18,25 +18,27 @@ const ModalEditDiscount = ({ productId, onClose, refresh }) => {
   const [error, setError] = useState(false);
   const total = beforePrice - beforePrice * disc;
 
-  useEffect(() => {
+  const fetchDiscountProduct = async () => {
     setIsLoading(true);
-    const fetchDiscountProduct = async () => {
-      try {
-        const response = await getDiscountProductByid(productId.id);
-        setDiscountProduct(response.data);
-        setDiscountPercentage(response.data.discountPercentage);
-        setExpirationDate(response.data.expirationDate);
-      } catch (error) {
-        console.log(error);
-        toast.error("terjadi kesalahan pada server");
-        setError(true);
-      } finally {
-        setIsLoading(false);
+    try {
+      const response = await getDiscountProductByid(productId.id);
+
+      setDiscountProduct(response.data);
+      setDiscountPercentage(response.data.discountPercentage);
+      setExpirationDate(response.data.expirationDate);
+    } catch (error) {
+      if (error.response) {
         setError(false);
+      } else {
+        setError(true);
       }
-    };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchDiscountProduct();
-  }, [productId]);
+  }, []);
 
   const OpenModals = () => {
     setIsModalOpen(true);
@@ -71,6 +73,10 @@ const ModalEditDiscount = ({ productId, onClose, refresh }) => {
           ) : (
             <>
               {error ? (
+                <>
+                  <ErrorLayout />
+                </>
+              ) : (
                 <>
                   {discountProduct ? (
                     <div className="">
@@ -112,10 +118,6 @@ const ModalEditDiscount = ({ productId, onClose, refresh }) => {
                     </div>
                   )}
                 </>
-              ) : (
-                <>
-                  <ErrorLayout />
-                </>
               )}
             </>
           )}
@@ -128,7 +130,6 @@ const ModalEditDiscount = ({ productId, onClose, refresh }) => {
           disc={discountPercentage}
           exp={expirationDate}
           productId={productId.id}
-          refresh={refresh}
         />
       )}
       <ToastContainer />
