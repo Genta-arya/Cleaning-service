@@ -35,6 +35,7 @@ const ManageProduct = () => {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [loadingDeleteDisc, setLoadingDosc] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -170,22 +171,25 @@ const ManageProduct = () => {
   };
 
   const handleDeleteDiscount = async (id) => {
+    setLoadingDosc(true);
     try {
-      const res = await DeleteDiscount(id);
+      await DeleteDiscount(id);
 
       const response = await getProduct();
       const { products } = response;
       setProducts(products);
-      setLoading(true);
+
       toast.success("Berhasil menghapus Diskon");
     } catch (error) {
+      setLoadingDosc(false);
       if (error.response) {
         toast.error(error.response.data.message);
+        setLoadingDosc(false);
       } else {
         toast.error("terjadi kesalahan pada server");
       }
     } finally {
-      setLoading(false);
+      // setLoadingDosc(false);
     }
   };
 
@@ -294,63 +298,65 @@ const ManageProduct = () => {
                 </td>
 
                 <td className="border border-gray-300 p-2">
-                  <div className="dropdown dropdown-hover dropdown-end">
-                    <button
-                      className="text-blue-500 hover:underline mr-2"
-                      tabIndex={0}
-                      role="button"
-                      onClick={() => handleCreatedDiscount(product)}
-                    >
-                      <FontAwesomeIcon icon={faPlus} />
-                    </button>
+                  <div className="flex">
+                    <div className="dropdown dropdown-hover dropdown-end">
+                      <button
+                        className="text-blue-500 hover:underline mr-2"
+                        tabIndex={0}
+                        role="button"
+                        onClick={() => handleCreatedDiscount(product)}
+                      >
+                        <FontAwesomeIcon icon={faPlus} />
+                      </button>
 
-                    <ul
-                      tabIndex={0}
-                      className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 text-xs items-center "
-                    >
-                      <li>
-                        <a>Tambah Discount</a>
-                      </li>
-                    </ul>
-                  </div>
+                      <ul
+                        tabIndex={0}
+                        className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 text-xs items-center "
+                      >
+                        <li>
+                          <a>Tambah Discount</a>
+                        </li>
+                      </ul>
+                    </div>
 
-                  <div className="dropdown dropdown-hover">
-                    <button
-                      className="text-biru hover:underline mr-2"
-                      tabIndex={0}
-                      role="button"
-                      onClick={() => handleEyeDiscount(product)}
-                    >
-                      <FontAwesomeIcon icon={faEye} />
-                    </button>
-                    <ul
-                      tabIndex={0}
-                      className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 text-xs items-center"
-                    >
-                      <li>
-                        <a>Lihat Discount</a>
-                      </li>
-                    </ul>
-                  </div>
+                    <div className="dropdown dropdown-hover">
+                      <button
+                        className="text-biru hover:underline mr-2"
+                        tabIndex={0}
+                        role="button"
+                        onClick={() => handleEyeDiscount(product)}
+                      >
+                        <FontAwesomeIcon icon={faEye} />
+                      </button>
+                      <ul
+                        tabIndex={0}
+                        className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 text-xs items-center"
+                      >
+                        <li>
+                          <a>Lihat Discount</a>
+                        </li>
+                      </ul>
+                    </div>
 
-                  <div className="dropdown dropdown-hover ">
-                    <button
-                      tabIndex={0}
-                      role="button"
-                      className="text-red-500 hover:underline"
-                      onClick={() => handleDeleteDiscount(product.id)}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
+                    <div className="dropdown dropdown-hover ">
+                      <button
+                        tabIndex={0}
+                        role="button"
+                        className="text-red-500 hover:underline"
+                        onClick={() => handleDeleteDiscount(product.id)}
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
 
-                    <ul
-                      tabIndex={0}
-                      className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 text-xs items-center "
-                    >
-                      <li>
-                        <a>Hapus Discount</a>
-                      </li>
-                    </ul>
+                      <ul
+                        tabIndex={0}
+                        className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 text-xs items-center "
+                      >
+                        <li>
+                          <a>Hapus Discount</a>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -417,8 +423,9 @@ const ManageProduct = () => {
           </div>
         </div>
       )}
-      <ToastContainer />
       {loading && <Loading />}
+      {loadingDeleteDisc && <Loading />}
+      <ToastContainer />
     </div>
   );
 };
