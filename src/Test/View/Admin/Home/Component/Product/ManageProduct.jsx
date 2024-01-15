@@ -189,7 +189,7 @@ const ManageProduct = () => {
         toast.error("terjadi kesalahan pada server");
       }
     } finally {
-      // setLoadingDosc(false);
+      setLoadingDosc(false);
     }
   };
 

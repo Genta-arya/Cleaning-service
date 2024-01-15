@@ -12,9 +12,14 @@ import IndexMain from "../Test/View/Admin/IndexMain";
 import ManagePesanan from "../Test/View/Admin/Home/Component/Pesanan/ManagePesanan";
 import ManageProduct from "../Test/View/Admin/Home/Component/Product/ManageProduct";
 import ChartComponent from "../Test/View/Admin/Home/Component/Chart/Chart";
+import { checkDiscountStatus } from "../Service/CheckAuth";
 
 function App() {
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    checkDiscountStatus();
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {

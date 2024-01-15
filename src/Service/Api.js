@@ -514,7 +514,18 @@ export const editDiscountProductByid = async (productId, newDiscount, exp) => {
 
 export const DeleteDiscount = async (productId) => {
   try {
-    const response = await axiosInstance.delete(`/product-discount/${productId}`);
+    const response = await axiosInstance.delete(
+      `/product-discount/${productId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const checkDiscountExpired = async () => {
+  try {
+    const response = await axiosInstance.delete(`/discounts/expired`);
     return response.data;
   } catch (error) {
     throw error;
