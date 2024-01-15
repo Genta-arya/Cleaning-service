@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Loading from "../Customer/Loading";
 import ReactQuill from "react-quill";
 
-const ModalCreateProduct = ({ onClose }) => {
+const ModalCreateProduct = ({ onClose, refresh }) => {
   const [productData, setProductData] = useState({
     nm_product: "",
     desc: "",
@@ -60,6 +60,7 @@ const ModalCreateProduct = ({ onClose }) => {
       if (response.status === 201) {
         toast.success("Product berhasil dibuat");
         setIsCreating(false);
+        onClose();
 
         setProductData({
           nm_product: "",
@@ -68,11 +69,16 @@ const ModalCreateProduct = ({ onClose }) => {
           categoryId: 0,
           thumbnail: null,
         });
-        window.location.reload();
+        setImagePreview(null);
+        refresh();
       }
     } catch (error) {
-      console.error("Error creating product:", error);
-      toast.error("Terjadi kesalahan saat membuat product");
+      console.log(error);
+      if (error.response) {
+        toast.error("Terjadi kesalahan saat membuat product");
+      } else {
+        toast.error("Terjadi kesalahan pada server");
+      }
     } finally {
       setIsCreating(false);
     }
@@ -138,9 +144,7 @@ const ModalCreateProduct = ({ onClose }) => {
               theme="snow"
               value={productData.desc}
               onChange={(content) => {
-                if (content.length >= 50) {
-                  setProductData({ ...productData, desc: content });
-                }
+                setProductData({ ...productData, desc: content });
               }}
               className="h-72 mb-12"
             />

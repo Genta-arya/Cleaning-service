@@ -86,8 +86,8 @@ const ListCustomer = () => {
   };
 
   return (
-    <div className="px-12 p-8">
-      <h1 className="text-2xl font-bold mb-4">List Customer</h1>
+    <div className="px-12 p-8 bg-slate-200 h-screen w-screen ">
+      <h1 className="text-2xl font-bold mb-4">Daftar Pelanggan</h1>
       {loading ? (
         <>
           {Array.from({ length: 5 }).map((_, index) => (
@@ -97,25 +97,35 @@ const ListCustomer = () => {
       ) : (
         <>
           {userData && userData.length > 0 ? (
-            <table className="min-w-full border border-gray-300">
+            <table className="min-w-full border border-black text-center">
               <thead>
-                <tr className="bg-gray-800 text-white">
-                  <th className="border px-4 py-2">User ID</th>
-                  <th className="border px-4 py-2">Username</th>
-                  <th className="border px-4 py-2">Email</th>
-                  <th className="border px-4 py-2">Role</th>
-                  <th className="border px-4 py-2">Actions</th>
-                  <th className="border px-4 py-2">Voucher Discount</th>
+                <tr className="bg-gray-800 text-white text-center">
+                  <th className="border border-black px-4 py-2">User ID</th>
+                  <th className="border border-black px-4 py-2">Username</th>
+                  <th className="border  border-black px-4 py-2">Email</th>
+                  <th className="border  border-black px-4 py-2">Role</th>
+                  <th className="border border-black px-4 py-2">Actions</th>
+                  <th className="border border-black px-4 py-2">
+                    Voucher Discount
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {userData.map((user) => (
                   <tr key={user.uid}>
-                    <td className="border px-4 py-2">{user.uid}</td>
-                    <td className="border px-4 py-2">{user.username}</td>
-                    <td className="border px-4 py-2">{user.email}</td>
-                    <td className="border px-4 py-2">{user.role}</td>
-                    <td className="border px-4 py-2 space-x-2 flex">
+                    <td className="border border-black  px-4 py-2">
+                      {user.uid}
+                    </td>
+                    <td className="border border-black px-4 py-2">
+                      {user.username}
+                    </td>
+                    <td className="border border-black px-4 py-2">
+                      {user.email}
+                    </td>
+                    <td className="border border-black px-4 py-2">
+                      {user.role}
+                    </td>
+                    <td className="border border-black px-4 py-2 space-x-2 flex justify-center">
                       <button
                         className="bg-blue-500 text-white px-2 py-1 rounded"
                         onClick={() => handleEditPassword(user.uid)}
@@ -130,7 +140,7 @@ const ListCustomer = () => {
                       </button>
                     </td>
 
-                    <td className="border px-4 py-2 ">
+                    <td className="border border-black px-4 py-2 ">
                       <div className="flex justify-center gap-2">
                         <button
                           className="bg-blue-500 text-white px-2 py-1 rounded"

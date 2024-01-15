@@ -7,7 +7,13 @@ import { PulseLoader } from "react-spinners";
 import Loading from "../Customer/Loading";
 import ReactQuill from "react-quill";
 
-const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
+const ModalEditProduct = ({
+  isOpen,
+  onClose,
+  productData,
+  onEdit,
+  refresh,
+}) => {
   const MAX_PRODUCT_NAME_LENGTH = 150;
   const MAX_DESCRIPTION_LENGTH = 350;
 
@@ -72,7 +78,7 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
         if (response.status === 200) {
           setLoading(false);
           toast.success("Product updated successfully!");
-          window.location.reload();
+          refresh();
         }
       }
     } catch (error) {
@@ -213,7 +219,6 @@ const ModalEditProduct = ({ isOpen, onClose, productData, onEdit }) => {
             {editedProductData.desc.length < 50 && (
               <p className="text-red-500 mt-1">Minimum length: 50 characters</p>
             )}
-           
           </label>
           <label className="block mb-2">
             <span className="text-gray-700">Harga:</span>

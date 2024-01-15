@@ -5,7 +5,12 @@ import { ToastContainer, toast } from "react-toastify";
 import axiosInstance from "../../../../../../Service/Config";
 import Loading from "../Customer/Loading";
 
-const ModalUploadGambar = ({ closeUploadModal, selectedOrderInfo, orders }) => {
+const ModalUploadGambar = ({
+  closeUploadModal,
+  selectedOrderInfo,
+  orders,
+  refresh,
+}) => {
   const limit_image = 3 * selectedOrderInfo.qty;
 
   const [selectedImages, setSelectedImages] = useState([]);
@@ -64,6 +69,7 @@ const ModalUploadGambar = ({ closeUploadModal, selectedOrderInfo, orders }) => {
         toast.success("Upload successful!");
         closeUploadModal();
         setLoading(false);
+        refresh();
       } else if (response.status === 400) {
         toast.error("Client-side error. Check your request.");
         setLoading(false);

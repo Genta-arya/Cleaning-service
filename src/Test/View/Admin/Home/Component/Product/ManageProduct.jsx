@@ -196,13 +196,13 @@ const ManageProduct = () => {
   const handleEditSave = (editedProductData) => {};
 
   return (
-    <div className="px-12 p-8">
-      <div className="flex justify-center gap-4">
+    <div className="px-12 p-8 bg-slate-200 h-screen w-screen ">
+      <div className="flex justify-center gap-4 ">
         <div className="relative flex-grow justify-center mx-auto">
           <input
             type="text"
             placeholder="cari service..."
-            className="border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:ring focus:border-blue-500 w-full"
+            className="border border-black px-3 py-2 rounded-md focus:outline-none focus:ring focus:border-blue-500 w-full"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <div className="absolute top-1/2 right-3 transform -translate-y-1/2">
@@ -239,32 +239,34 @@ const ManageProduct = () => {
       ) : (
         <table className="mt-8 w-full border-collapse text-center ">
           <thead className="">
-            <tr className="bg-gray-800 text-white">
-              <th className="border border-gray-300 p-2">No</th>
-              <th className="border border-gray-300 p-2">Image</th>
-              <th className="border border-gray-300 p-2">Service</th>
-              <th className="border border-gray-300 p-2">Description</th>
-              <th className="border border-gray-300 p-2">Harga</th>
-              <th className="border border-gray-300 p-2">Kategori</th>
-              <th className="border border-gray-300 p-2">Produk</th>
-              <th className="border border-gray-300 p-2">Diskon</th>
+            <tr className="bg-gray-800 text-white items-center">
+              <th className="border border-black p-2">No</th>
+              <th className="border border-black p-2">Image</th>
+              <th className="border border-black p-2">Service</th>
+              <th className="border border-black p-2">Description</th>
+              <th className="border border-black p-2">Harga</th>
+              <th className="border border-black p-2">Kategori</th>
+              <th className="border border-black p-2">Produk</th>
+              <th className="border border-black p-2">Diskon</th>
             </tr>
           </thead>
           <tbody>
             {filteredProducts.map((product, index) => (
               <tr key={product.id}>
-                <td className="border border-gray-300 p-2">{index + 1}</td>
-                <td className="border border-gray-300 p-2">
-                  <img
-                    src={product.url}
-                    alt="image"
-                    className="rounded-xl w-32 h-auto"
-                  />
+                <td className="border border-black p-2">{index + 1}</td>
+                <td className="border border-black p-2 ">
+                  <div className="flex justify-center">
+                    <img
+                      src={product.url}
+                      alt="image"
+                      className="rounded-xl w-44 h-auto"
+                    />
+                  </div>
                 </td>
-                <td className="border border-gray-300 p-2">
+                <td className="border border-black p-2">
                   {product.nm_product}
                 </td>
-                <td className="border border-gray-300 p-2">
+                <td className="border border-black p-2">
                   {" "}
                   <ReactQuill
                     value={product.desc}
@@ -273,16 +275,16 @@ const ManageProduct = () => {
                     theme={"bubble"}
                   />
                 </td>
-                <td className="border border-gray-300 p-2">
+                <td className="border border-black p-2">
                   {new Intl.NumberFormat("id-ID", {
                     style: "currency",
                     currency: "IDR",
                   }).format(product.price)}
                 </td>
-                <td className="border border-gray-300 p-2">
+                <td className="border border-black p-2">
                   {product.category.nm_category}
                 </td>
-                <td className="border border-gray-300 p-2">
+                <td className="border border-black p-2">
                   <button
                     className="text-blue-500 hover:underline mr-2"
                     onClick={() => handleEdit(product)}
@@ -297,8 +299,8 @@ const ManageProduct = () => {
                   </button>
                 </td>
 
-                <td className="border border-gray-300 p-2">
-                  <div className="flex">
+                <td className="border border-black p-2">
+                  <div className="flex justify-center gap-2">
                     <div className="dropdown dropdown-hover dropdown-end">
                       <button
                         className="text-blue-500 hover:underline mr-2"
@@ -366,7 +368,10 @@ const ManageProduct = () => {
       )}
       {isModalOpen && <MenuCategory onClose={handleCloseModal} />}
       {isProductModalOpen && (
-        <ModalCreateProduct onClose={handleCloseProductModal} />
+        <ModalCreateProduct
+          onClose={handleCloseProductModal}
+          refresh={fetchData}
+        />
       )}
       {isDiscModalEyeOpen && (
         <ModalShowDiscount

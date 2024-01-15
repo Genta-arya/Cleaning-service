@@ -5,7 +5,7 @@ import Loading from "../Customer/Loading";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { deltaToHtml } from "delta-to-html";
-const ModalPostKeterangan = ({ uuid, closeModalKet }) => {
+const ModalPostKeterangan = ({ uuid, closeModalKet, refresh }) => {
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -21,8 +21,10 @@ const ModalPostKeterangan = ({ uuid, closeModalKet }) => {
       toast.success("Keterangan Berhasil dikirim");
       setLoading(false);
       closeModalKet();
+      refresh();
     } catch (error) {
       toast.error("Error posting description:", error);
+    } finally {
       setLoading(false);
     }
   };

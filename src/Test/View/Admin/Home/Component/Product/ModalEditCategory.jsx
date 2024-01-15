@@ -11,17 +11,15 @@ const ModalEditCategory = ({ onClose }) => {
   const [editedCategory, setEditedCategory] = useState({});
   const [loading, setLoading] = useState(false);
   const [validationError, setValidationError] = useState("");
-
+  const fetchCategories = async () => {
+    try {
+      const response = await getAllCategories();
+      setCategories(response.categories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getAllCategories();
-        setCategories(response.categories);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-
     fetchCategories();
   }, []);
 
@@ -47,12 +45,16 @@ const ModalEditCategory = ({ onClose }) => {
       }
 
       const categoryId = parseInt(selectedCategoryId, 10);
+      await editCategory(categoryId, editedCategory);
       toast.success("Kategori Berhasil diEdit");
 
-      await editCategory(categoryId, editedCategory);
-      window.location.reload();
+      fetchCategories();
+      onClose();
     } catch (error) {
-      toast.error("Kategori Gagal diubah");
+      if (error.response) {
+        toast.error("Kategori Gagal diubah");
+      } else {
+      }
     } finally {
       setLoading(false);
     }
@@ -75,7 +77,6 @@ const ModalEditCategory = ({ onClose }) => {
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer"
         >
-          {/* Close button with FontAwesome icon */}
           <FontAwesomeIcon icon={faTimes} />
         </button>
         <select

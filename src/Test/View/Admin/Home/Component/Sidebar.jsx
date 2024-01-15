@@ -41,7 +41,7 @@ const Sidebar = () => {
     open: {
       x: 0,
       opacity: 1,
-   
+
       translateY: 0,
       transition: {
         ease: "easeOut",
@@ -51,19 +51,12 @@ const Sidebar = () => {
     closed: {
       x: 0,
       opacity: 0,
-      
-    
- 
+
       transition: {
         ease: "easeIn",
         duration: 0.2,
       },
     },
-  };
-  
-  const fadeInVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
   };
 
   const toggleManageData = () => {
@@ -345,7 +338,7 @@ const Sidebar = () => {
       </div>
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-         <Loading />
+          <Loading />
         </div>
       )}
     </div>

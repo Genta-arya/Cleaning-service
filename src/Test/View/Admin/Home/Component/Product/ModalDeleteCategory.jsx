@@ -7,22 +7,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import Loading from "../Customer/Loading";
 import { motion, AnimatePresence } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
 const ModalDeleteCategory = ({ onClose }) => {
   const [categories, setCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [loading, setLoading] = useState(false);
   const [validationError, setValidationError] = useState("");
-
+  const fetchCategories = async () => {
+    try {
+      const response = await getAllCategories();
+      setCategories(response.categories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getAllCategories();
-        setCategories(response.categories);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-
     fetchCategories();
   }, []);
 
@@ -48,10 +47,15 @@ const ModalDeleteCategory = ({ onClose }) => {
       }
 
       const categoryId = parseInt(selectedCategoryId, 10);
-
+      fetchCategories();
       await DeleteCategory(categoryId);
-      window.location.reload();
+      toast.success("Berhasi Hapus Kategori");
     } catch (error) {
+      if (error.response) {
+        toast.error("Gagal Menghapus Kategori");
+      } else {
+        toast.error("Terjadi Kesalahan server");
+      }
     } finally {
       setLoading(false);
     }
@@ -104,6 +108,7 @@ const ModalDeleteCategory = ({ onClose }) => {
         </button>
       </motion.div>
       {loading && <Loading />}
+      <ToastContainer />
     </motion.div>
   );
 };

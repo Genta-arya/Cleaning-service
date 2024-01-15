@@ -96,7 +96,6 @@ const ManagePesanan = () => {
 
   useEffect(() => {
     fetchData();
-   
   }, [currentPage, searchQuery]);
 
   const searchData = (e) => {
@@ -136,6 +135,7 @@ const ManagePesanan = () => {
   }, []);
 
   const handleEditStatus = async (orderId, newStatus, refetchOrders) => {
+    setIsLoadingLogout(true);
     try {
       const response = await updateOrderStatus(orderId, newStatus);
 
@@ -148,6 +148,8 @@ const ManagePesanan = () => {
       }
     } catch (error) {
       toast.error(`Error editing order status: ${error.message}`);
+    } finally {
+      setIsLoadingLogout(false);
     }
   };
 
@@ -157,7 +159,7 @@ const ManagePesanan = () => {
   };
 
   const handleDeleteOrder = async (orderId) => {
-    setLoading(true)
+    setLoading(true);
     try {
       const parsedOrderId = parseInt(orderId);
 
@@ -174,8 +176,8 @@ const ManagePesanan = () => {
       if (error.response && error.response.status === 404) {
         toast.error(`Gambar tidak ditemukan`);
       }
-    } finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -211,7 +213,7 @@ const ManagePesanan = () => {
 
   const openKetModal = (orderId) => {
     setSelectedOrderUUID(orderId.orderDetails.uuid);
-   
+
     setIsModalKetVisible(true);
   };
   const closeModalKet = () => {
@@ -270,13 +272,13 @@ const ManagePesanan = () => {
       .catch((error) => {});
   };
 
-  const openUploadModal = (orderId, nm_product, id, status ,qty) => {
+  const openUploadModal = (orderId, nm_product, id, status, qty) => {
     setSelectedOrderInfo({
       orderId,
       nm_product,
       id,
       status,
-      qty
+      qty,
     });
     setIsModaUpload(true);
   };
@@ -312,7 +314,7 @@ const ManagePesanan = () => {
   };
 
   return (
-    <div className="px-12 p-8">
+    <div className="px-12 p-8 bg-slate-200 h-screen w-screen ">
       <div className="flex justify-between items-center w-auto bg-white p-4 mb-4 rounded-full lg:hidden md:hidden block">
         <img src={image} alt="image" className="w-10 h-10" />
 
@@ -428,24 +430,20 @@ const ManagePesanan = () => {
                 <table className="table table-xs ">
                   <thead>
                     <tr className="text-center bg-gray-800 text-white">
-                      <th className="border border-gray-300 p-2">Id pesanan</th>
-                      <th className="border border-gray-300 p-2">Username</th>
-                      <th className="border border-gray-300 p-2">Image</th>
-                      <th className="border border-gray-300 p-2">Service</th>
-                      <th className="border border-gray-300 p-2">
-                        Total Price
-                      </th>
-                      <th className="border border-gray-300 p-2">Tanggal</th>
-                      <th className="border border-gray-300 p-2">Alamat</th>
-                      <th className="border border-gray-300 p-2">Koordinat</th>
-                      <th className="border border-gray-300 p-2">Status</th>
-                      <th className="border border-gray-300 p-2">
-                        Dokumentasi
-                      </th>
-                      <th className="border border-gray-300 p-2">
+                      <th className="border border-black p-2">Id pesanan</th>
+                      <th className="border border-black p-2">Username</th>
+                      <th className="border border-black p-2">Image</th>
+                      <th className="border border-black p-2">Service</th>
+                      <th className="border border-black p-2">Total Price</th>
+                      <th className="border border-black p-2">Tanggal</th>
+                      <th className="border border-black p-2">Alamat</th>
+                      <th className="border border-black p-2">Koordinat</th>
+                      <th className="border border-black p-2">Status</th>
+                      <th className="border border-black p-2">Dokumentasi</th>
+                      <th className="border border-black p-2">
                         Keterangan Service
                       </th>
-                      <th className="border border-gray-300 p-2">Chat</th>
+                      <th className="border border-black p-2">Chat</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -454,21 +452,19 @@ const ManagePesanan = () => {
                         key={order.id}
                         className="hover:bg-gray-100 text-center"
                       >
-                        <td className="border border-gray-300 p-2">
-                          {order.id}
-                        </td>
-                        <td className="border border-gray-300 p-2">
+                        <td className="border border-black p-2">{order.id}</td>
+                        <td className="border border-black p-2">
                           {order.username}
                         </td>
 
-                        <td className="border border-gray-300 p-2">
+                        <td className="border border-black p-2">
                           <img
                             src={order.orderDetails.url || "default-image-url"}
                             alt="image"
                             className="w-16 h-16 object-cover rounded"
                           />
                         </td>
-                        <td className="border border-gray-300 p-2">
+                        <td className="border border-black p-2">
                           Quantity: {order.orderDetails.qty} x{" "}
                           {order.orderDetails.nm_product}{" "}
                           <span className="flex items-center justify-center text-green-500 font-bold text-sm">
@@ -476,20 +472,20 @@ const ManagePesanan = () => {
                             * {order.orderDetails.ket} *
                           </span>
                         </td>
-                        <td className="border border-gray-300 p-2">
+                        <td className="border border-black p-2">
                           Rp {order.orderDetails.price.toLocaleString()}
                         </td>
-                        <td className="border border-gray-300 p-2">
+                        <td className="border border-black p-2">
                           {order.orderDetails.createdAt &&
                             new Date(
                               order.orderDetails.createdAt
                             ).toLocaleString()}
                         </td>
-                        <td className="border border-gray-300 p-2">
+                        <td className="border border-black p-2">
                           {" "}
                           {order.location.address},{" "}
                         </td>
-                        <td className="border border-gray-300 p-2 text-blue-500 font-bold">
+                        <td className="border border-black p-2 text-blue-500 font-bold">
                           <a
                             href={`https://www.google.com/maps/place/${order.location.latitude},${order.location.longitude}`}
                             target="_blank"
@@ -499,13 +495,13 @@ const ManagePesanan = () => {
                             Open Maps
                           </a>
                         </td>
-                        <td className="flex p-6 mt-1 gap-4 items-center text-center  ">
+                        <td className=" border border-black ">
                           <div
-                            className="border p-1 rounded-md border-gray-300  flex gap-2 cursor-pointer"
+                            className="border p-1 rounded-md border-black  flex justify-center gap-2 cursor-pointer"
                             onClick={() => openEditModal(order)}
                           >
                             <div
-                              className={`${
+                              className={` ${
                                 order.orderDetails.status === "pending"
                                   ? "text-orange-500  font-bold"
                                   : order.orderDetails.status === "selesai"
@@ -527,8 +523,8 @@ const ManagePesanan = () => {
                           </div>
                         </td>
 
-                        <td className="border border-gray-300 p-2">
-                          <div className="flex gap-4 p-4">
+                        <td className="border border-black p-2">
+                          <div className="flex  justify-center gap-4 p-4">
                             <button
                               className="text-green-500 hover:underline"
                               onClick={() => {
@@ -599,8 +595,8 @@ const ManagePesanan = () => {
                             </button>
                           </div>
                         </td>
-                        <td className="flex p-6 mt-1 gap-4 items-center text-center justify-center">
-                          <div className="border p-1 rounded-md border-gray-300 flex gap-2 cursor-pointer justify-center">
+                        <td className=" border border-black">
+                          <div className="border p-1 rounded-md border-black flex gap-2 cursor-pointer justify-center">
                             <button
                               onClick={() => {
                                 if (order.orderDetails.status === "selesai") {
@@ -620,7 +616,7 @@ const ManagePesanan = () => {
                             </button>
                           </div>
                         </td>
-                        <td className="border border-gray-300 ">
+                        <td className="border border-black ">
                           <button
                             onClick={() => handleWhatsAppChat(order)}
                             className="text-green-500 hover:underline"
@@ -647,6 +643,7 @@ const ManagePesanan = () => {
           closeUploadModal={closeUploadModal}
           selectedOrderInfo={selectedOrderInfo}
           orders={orders}
+          refresh={fetchData}
         />
       )}
 
@@ -720,13 +717,12 @@ const ManagePesanan = () => {
         <ModalPostKeterangan
           closeModalKet={closeModalKet}
           uuid={selectedOrderUUID}
+          refresh={fetchData}
         />
       )}
 
       <ToastContainer />
-      {loading && (
-        <Loading />
-      )}
+      {loading && <Loading />}
     </div>
   );
 };

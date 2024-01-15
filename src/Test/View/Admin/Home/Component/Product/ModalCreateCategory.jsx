@@ -22,10 +22,11 @@ const ModalCreateCategory = ({ onClose }) => {
       await createCategory(categoryName);
 
       toast.success("Kategori berhasil dibuat");
+      onClose();
       setCategoryName("");
     } catch (error) {
-      if (error.message === "Failed to create category") {
-        toast.error("Gagal membuat kategori");
+      if (error.response) {
+        toast.error("Kategori sudah ada");
       } else {
         console.error("Error creating category:", error);
         toast.error("Terjadi kesalahan saat membuat kategori");
