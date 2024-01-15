@@ -314,11 +314,11 @@ const ManagePesanan = () => {
   };
 
   return (
-    <div className="px-12 p-8 bg-slate-200 h-screen w-screen ">
-      <div className="flex justify-between items-center w-auto bg-white p-4 mb-4 rounded-full lg:hidden md:hidden block">
+    <div className="px-12 p-8 lg:bg-slate-200 md:bg-slate-200 h-screen w-screen ">
+      <div className="flex justify-between items-center w-auto bg-gray-800 p-4 mb-4 rounded-full lg:hidden md:hidden block">
         <img src={image} alt="image" className="w-10 h-10" />
 
-        <h1 className="font-bold text-biru ">Pesanan</h1>
+        <h1 className="font-bold text-white ">Pesanan</h1>
         <h1 className="cursor-pointer " onClick={handleLogoutClick}>
           <FontAwesomeIcon
             icon={faSignOut}
