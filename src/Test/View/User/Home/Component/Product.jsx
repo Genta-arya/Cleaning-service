@@ -256,9 +256,21 @@ const Product = () => {
                     >
                       <div className="relative">
                         {product.discount && (
-                          <span className="bg-red-500 text-white text-xs font-bold rounded-full px-4 absolute top-7 -left-2 z-10 transform -rotate-45 p-1 ">
-                            Diskon {product.discount.discountPercentage} %
-                          </span>
+                          <div className=" bg-red-500 text-white font-bold rounded-full px-4 p-1 w-fit absolute top-3 left-4 z-10 transform ">
+                            <span className=" ">
+                              Diskon {product.discount.discountPercentage} %
+                            </span>
+                            <p className="text-xs">
+                              Exp{" "}
+                              {new Date(
+                                product.discount.expirationDate
+                              ).toLocaleDateString("id-ID", {
+                                day: "numeric",
+                                month: "numeric",
+                                year: "numeric",
+                              })}
+                            </p>
+                          </div>
                         )}
                         <motion.div
                           whileHover={{ scale: 1.05 }}
@@ -377,9 +389,21 @@ const Product = () => {
                   >
                     <div className="relative">
                       {product.discount && (
-                        <span className="bg-red-500 text-white text-xs font-bold rounded-full px-4 absolute top-10 left-0 z-10 transform -rotate-45 p-1">
-                          Diskon {product.discount.discountPercentage} %
-                        </span>
+                        <div className=" bg-red-500 text-white font-bold rounded-full px-4 p-1 w-fit absolute top-3 left-4 z-10 transform ">
+                          <span className=" ">
+                            Diskon {product.discount.discountPercentage} %
+                          </span>
+                          <p className="text-xs">
+                            Exp{" "}
+                            {new Date(
+                              product.discount.expirationDate
+                            ).toLocaleDateString("id-ID", {
+                              day: "numeric",
+                              month: "numeric",
+                              year: "numeric",
+                            })}
+                          </p>
+                        </div>
                       )}
 
                       <motion.div
@@ -393,7 +417,6 @@ const Product = () => {
                           src={product.url}
                           alt={product.nm_product}
                           className="mb-4 w-full h-80 flex  rounded-t-xl transition-all transform duration-500 cursor-pointer ease-in object-cover hover:scale-105 hover:rounded-b-xl hover:rounded-t-xl"
-                         
                         />
                         <motion.div
                           initial={{ opacity: 0 }}
