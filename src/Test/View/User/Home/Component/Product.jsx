@@ -72,6 +72,7 @@ const Product = () => {
       try {
         const response = await getProduct();
         const { products } = response;
+        console.log(response);
         setIsloading(false);
 
         dispatch(setProducts(products));
@@ -330,6 +331,11 @@ const Product = () => {
                               {formatCurrency(product.price)}
                             </span>
                           )}
+                          <div className="text-gray-500 text-sm">
+                            {product.sold === 0
+                              ? "Belum Terjual"
+                              : `${product.sold} Terjual`}
+                          </div>
                         </div>
 
                         <div className="flex justify-center mt-4 items-center">

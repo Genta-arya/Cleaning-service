@@ -134,7 +134,7 @@ const ManagePesanan = () => {
     };
   }, []);
 
-  const handleEditStatus = async (orderId, newStatus, refetchOrders) => {
+  const handleEditStatus = async (orderId, newStatus) => {
     setIsLoadingLogout(true);
     try {
       const response = await updateOrderStatus(orderId, newStatus);

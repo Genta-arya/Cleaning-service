@@ -190,10 +190,11 @@ const OrderForm = () => {
   const handleQuantityChange = (e) => {
     const newQuantity = parseInt(e.target.value);
 
-    if (!isNaN(newQuantity) && newQuantity >= 1 && newQuantity <= 3) {
+    if (!isNaN(newQuantity) && newQuantity >= 1) {
       setQuantity(newQuantity);
     }
   };
+
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
@@ -357,9 +358,7 @@ const OrderForm = () => {
   };
 
   const handleIncrement = () => {
-    if (quantity < 3) {
-      setQuantity(quantity + 1);
-    }
+    setQuantity(quantity + 1);
   };
 
   const handleDecrement = () => {
