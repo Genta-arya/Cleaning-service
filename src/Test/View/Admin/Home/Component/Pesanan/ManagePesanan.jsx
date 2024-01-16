@@ -401,13 +401,13 @@ const ManagePesanan = () => {
           </div>
         </>
       ) : orders.length === 0 ? (
-        <p className="mt-4 text-center text-red-500">
+        <p className="mt-4 text-center text-black">
           {searchQuery ? "Data tidak ditemukan" : "Belum Ada Pesanan"}
         </p>
       ) : (
         <>
           {orders.length === 0 ? (
-            <p className="mt-4 text-center text-red-500">
+            <p className="mt-4 text-center text-black">
               Data tidak ditemukan
             </p>
           ) : (

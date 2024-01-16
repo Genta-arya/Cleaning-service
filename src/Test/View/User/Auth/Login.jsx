@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { checkJwt, handleLogin } from "../../../../Service/Api";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,6 +31,7 @@ const Login = () => {
     username: "",
     password: "",
   });
+  const [rememberMe, setRememberMe] = useState(false);
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] =
     useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -40,6 +41,18 @@ const Login = () => {
 
   const toggleForgotPasswordModal = () => {
     setIsForgotPasswordModalOpen(!isForgotPasswordModalOpen);
+  };
+
+  useEffect(() => {
+    const storedRememberMe = localStorage.getItem("rememberMe");
+    if (storedRememberMe) {
+      setRememberMe(JSON.parse(storedRememberMe));
+    }
+  }, []);
+
+  const handleCheckboxChange = () => {
+    setRememberMe(!rememberMe);
+    localStorage.setItem("rememberMe", !rememberMe);
   };
 
   const handleChange = (e) => {
@@ -65,6 +78,16 @@ const Login = () => {
       localStorage.setItem("token", result.token);
 
       const checkJwtResponse = await checkJwt();
+
+      if (rememberMe) {
+   
+        localStorage.setItem("rememberedUsername", formData.username);
+        localStorage.setItem("rememberedPassword", formData.password);
+      } else {
+      
+        localStorage.removeItem("rememberedUsername");
+        localStorage.removeItem("rememberedPassword");
+      }
 
       if (checkJwtResponse.success) {
         toast.success("Login berhasil");
@@ -118,6 +141,8 @@ const Login = () => {
       if (data.success) {
         dispatch(setLoggedIn(true));
         dispatch(setRole(data.role));
+        setRememberMe(false);
+        localStorage.removeItem("rememberMe");
         navigate("/");
       } else {
         toast.error("Login failed: " + data.error);
@@ -128,6 +153,18 @@ const Login = () => {
       setIsLoading(false);
     }
   };
+  useEffect(() => {
+    const rememberedUsername = localStorage.getItem("rememberedUsername");
+    const rememberedPassword = localStorage.getItem("rememberedPassword");
+
+    if (rememberedUsername && rememberedPassword) {
+      setFormData({
+        username: rememberedUsername,
+        password: rememberedPassword,
+      });
+      setRememberMe(true);
+    }
+  }, []);
 
   return (
     <motion.div
@@ -139,7 +176,7 @@ const Login = () => {
     >
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-         <Loading />
+          <Loading />
         </div>
       )}
       <motion.div
@@ -173,6 +210,7 @@ const Login = () => {
               type="text"
               id="username"
               name="username"
+              placeholder="username"
               required
               value={formData.username}
               onChange={handleChange}
@@ -187,6 +225,7 @@ const Login = () => {
               type={showPassword ? "text" : "password"}
               id="password"
               name="password"
+              placeholder="*******"
               required
               value={formData.password}
               onChange={handleChange}
@@ -203,10 +242,20 @@ const Login = () => {
               />
             </div>
           </div>
+          <div className="flex   justify-center mb-4 items-center gap-2">
+            <span className="text-xs">Ingat saya</span>
+            <label>
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={handleCheckboxChange}
+              />
+            </label>
+          </div>
           <div className="flex justify-center items-center gap-4">
             <p className="text-xs text-gray-500">Belum punya akun ?</p>
             <p
-              className="text-sm text-blue-700 font-semibold cursor-pointer hover:underline"
+              className="text-sm text-biru font-semibold cursor-pointer hover:underline"
               onClick={HandleToRegister}
             >
               Daftar Disini

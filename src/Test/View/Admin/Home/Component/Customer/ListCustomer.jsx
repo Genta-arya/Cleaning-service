@@ -168,7 +168,7 @@ const ListCustomer = () => {
               </tbody>
             </table>
           ) : (
-            <p>Tidak ada pelanggan.</p>
+            <p className="text-black flex justify-center">Tidak ada pelanggan.</p>
           )}
         </>
       )}

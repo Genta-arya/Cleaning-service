@@ -233,7 +233,7 @@ const ManageProduct = () => {
           ))}
         </div>
       ) : filteredProducts.length === 0 ? (
-        <p className="mt-4 text-center text-red-500">
+        <p className="mt-4 text-center text-black">
           Product tidak ditemukan.
         </p>
       ) : (
