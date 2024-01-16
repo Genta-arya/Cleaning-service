@@ -28,7 +28,7 @@ const ModalError = ({ onClose, isModalOpen }) => {
         >
           <motion.div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 p-4 ">
             <motion.div
-              className="bg-white p-8 rounded-md shadow-lg z-50 w-[30%]"
+              className="bg-white p-8 rounded-md shadow-lg z-50 xl:w-[30%] w-96 md:w-[45%] lg:w-[35%]"
               initial={{ scale: 0.5 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.5 }}
