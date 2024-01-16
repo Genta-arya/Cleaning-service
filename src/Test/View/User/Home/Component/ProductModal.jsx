@@ -25,9 +25,7 @@ const ProductModal = ({ product, closeModal, showModal }) => {
       {showModal && (
         <motion.div
           className=""
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+ 
         >
           <motion.div
             className="fixed top-0 left-0 w-full h-full flex items-center justify-center p-8 bg-black bg-opacity-80 z-50"

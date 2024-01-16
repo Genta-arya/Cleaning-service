@@ -21,6 +21,7 @@ import axios from "axios";
 import "../../../../../Style/Content.css";
 import Loading from "../../../Admin/Home/Component/Customer/Loading";
 import ReactQuill from "react-quill";
+import ModalError from "./ModalError";
 const OrderForm = () => {
   const { state } = useLocation();
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +44,7 @@ const OrderForm = () => {
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [route, setRoute] = useState(null);
   const [discount, setDiscount] = useState(null);
-
+  const [isModalError, setModalError] = useState(false);
   const db = getDatabase(firebaseApp);
 
   useEffect(() => {
@@ -112,7 +113,7 @@ const OrderForm = () => {
 
   const distance = calculateHaversineDistance(
     selectedLocation,
-    selectedLocation
+    referenceCoordinates
   );
 
   const username = localStorage.getItem("username");
@@ -166,7 +167,6 @@ const OrderForm = () => {
                 setMapdetail(addressString);
               }
 
-              // Call fetchRoute with the obtained location
               fetchRoute(location);
 
               setMapKey((prevKey) => prevKey + 1);
@@ -213,6 +213,9 @@ const OrderForm = () => {
   const handleKetChange = (e) => {
     setKeterangan(e.target.value);
   };
+  const handleCloseModalError = () => {
+    setModalError(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -223,17 +226,18 @@ const OrderForm = () => {
     const maxDistance = 25;
     const id = productData.categoryId;
     if (distance > maxDistance) {
-      toast.error(
-        `Lokasi kamu terlalu jauh ${distance} km. maksimal 25 km untuk melakukan pesanan`,
-        {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          draggable: true,
-          progress: undefined,
-        }
-      );
+      // toast.error(
+      //   `Lokasi kamu terlalu jauh ${distance} km. maksimal 25 km untuk melakukan pesanan`,
+      //   {
+      //     position: "top-center",
+      //     autoClose: 1000,
+      //     hideProgressBar: false,
+      //     closeOnClick: true,
+      //     draggable: true,
+      //     progress: undefined,
+      //   }
+      // );
+      setModalError(true);
       setIsLoading(false);
     } else {
       let price = (productPrice || 0) * (quantity || 1);
@@ -280,8 +284,8 @@ const OrderForm = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            // email: "andiarta150898@gmail.com",
-            email: "mgentaaryap@gmail.com",
+            email: "andiarta150898@gmail.com",
+            // email: "mgentaaryap@gmail.com",
             orderData: orderData,
           }),
         });
@@ -305,6 +309,8 @@ const OrderForm = () => {
             progress: undefined,
           }
         );
+      } finally {
+        setModalError(false);
       }
     }
   };
@@ -662,9 +668,10 @@ const OrderForm = () => {
       </div>
       {isChatBotOpen && <ChatBotOrder onClose={handleCloseChat} />}
       {isOrderSuccess && (
-        <SuccessModal showModal={isOrderSuccess} onClose={handleCloseModal} />
+        <SuccessModal showModal={isOrderSuccess} onClose={handleCloseModal}  />
       )}
       {load && <Loading />}
+      {isModalError && <ModalError onClose={handleCloseModalError} isModalOpen={isModalError}/>}
     </div>
   );
 };
